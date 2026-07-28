@@ -157,5 +157,38 @@
       "geometry": "landscape tiled bathhouse wall with square and rectangular grids, oval medallions, wave courses, shell-bordered niches, a low horizontal waterline and one severe vertical interruption",
       "overall_character": "premium contemporary ceramic installation: a cool northern summer bathhouse of light, salt, glaze and geometry where common birds become refined resident emblems within a shared ornamental habitat"
     }
+  },
+  {
+    "date": "2026-07-28",
+    "movement": "Lime Orchard Fresco: The Five Small Citizens",
+    "materials": "Wet lime plaster ground, marble dust intonaco, sinopia underdrawing, terre verte wash, yellow ochre, lime-safe ultramarine, iron oxide red, pale umber, bone black, casein secco retouching, rubbed pumice abrasion, shallow incised plaster lines, softened dry-brush dusting and minute embedded summer grit for a salt-worn mineral surface.",
+    "palette": "Lime white, warm plaster cream, sandstone beige, yellow ochre, pale umber, terre verte, softened brick red, lime-safe ultramarine, blue-grey, muted lemon yellow, iron oxide red, dove grey, bone black, with faint sea-glass green and cool North Sea blue undertones worked into the shadows.",
+    "composition": "A wide horizontal fresco wall divided into three shallow arcade bays and a pale upper lunette. The lower band carries small cracks, masonry ledges and seed-like marks where the two sparrows gather at slightly different distances. The middle band holds a curved lemon branch supporting the Blue Tit and opening the central rhythm. The Goldfinch crosses the central arch in a poised diagonal, giving the whole wall a gentle pulse. The Collared Dove rests high in the lunette as a pale balancing form. The structure should feel stable, airy and architectural, with generous unpainted plaster breathing between figures.",
+    "originality": 8,
+    "creative_dna": {
+      "dominant_family": "contemporary lime fresco civic orchard mural",
+      "materials": [
+        "wet lime plaster",
+        "marble dust intonaco",
+        "sinopia underdrawing",
+        "terre verte wash",
+        "yellow ochre",
+        "lime-safe ultramarine",
+        "iron oxide red",
+        "pale umber",
+        "bone black",
+        "casein secco retouching",
+        "rubbed pumice abrasion",
+        "shallow incised plaster lines",
+        "dry-brush mineral dusting",
+        "embedded summer grit"
+      ],
+      "palette_type": "mineral fresco palette of warm lime whites, ochres, umbers and sandstone neutrals with restrained brick red, muted lemon, dove grey, blue-grey and faint sea-glass North Sea undertones",
+      "energy": "calm, sun-warmed, civic, intimate, lightly formal, airy and gently pulsed by the central goldfinch diagonal",
+      "complexity": "moderate and carefully ordered: five clearly integrated bird citizens within a spare three-bay architectural orchard structure, reduced detail and generous negative space",
+      "surface": "salt-softened lime intonaco, weathered mineral plaster, rubbed and abraded, with visible underdrawing, shallow cracks, incisions, dry fresco texture and breathable matte depth",
+      "geometry": "wide horizontal fresco panel with three shallow arcade bays, pale upper lunette, garden wall seams, orchard-trunk verticals, seed-tray horizontals and a curved lemon branch rhythm",
+      "overall_character": "a discovered fragment of a humane northern garden-court wall-cycle: Renaissance calm refined into spare modern geometry, mineral colour and quiet civic bird presence without literal seaside imagery or decorative wildlife realism"
+    }
   }
 ]
