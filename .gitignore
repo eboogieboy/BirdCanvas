@@ -1,20 +1,35 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyo
 
-# Local environments
+# Virtual environments
 .venv/
 venv/
 .env
 
-# Editor and OS files
+# Editor
 .vscode/
+.idea/
 .DS_Store
 
-# Generated release packages
-GalleryOS-Sprint-*.zip
-BirdCanvas-current.zip
+# Logs
+*.log
+runtime/logs/
 
-# Runtime-generated files
-runtime/logs/*.log
-backups/*.zip
+# Temporary backups
+*.zip
+*.tar.gz
+
+# BirdNET imports
+imports/*.zip
+
+# Generated caches
+output/current/
+output/control/
+output/gallery/
+output/index.html
+output/final_scene.png
+
+# OS files
+Thumbs.db
