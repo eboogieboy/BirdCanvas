@@ -1,0 +1,749 @@
+{
+  "version": 3,
+  "current_artwork_id": "birdcanvas-2026-07-28-daily",
+  "collections": [
+    {
+      "id": "birdcanvas",
+      "title": "BirdCanvas",
+      "count": 8,
+      "latest_created_at": "2026-07-28T07:46:23+00:00"
+    }
+  ],
+  "stats": {
+    "artwork_count": 8,
+    "favourite_count": 0,
+    "hidden_count": 0,
+    "storage_bytes": 53289180
+  },
+  "artworks": [
+    {
+      "id": "birdcanvas-2026-07-28-daily",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-28",
+      "observation_date": "2026-07-28",
+      "created_at": "2026-07-28T07:46:23+00:00",
+      "updated_at": "2026-07-28T07:46:23+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-28-daily/artwork.png",
+      "image_size_bytes": 3590743,
+      "species": [
+        "House Sparrow",
+        "Eurasian Blue Tit",
+        "Eurasian Collared Dove",
+        "European Goldfinch",
+        "Eurasian Tree Sparrow"
+      ],
+      "season": "",
+      "style": "Layered translucent rectangles, cyanotype exposure fields, reserved white bird silhouettes, ghosted botanical shadows, pin-prick alignment marks, specimen labels, pale pencil notes, torn vellum edges, soft water blooms and fine granular chemistry. The birds should be formed through negative space, softened outlines and selective detail rather than painted realism. Geometry should remain composed and gallery-like, with staggered sheets creating rhythm across the landscape format.",
+      "palette": "Deep Prussian blue, washed indigo, sea-glass green, chalk white, pale vellum grey, weathered timber beige, faint pollen ochre, blue-black pencil and occasional restrained accents of goldfinch red and yellow, blue tit blue and yellow, kept minimal and sun-faded.",
+      "mood": "Quiet, luminous, observational and gently summery; a calm field-science reverie with the delicacy of preserved daylight.",
+      "creative_collection": "Daily BirdCanvas \u2014 North Shields Summer Field Archive",
+      "creative_brief": {
+        "collection": "Daily BirdCanvas \u2014 North Shields Summer Field Archive",
+        "style": "Prussian Vellum Hedgerow Ledger",
+        "style_guidance": "Develop Hedge Solargram Index as a refined contemporary archive of summer hedge observation: five translucent cyanotype specimen sheets layered across a landscape-format composition, each sheet holding a different bird as a sun-reserved presence among pressed grasses, chickweed, seed heads and pale field markings. The style should feel botanical-photographic rather than illustrative, with the birds emerging through exposure, shadow, registration and absence. Maintain the cool Prussian blue chemistry of cyanotype, softened by sea-glass greens, chalk whites, weathered grey and faint pollen warmth. The result should be calm, premium and spacious, like a set of fragile field records displayed as one resolved artwork.",
+        "curator_notes": "This exhibition should treat the day\u2019s birds as discoveries within a summer hedge rather than portraits posed for admiration. The House Sparrow, Eurasian Blue Tit, Eurasian Collared Dove, European Goldfinch and Eurasian Tree Sparrow are to be clearly recognisable, but translated into the language of sunlight, vellum, plant shadow and field indexing. The Collared Dove may provide the largest quiet void, a soft pale form anchoring the archive, while the Goldfinch and Blue Tit offer the sharpest points of recognition through small, precise silhouettes and restrained hints of colour. The sparrows should sit lower in the work, close to plant litter and hedge-base textures, giving the piece honesty and intimacy. Let North Shields enter only through atmosphere: cool northern daylight, salt-worn restraint, open horizontal breathing space and muted maritime blues, never through literal seaside imagery.",
+        "mood": "Quiet, luminous, observational and gently summery; a calm field-science reverie with the delicacy of preserved daylight.",
+        "visual_language": "Layered translucent rectangles, cyanotype exposure fields, reserved white bird silhouettes, ghosted botanical shadows, pin-prick alignment marks, specimen labels, pale pencil notes, torn vellum edges, soft water blooms and fine granular chemistry. The birds should be formed through negative space, softened outlines and selective detail rather than painted realism. Geometry should remain composed and gallery-like, with staggered sheets creating rhythm across the landscape format.",
+        "palette": "Deep Prussian blue, washed indigo, sea-glass green, chalk white, pale vellum grey, weathered timber beige, faint pollen ochre, blue-black pencil and occasional restrained accents of goldfinch red and yellow, blue tit blue and yellow, kept minimal and sun-faded.",
+        "composition": "A landscape-format arrangement of five oversized specimen sheets staggered from left to right like an opened field archive. The sheets overlap slightly, creating translucent blue intersections and quiet depth. The broadest pale exposure belongs to the Collared Dove near the upper centre-left, creating a calm central void. The Goldfinch appears smaller and sharper near seed heads in the upper right quadrant; the Blue Tit sits near a crisp tangle of chickweed and grass awns, readable at normal viewing distance. The House Sparrow and Eurasian Tree Sparrow occupy the lower margins, close to hedge-base textures, their silhouettes partially intersecting with plant shadows and annotation lines. Leave generous open space so the artwork breathes like cool summer light on vellum.",
+        "bird_integration": "Represent every observed bird as a recognisable cyanotype-reserved presence within the archive. The Eurasian Blue Tit should be immediately identifiable through its compact body, rounded head, fine beak, blue cap suggestion and small yellow wash held inside the otherwise white silhouette. The European Goldfinch should be crisp and delicate, with a slender beak, wing bar, and minimal sun-faded red and yellow accents near seed clusters. The Eurasian Collared Dove should appear as the largest calm pale void, with a soft dove profile and a faint charcoal-blue collar mark. The House Sparrow should be placed low in the composition with a sturdy, familiar silhouette, short beak, warm muted brown pencil hatching and hedge-base proximity. The Eurasian Tree Sparrow should sit near it but remain distinct through a neater rounded head, chestnut cap indication and small dark cheek spot. All birds must feel embedded in the cyanotype process: partly exposed, partly remembered, surrounded by plant shadows, tape marks and field annotations.",
+        "materials": "Ferric ammonium citrate and potassium ferricyanide chemistry on translucent blueprint vellum, layered archival papers, pressed chickweed, grass awns, seed heads, dried pollen dust, pale graphite, blue-black pencil, archival specimen tape, pin-prick registration marks, hand-washed water stains, salt-softened paper edges and faintly abraded matte surface textures.",
+        "visual_focus": "The viewer should first be drawn to the luminous overlap of translucent Prussian-blue specimen sheets and the broad chalk-white exposure void at the centre, where layered vellum, water stains and plant shadows create a quiet field of light before the individual forms resolve.",
+        "avoid": [
+          "literal seaside scenery",
+          "wildlife-calendar realism",
+          "crowded botanical decoration",
+          "bright summer clich\u00e9s",
+          "overly cute bird characterisation",
+          "heavy black outlines",
+          "dramatic skies or storm effects",
+          "making the common birds feel hidden or apologetic",
+          "imitating any living artist",
+          "turning the cyanotype language into a simple blue filter"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "no",
+        "style": "no_mount",
+        "style_name": "No Mount",
+        "decision_reason": "Samsung Frame full-screen mode.",
+        "analysis": {
+          "edge_luminance": 188.42,
+          "centre_luminance": 93.71,
+          "edge_variation": 42.36,
+          "edge_centre_difference": 94.71,
+          "average_saturation": 90.71,
+          "edge_red": 186.33,
+          "edge_green": 189.79,
+          "edge_blue": 180.96
+        },
+        "mount_width": 0,
+        "output_size": [
+          1920,
+          1080
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Eurasian Blue Tit, Eurasian Collared Dove, European Goldfinch and Eurasian Tree Sparrow. Its atmosphere is quiet, luminous, observational and gently summery; a calm field-science reverie with the delicacy of preserved daylight.",
+        "collection": "Daily BirdCanvas \u2014 North Shields Summer Field Archive",
+        "composition": "A landscape-format arrangement of five oversized specimen sheets staggered from left to right like an opened field archive. The sheets overlap slightly, creating translucent blue intersections and quiet depth. The broadest pale exposure belongs to the Collared Dove near the upper centre-left, creating a calm central void. The Goldfinch appears smaller and sharper near seed heads in the upper right quadrant; the Blue Tit sits near a crisp tangle of chickweed and grass awns, readable at normal viewing distance. The House Sparrow and Eurasian Tree Sparrow occupy the lower margins, close to hedge-base textures, their silhouettes partially intersecting with plant shadows and annotation lines. Leave generous open space so the artwork breathes like cool summer light on vellum.",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 5,
+        "observation_date": "2026-07-28"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-27-daily",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-27",
+      "observation_date": "2026-07-27",
+      "created_at": "2026-07-27T20:53:03+00:00",
+      "updated_at": "2026-07-27T20:53:03+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-27-daily/artwork.png",
+      "image_size_bytes": 3666857,
+      "species": [
+        "Herring Gull",
+        "Carrion Crow",
+        "Blue Tit",
+        "Tree Sparrow",
+        "Pigeon",
+        "Wren",
+        "Starling"
+      ],
+      "season": "",
+      "style": "A broad landscape wall of square and rectangular tiles with slight misalignment, milky grout, hand-painted cobalt linework, raised slip trailing, crackle glaze, oval medallions, shell-impressed margins, wave-like courses and occasional mother-of-pearl flashes. Forms should be simplified into confident silhouettes and ornamental profiles, with delicate feather markings translated into glaze marks, tesserae, stipples, scallops and transfer-like imperfections.",
+      "palette": "Tin white, Delft cobalt, copper sea-glass green, soft turquoise, manganese purple-black, antimony yellow, diluted sandstone beige, pearl lustre, pale grey grout, weathered wood brown and a few muted starling iridescences of petrol blue, violet and green.",
+      "mood": "Cool, buoyant, decorative, communal, salt-washed, quietly playful and premium; a calm northern summer light held inside glazed ceramic.",
+      "creative_collection": "BirdCanvas Daily Edition \u2014 North Shields Summer",
+      "creative_brief": {
+        "collection": "BirdCanvas Daily Edition \u2014 North Shields Summer",
+        "style": "Tin-Glaze Estuary Bathhouse: Salt-Lit Ceramic Aviary",
+        "style_guidance": "Develop the selected movement as a refined landscape-format ceramic wall rather than a scene: a cool, luminous bathhouse surface made from hand-painted tin-glazed tiles, mismatched medallions, wave courses, shell-impressed borders and softened grout lines. The artwork should feel like a premium contemporary ceramic installation translated for the Samsung Frame: decorative, architectural, calm and quietly communal. Birds remain clearly legible, but they are absorbed into tile logic, glaze pooling, raised slip outlines, crackle and lustre rather than illustrated naturalistically.",
+        "curator_notes": "Today\u2019s exhibition should read first as an elegant tiled chamber of light, salt, glaze and geometry, with the birds appearing as resident emblems within a shared ceramic habitat. The North Shields atmosphere should be present through cool maritime illumination, sea-glass greens, milky whites, weathered blues and faint sandstone warmth, without becoming a literal coastal view. Summer is expressed through buoyant glaze, softened brightness and watery air, not through flowers or sunshine motifs. The common birds are treated honestly as part of the day\u2019s social rhythm, while the smaller, charming birds bring intimacy and delight.",
+        "mood": "Cool, buoyant, decorative, communal, salt-washed, quietly playful and premium; a calm northern summer light held inside glazed ceramic.",
+        "visual_language": "A broad landscape wall of square and rectangular tiles with slight misalignment, milky grout, hand-painted cobalt linework, raised slip trailing, crackle glaze, oval medallions, shell-impressed margins, wave-like courses and occasional mother-of-pearl flashes. Forms should be simplified into confident silhouettes and ornamental profiles, with delicate feather markings translated into glaze marks, tesserae, stipples, scallops and transfer-like imperfections.",
+        "palette": "Tin white, Delft cobalt, copper sea-glass green, soft turquoise, manganese purple-black, antimony yellow, diluted sandstone beige, pearl lustre, pale grey grout, weathered wood brown and a few muted starling iridescences of petrol blue, violet and green.",
+        "composition": "Landscape format. Arrange the image as a tiled bathhouse wall divided by a low horizontal waterline of wave-pattern courses. Above it, a large cobalt crest panel anchors the centre-left, surrounded by mismatched square tiles and oval bird medallions. Repeated pigeon motifs create a gentle architectural rhythm across the lower band. Smaller shell-bordered niches sit toward the corners and edges. A severe vertical manganese interruption offsets the decorative order on one side, preventing the design from becoming too sweet. Leave areas of pale tile and grout breathing space so the work remains calm and contemporary.",
+        "bird_integration": "Represent every observed bird as part of the ceramic language. The Herring Gull should be the most immediately identifiable at normal viewing distance: a large, clean cobalt-and-white crest with recognisable gull head, pale body, yellow bill accent and grey wing geometry, positioned above the central waterline. The Pigeon appears as a repeated bathhouse tile motif across the lower band, simplified into rounded heads, soft breast curves and small iridescent neck-glaze marks. The Starling is built from broken lustre tesserae, with a dark compact form, speckled pale slip dots and flashes of blue-green-violet overglaze. The Blue Tit occupies a crisp corner tile with yellow breast, blue cap and white cheek clearly retained inside Iznik-like ornament. The Tree Sparrow sits in a small shell-bordered niche with chestnut cap, pale cheek, black cheek spot and compact posture. The Wren occupies another small niche, tiny and warm brown, with raised tail and fine barred slip marks. The Carrion Crow interrupts the tiled rhythm as a severe manganese-purple silhouette with heavy bill and watchful stance, elegant but stark against pale glaze.",
+        "materials": "Tin-glazed earthenware, cobalt oxide brushwork, copper-green glaze, manganese purple, antimony yellow, raised white slip, crackle glaze, hand-painted tile transfers, shell-impressed ceramic borders, milky grout, pearl lustre overglaze, lightly abraded glaze edges and subtle sandstone-toned underpainting.",
+        "visual_focus": "The first attraction should be the luminous central field of cool tin-white glaze crossed by cobalt tile geometry and a low wave-like waterline, with pearl lustre and crackle catching the eye before the viewer resolves the individual bird forms.",
+        "avoid": [
+          "literal beach, harbour or seaside scenery",
+          "wildlife-calendar realism",
+          "crowded natural habitat illustration",
+          "overly cute cartoon birds",
+          "Mediterranean holiday clich\u00e9s",
+          "obvious summer symbols such as bright sunflowers, beach towels or blazing sun",
+          "dramatic storm imagery",
+          "photorealistic feathers",
+          "flat digital vector cleanliness without ceramic irregularity",
+          "imitating any living artist"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "no",
+        "style": "no_mount",
+        "style_name": "No Mount",
+        "decision_reason": "Samsung Frame full-screen mode.",
+        "analysis": {
+          "edge_luminance": 177.75,
+          "centre_luminance": 162.2,
+          "edge_variation": 33.99,
+          "edge_centre_difference": 15.55,
+          "average_saturation": 54.61,
+          "edge_red": 183.14,
+          "edge_green": 178.93,
+          "edge_blue": 150.24
+        },
+        "mount_width": 0,
+        "output_size": [
+          1920,
+          1080
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Herring Gull, Carrion Crow, Blue Tit, Tree Sparrow, Pigeon, Wren and Starling. Its atmosphere is cool, buoyant, decorative, communal, salt-washed, quietly playful and premium; a calm northern summer light held inside glazed ceramic.",
+        "collection": "BirdCanvas Daily Edition \u2014 North Shields Summer",
+        "composition": "Landscape format. Arrange the image as a tiled bathhouse wall divided by a low horizontal waterline of wave-pattern courses. Above it, a large cobalt crest panel anchors the centre-left, surrounded by mismatched square tiles and oval bird medallions. Repeated pigeon motifs create a gentle architectural rhythm across the lower band. Smaller shell-bordered niches sit toward the corners and edges. A severe vertical manganese interruption offsets the decorative order on one side, preventing the design from becoming too sweet. Leave areas of pale tile and grout breathing space so the work remains calm and contemporary.",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-27"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-26-daily",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-26",
+      "observation_date": "2026-07-26",
+      "created_at": "2026-07-26T22:31:54+00:00",
+      "updated_at": "2026-07-26T22:31:54+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-26-daily/artwork.png",
+      "image_size_bytes": 3479264,
+      "species": [
+        "Kingfisher",
+        "Barn Owl",
+        "Bullfinch",
+        "Goldcrest",
+        "Treecreeper",
+        "Long-tailed Tit",
+        "Great Spotted Woodpecker"
+      ],
+      "season": "",
+      "style": "A landscape-format folding screen divided into subtle vertical panel intervals, with deep lacquer fields, irregular reed strokes, fine incised lines, translucent colour veils and small inlaid interruptions. Use asymmetry, silence, off-centre spacing and concealed forms. Edges should feel hand-worked and salt-softened. The birds are simplified into precise silhouettes, material marks and recognisable profiles, never cartooned and never naturalistically painted.",
+      "palette": "Vermilion ground muted under translucent celadon lacquer, deep black-brown urushi, smoke grey, sea-glass green, pale eggshell white, powdered mica silver, soft sandstone beige, weathered wood taupe, restrained bullfinch rose, kingfisher turquoise-blue and a single disciplined woodpecker red. Summer should appear as warmth beneath the lacquer rather than obvious seasonal colour.",
+      "mood": "Still, polished, intimate and observant, with the hush of warm summer air filtered through cool North Sea light. The mood should be contemplative rather than decorative, delicate rather than pretty, and quietly luminous rather than bright.",
+      "creative_collection": "BirdCanvas Daily",
+      "creative_brief": {
+        "collection": "BirdCanvas Daily",
+        "style": "Celadon Urushi Reed-Screen Inlay",
+        "style_guidance": "Develop the chosen Lacquered Reed Silence movement as a refined contemporary folding-screen language for landscape format display. The work should feel like a premium urushi object translated into light: restrained, polished, asymmetrical and quietly northern. Use the grammar of Japanese lacquer, kiri wood, crushed eggshell, translucent celadon layers and sparse reed notation, but avoid historic pastiche. The birds should appear as deliberate pauses within the lacquered field: visible, recognisable and composed with contemplative precision. The style should privilege surface depth, negative space, subtle glints and hidden edges over illustrative detail.",
+        "curator_notes": "Today's exhibition should read first as an elegant lacquer screen: a calm sequence of panels breathing across the Samsung Frame, with empty space carrying as much importance as the birds. The seven observed birds become the internal rhythm of the screen, each given a different material presence. The Kingfisher should provide the clearest immediate recognition, rendered as a poised celadon-and-copper streak within the reeds rather than a literal riverside portrait. The Barn Owl should appear as a pale, near-silent apparition in eggshell inlay. The smaller birds should reward slower looking: Bullfinch as a restrained rose-charcoal form, Goldcrest as a tiny mica flame, Treecreeper climbing through bark-like lacquer lines, Long-tailed Tit as a soft thread of pale ovals and tail, and Great Spotted Woodpecker as a disciplined black-white-vermilion accent. The North Shields atmosphere should be present only through cool light, salt-softened colour, harbour-worn texture and open horizontal breathing room.",
+        "mood": "Still, polished, intimate and observant, with the hush of warm summer air filtered through cool North Sea light. The mood should be contemplative rather than decorative, delicate rather than pretty, and quietly luminous rather than bright.",
+        "visual_language": "A landscape-format folding screen divided into subtle vertical panel intervals, with deep lacquer fields, irregular reed strokes, fine incised lines, translucent colour veils and small inlaid interruptions. Use asymmetry, silence, off-centre spacing and concealed forms. Edges should feel hand-worked and salt-softened. The birds are simplified into precise silhouettes, material marks and recognisable profiles, never cartooned and never naturalistically painted.",
+        "palette": "Vermilion ground muted under translucent celadon lacquer, deep black-brown urushi, smoke grey, sea-glass green, pale eggshell white, powdered mica silver, soft sandstone beige, weathered wood taupe, restrained bullfinch rose, kingfisher turquoise-blue and a single disciplined woodpecker red. Summer should appear as warmth beneath the lacquer rather than obvious seasonal colour.",
+        "composition": "A horizontal six-panel screen structure with alternating dense and empty zones. The left third contains mostly open lacquer with a few reed marks and a concealed Treecreeper moving along a bark-like vertical seam. The central area holds the clearest bird presence, with the Kingfisher placed low-to-mid height as a sleek celadon stroke crossing a quiet reed interval. A pale Barn Owl form hovers in the upper right as fractured eggshell inlay, softened into the lacquer field. The Bullfinch, Long-tailed Tit, Goldcrest and Great Spotted Woodpecker occupy smaller rhythmic positions across the remaining panels, creating a slow visual walk rather than a crowded bird arrangement.",
+        "bird_integration": "Kingfisher: immediately recognisable at normal viewing distance through its compact profile, sharp bill and brilliant celadon-turquoise body streak with a small warm copper breast note, perched within sparse reeds rather than shown in a literal waterside scene. Barn Owl: formed from crushed eggshell tesserae, with a clear heart-shaped facial disc, pale wings and a soft floating posture, emerging from negative space in the lacquer. Bullfinch: integrated as a rounded rose and charcoal silhouette partly screened by reed stems, with its heavy bill and compact form clearly readable. Goldcrest: represented as the smallest deliberate event in the piece, a tiny olive body with a precise mica-gold crown glint, recognisable on close viewing through its scale and crest. Treecreeper: embedded into vertical bark-like lacquer striations along one panel seam, with curved bill, stiff tail and climbing posture kept legible. Long-tailed Tit: shown as a pale, bead-like body with an exaggerated fine tail drawn in silk-thin lacquer line, moving lightly through the reed geometry. Great Spotted Woodpecker: rendered as a crisp black-and-white angular form with a controlled vermilion accent, partially aligned with a dark reed or wood seam so it feels like part of the screen structure while remaining unmistakable.",
+        "materials": "Urushi lacquer over kiri wood panels, rice-straw underlayer for subtle irregular relief, translucent celadon-green lacquer veils, muted vermilion lacquer ground, crushed eggshell inlay for the Barn Owl, powdered mica for Goldcrest glint and cool atmospheric shimmer, fine charcoal-black lacquer linework for reeds and bark marks, mineral pigments for restrained bird accents, silk-hinge references between panel divisions, and softly abraded surface textures suggesting salt-worn polish and weathered harbour wood.",
+        "visual_focus": "The viewer should first be drawn to the deep polished lacquer field and the off-centre passage of celadon light across the panel structure, where empty space, reed geometry and faint mica shimmer create a quiet horizontal pull before the individual forms resolve.",
+        "avoid": [
+          "literal coastal scenery",
+          "wildlife-calendar realism",
+          "busy reed-bed illustration",
+          "overly decorative Japanese pastiche",
+          "cartoon-like bird simplification",
+          "bright summer clich\u00e9s",
+          "crowded composition",
+          "dramatic action poses",
+          "photographic detail",
+          "making the birds too hidden to recognise"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "no",
+        "style": "no_mount",
+        "style_name": "No Mount",
+        "decision_reason": "Samsung Frame full-screen mode.",
+        "analysis": {
+          "edge_luminance": 72.47,
+          "centre_luminance": 107.22,
+          "edge_variation": 16.76,
+          "edge_centre_difference": 34.75,
+          "average_saturation": 71.63,
+          "edge_red": 77.14,
+          "edge_green": 73.04,
+          "edge_blue": 53.05
+        },
+        "mount_width": 0,
+        "output_size": [
+          1920,
+          1080
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Kingfisher, Barn Owl, Bullfinch, Goldcrest, Treecreeper, Long-tailed Tit and Great Spotted Woodpecker. Its atmosphere is still, polished, intimate and observant, with the hush of warm summer air filtered through cool north sea light. the mood should be contemplative rather than decorative, delicate rather than pretty, and quietly luminous rather than bright.",
+        "collection": "BirdCanvas Daily",
+        "composition": "A horizontal six-panel screen structure with alternating dense and empty zones. The left third contains mostly open lacquer with a few reed marks and a concealed Treecreeper moving along a bark-like vertical seam. The central area holds the clearest bird presence, with the Kingfisher placed low-to-mid height as a sleek celadon stroke crossing a quiet reed interval. A pale Barn Owl form hovers in the upper right as fractured eggshell inlay, softened into the lacquer field. The Bullfinch, Long-tailed Tit, Goldcrest and Great Spotted Woodpecker occupy smaller rhythmic positions across the remaining panels, creating a slow visual walk rather than a crowded bird arrangement.",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-26"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-26-midday",
+      "collection": "birdcanvas",
+      "title": "Midday Exhibition \u2014 2026-07-26",
+      "observation_date": "2026-07-26",
+      "created_at": "2026-07-26T19:50:54+00:00",
+      "updated_at": "2026-07-26T19:50:54+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-26-midday/artwork.png",
+      "image_size_bytes": 3557438,
+      "species": [
+        "Kingfisher",
+        "Barn Owl",
+        "Bullfinch",
+        "Goldcrest",
+        "Treecreeper",
+        "Long-tailed Tit",
+        "Great Spotted Woodpecker"
+      ],
+      "season": "",
+      "style": "Layered translucent planes, shallow relief marks, brushed mineral veils, fine engraved lines and softened geometric intervals. Forms should feel partially revealed, as if seen through frosted glass, pale glaze or sun-bleached vellum. Balance delicacy with structure: a contemporary landscape-format field where space, rhythm and restraint carry the emotion.",
+      "palette": "Sea-glass blue, oxidised teal, soft chalk, warm sandstone, muted flax, smoke grey, weathered timber brown, pearl white and very small accents of ember red, moss gold and deep ink. Keep the palette cool and coastal in temperament, lifted by subtle summer clarity rather than bright seasonal colour.",
+      "mood": "Still, lucid, refined and quietly joyful, with the sensation of cool noon light passing across a hand-finished surface.",
+      "creative_collection": "Midday Edition \u2014 Quiet Northern Radiance",
+      "creative_brief": {
+        "collection": "Midday Edition \u2014 Quiet Northern Radiance",
+        "style": "Salt-Glaze Luminism",
+        "style_guidance": "A newly invented gallery style combining the softened glow of early photographic contact prints, the mineral sheen of salt-glazed ceramics, the measured calm of architectural relief panels and the delicate incision of fine wood engraving. The work should feel like a luminous object rather than a scene: restrained, tactile, contemporary and quietly expensive. Use the birds as embedded presences within a larger atmospheric construction, allowing their identities to emerge through elegant contour, rhythm and surface detail rather than illustrative emphasis.",
+        "curator_notes": "Today\u2019s exhibition should honour a remarkable midday gathering without turning it into a wildlife display. The kingfisher, barn owl, bullfinch, goldcrest, treecreeper, long-tailed tit and great spotted woodpecker should all be present, but absorbed into an artwork led by light, surface and compositional poise. Let North Shields enter through cool maritime illumination, chalky sandstone warmth, faint sea-glass translucency and salt-worn texture, never through literal harbour or shoreline imagery. The result should feel like summer held in reserve: clear, airy, mineral and calm.",
+        "mood": "Still, lucid, refined and quietly joyful, with the sensation of cool noon light passing across a hand-finished surface.",
+        "visual_language": "Layered translucent planes, shallow relief marks, brushed mineral veils, fine engraved lines and softened geometric intervals. Forms should feel partially revealed, as if seen through frosted glass, pale glaze or sun-bleached vellum. Balance delicacy with structure: a contemporary landscape-format field where space, rhythm and restraint carry the emotion.",
+        "palette": "Sea-glass blue, oxidised teal, soft chalk, warm sandstone, muted flax, smoke grey, weathered timber brown, pearl white and very small accents of ember red, moss gold and deep ink. Keep the palette cool and coastal in temperament, lifted by subtle summer clarity rather than bright seasonal colour.",
+        "composition": "A wide horizontal arrangement built from calm bands of light, softly offset vertical traces and shallow relief-like intervals. The composition should read first as an abstract atmospheric panel, with a strong sense of open horizon and suspended stillness. Use asymmetry and generous negative space to create a premium domestic presence suitable for a Frame television.",
+        "bird_integration": "All seven observed birds are to be incorporated as refined, recognisable motifs embedded within the larger language of incised line, translucent silhouette and tonal interruption. Their forms should appear as discoveries within the surface rather than subjects placed on display, allowing species character to register through proportion and gesture without becoming anecdotal. The overall strategy is to make the birds part of the artwork\u2019s texture, cadence and quiet intelligence.",
+        "materials": "Digitally composed to evoke salt-glazed ceramic, frosted glass, mineral pigment wash, pale lime plaster, engraved maple block, weathered oak and translucent photographic emulsion. Include subtle surface grain, glaze pooling, rubbed edges and shallow relief shadows for depth on screen.",
+        "visual_focus": "The viewer should first be drawn to a broad passage of cool pearlescent light moving across layered mineral texture, where translucent geometry and shallow relief create a calm sense of depth before any representational detail is noticed.",
+        "avoid": [
+          "literal coastal scenery",
+          "wildlife-calendar realism",
+          "birds as the main focal point",
+          "dramatic hunting or predatory narrative",
+          "crowded illustrative composition",
+          "obvious summer clich\u00e9s",
+          "cute decorative bird patterning",
+          "bright postcard colour",
+          "imitating any living artist",
+          "harbour, beach or lighthouse motifs"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "no",
+        "style": "no_mount",
+        "style_name": "No Mount",
+        "decision_reason": "Samsung Frame full-screen mode.",
+        "analysis": {
+          "edge_luminance": 177.06,
+          "centre_luminance": 196.45,
+          "edge_variation": 12.88,
+          "edge_centre_difference": 19.39,
+          "average_saturation": 42.58,
+          "edge_red": 181.49,
+          "edge_green": 178.38,
+          "edge_blue": 150.9
+        },
+        "mount_width": 0,
+        "output_size": [
+          1920,
+          1080
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Kingfisher, Barn Owl, Bullfinch, Goldcrest, Treecreeper, Long-tailed Tit and Great Spotted Woodpecker. Its atmosphere is still, lucid, refined and quietly joyful, with the sensation of cool noon light passing across a hand-finished surface.",
+        "collection": "Midday Edition \u2014 Quiet Northern Radiance",
+        "composition": "A wide horizontal arrangement built from calm bands of light, softly offset vertical traces and shallow relief-like intervals. The composition should read first as an abstract atmospheric panel, with a strong sense of open horizon and suspended stillness. Use asymmetry and generous negative space to create a premium domestic presence suitable for a Frame television.",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-26"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-13-morning",
+      "collection": "birdcanvas",
+      "title": "Morning Exhibition \u2014 2026-07-13",
+      "observation_date": "2026-07-13",
+      "created_at": "2026-07-18T17:24:48+00:00",
+      "updated_at": "2026-07-18T17:24:48+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-13-morning/artwork.png",
+      "image_size_bytes": 3268945,
+      "species": [
+        "Bullfinch",
+        "Goldfinch",
+        "Long-tailed Tit",
+        "Treecreeper",
+        "Nuthatch",
+        "Goldcrest",
+        "Great Spotted Woodpecker"
+      ],
+      "season": "",
+      "style": "A contemporary layered-paper and mineral-pigment aesthetic: flattened bird silhouettes, refined cut edges, translucent washes, fine bark-like scoring and small jewel-toned accents. Let the birds feel recognisable through posture, colour blocks and distinctive markings rather than detailed naturalism.",
+      "palette": "Sea-glass green, pale lichen, warm sandstone, weathered cream, soft charcoal, muted rose, bullfinch coral, goldcrest yellow, goldfinch ochre-gold, with tiny notes of nuthatch blue-grey and woodpecker red. Overall light should feel cool, northern and morning-clear.",
+      "mood": "Delicate, composed and quietly joyful, with the feeling of birds glimpsed in a sheltered green place just after dawn. Calm rather than busy; intimate rather than scenic.",
+      "creative_collection": "Morning edition \u2014 a quiet woodland-chamber piece shaped by cool North Sea light and the soft clarity of an early summer day.",
+      "creative_brief": {
+        "collection": "Morning edition \u2014 a quiet woodland-chamber piece shaped by cool North Sea light and the soft clarity of an early summer day.",
+        "mood": "Delicate, composed and quietly joyful, with the feeling of birds glimpsed in a sheltered green place just after dawn. Calm rather than busy; intimate rather than scenic.",
+        "visual_language": "A contemporary layered-paper and mineral-pigment aesthetic: flattened bird silhouettes, refined cut edges, translucent washes, fine bark-like scoring and small jewel-toned accents. Let the birds feel recognisable through posture, colour blocks and distinctive markings rather than detailed naturalism.",
+        "palette": "Sea-glass green, pale lichen, warm sandstone, weathered cream, soft charcoal, muted rose, bullfinch coral, goldcrest yellow, goldfinch ochre-gold, with tiny notes of nuthatch blue-grey and woodpecker red. Overall light should feel cool, northern and morning-clear.",
+        "composition": "Portrait format with a slender vertical structure suggesting a tree trunk or folded wooden screen slightly off-centre. Place the Bullfinch as the calm visual anchor in the lower-middle, rounded and still. Let the Goldcrest appear as a tiny luminous mark near the upper third, and the Treecreeper climb in a narrow vertical rhythm along the textured edge. Other birds should orbit as small, balanced presences across fine branch-lines and negative space, creating a gentle upward movement rather than a literal woodland scene.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldcrest",
+          "Treecreeper"
+        ],
+        "character_birds": [
+          "Goldfinch",
+          "Long-tailed Tit",
+          "Nuthatch",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [],
+        "avoid": [
+          "literal coastal scenery",
+          "wildlife-calendar realism",
+          "crowded branch arrangements",
+          "dramatic action poses",
+          "bright tropical colour saturation",
+          "obvious summer clich\u00e9s",
+          "photographic bark detail",
+          "cute cartoon styling"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "black",
+        "style": "black_mount",
+        "style_name": "Black Mount",
+        "decision_reason": "A black mount gives the strongest restrained contrast with the artwork edge.",
+        "analysis": {
+          "edge_luminance": 155.16,
+          "centre_luminance": 152.97,
+          "edge_variation": 16.03,
+          "edge_centre_difference": 2.18,
+          "average_saturation": 61.53,
+          "edge_red": 136.86,
+          "edge_green": 163.13,
+          "edge_blue": 130.05
+        },
+        "mount_width": 78,
+        "output_size": [
+          1200,
+          1800
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Bullfinch, Goldfinch, Long-tailed Tit, Treecreeper, Nuthatch, Goldcrest and Great Spotted Woodpecker. The composition gives particular prominence to Bullfinch, Goldcrest, Treecreeper. Its atmosphere is delicate, composed and quietly joyful, with the feeling of birds glimpsed in a sheltered green place just after dawn. calm rather than busy; intimate rather than scenic.",
+        "collection": "Morning edition \u2014 a quiet woodland-chamber piece shaped by cool North Sea light and the soft clarity of an early summer day.",
+        "composition": "Portrait format with a slender vertical structure suggesting a tree trunk or folded wooden screen slightly off-centre. Place the Bullfinch as the calm visual anchor in the lower-middle, rounded and still. Let the Goldcrest appear as a tiny luminous mark near the upper third, and the Treecreeper climb in a narrow vertical rhythm along the textured edge. Other birds should orbit as small, balanced presences across fine branch-lines and negative space, creating a gentle upward movement rather than a literal woodland scene.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldcrest",
+          "Treecreeper"
+        ],
+        "character_birds": [
+          "Goldfinch",
+          "Long-tailed Tit",
+          "Nuthatch",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-13"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-13",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-13",
+      "observation_date": "2026-07-13",
+      "created_at": "2026-07-13T10:21:24+00:00",
+      "updated_at": "2026-07-13T10:21:24+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-13/artwork.png",
+      "image_size_bytes": 3140430,
+      "species": [
+        "Bullfinch",
+        "Goldfinch",
+        "Long-tailed Tit",
+        "Treecreeper",
+        "Nuthatch",
+        "Goldcrest",
+        "Great Spotted Woodpecker"
+      ],
+      "season": "",
+      "style": "A premium contemporary portrait artwork built from elegant vertical layers: slender bark-like forms, translucent washes, fine etched lines and soft blocks of sea-glass colour. Let the birds feel recognisable but slightly distilled, as if composed from cut paper, mineral pigment and weathered wood grain rather than painted literally. Aim for delicacy, rhythm and negative space over detail.",
+      "palette": "Cool summer light: pale celadon, chalky blue, sea-glass green, warm sandstone, soft driftwood grey and muted cream, lifted by precise accents of bullfinch rose, goldfinch red and yellow, goldcrest amber, nuthatch blue-grey and woodpecker crimson.",
+      "mood": "Quietly joyful, poised and luminous, with the feeling of a sheltered summer morning after a cool night by the sea.",
+      "creative_collection": "Salt-Air Arboretum",
+      "creative_brief": {
+        "collection": "Salt-Air Arboretum",
+        "mood": "Quietly joyful, poised and luminous, with the feeling of a sheltered summer morning after a cool night by the sea.",
+        "visual_language": "A premium contemporary portrait artwork built from elegant vertical layers: slender bark-like forms, translucent washes, fine etched lines and soft blocks of sea-glass colour. Let the birds feel recognisable but slightly distilled, as if composed from cut paper, mineral pigment and weathered wood grain rather than painted literally. Aim for delicacy, rhythm and negative space over detail.",
+        "palette": "Cool summer light: pale celadon, chalky blue, sea-glass green, warm sandstone, soft driftwood grey and muted cream, lifted by precise accents of bullfinch rose, goldfinch red and yellow, goldcrest amber, nuthatch blue-grey and woodpecker crimson.",
+        "composition": "Portrait format with a calm upward movement. Create an abstract tree-column rising through the centre, more like a weathered harbour post crossed with woodland bark than a literal trunk. Place the Bullfinch and Goldfinch as the main colour notes in the upper and mid sections, balanced by the tiny Goldcrest as a glowing jewel near the top. Let the other birds move around the structure in quieter gestures: creeping, clinging, tilting and flicking through the vertical space. Leave generous pale air around them, suggesting open northern light without depicting the coast.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldfinch",
+          "Goldcrest"
+        ],
+        "character_birds": [
+          "Long-tailed Tit",
+          "Treecreeper",
+          "Nuthatch",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [],
+        "avoid": [
+          "literal seaside scenery",
+          "busy woodland realism",
+          "wildlife-calendar composition",
+          "overly bright tropical colour",
+          "dramatic action poses",
+          "photographic feather detail",
+          "cute cartoon styling",
+          "obvious summer clich\u00e9s"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "black",
+        "style": "black_mount",
+        "style_name": "Black Mount",
+        "decision_reason": "The artwork has light outer edges, so a black mount gives clean separation.",
+        "analysis": {
+          "edge_luminance": 195.85,
+          "centre_luminance": 166.58,
+          "edge_variation": 25.38,
+          "edge_centre_difference": 29.27,
+          "average_saturation": 58.75,
+          "edge_red": 200.22,
+          "edge_green": 198.02,
+          "edge_blue": 161.55
+        },
+        "mount_width": 78,
+        "output_size": [
+          1200,
+          1800
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Bullfinch, Goldfinch, Long-tailed Tit, Treecreeper, Nuthatch, Goldcrest and Great Spotted Woodpecker. The composition gives particular prominence to Bullfinch, Goldfinch, Goldcrest. Its atmosphere is quietly joyful, poised and luminous, with the feeling of a sheltered summer morning after a cool night by the sea.",
+        "collection": "Salt-Air Arboretum",
+        "composition": "Portrait format with a calm upward movement. Create an abstract tree-column rising through the centre, more like a weathered harbour post crossed with woodland bark than a literal trunk. Place the Bullfinch and Goldfinch as the main colour notes in the upper and mid sections, balanced by the tiny Goldcrest as a glowing jewel near the top. Let the other birds move around the structure in quieter gestures: creeping, clinging, tilting and flicking through the vertical space. Leave generous pale air around them, suggesting open northern light without depicting the coast.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldfinch",
+          "Goldcrest"
+        ],
+        "character_birds": [
+          "Long-tailed Tit",
+          "Treecreeper",
+          "Nuthatch",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-13"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
+    {
+      "id": "birdcanvas-2026-07-12",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-12",
+      "observation_date": "2026-07-12",
+      "created_at": "2026-07-12T17:02:02+00:00",
+      "updated_at": "2026-07-12T20:40:09+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-12/artwork.png",
+      "image_size_bytes": 2997864,
+      "species": [
+        "Goldfinch",
+        "Bullfinch",
+        "Long-tailed Tit",
+        "European Robin",
+        "Blue Tit",
+        "Great Spotted Woodpecker",
+        "Blackbird"
+      ],
+      "season": "",
+      "style": "A contemporary portrait-format arrangement using layered translucent shapes, soft-edged paper-cut silhouettes, and fine linear details. Let the birds feel recognisable through posture, colour accents and proportion, but avoid literal naturalism. Introduce subtle salt-worn textures, pale washed surfaces and faint weathered-grain marks, as if the image has been built from sea glass, old paint and morning air.",
+      "palette": "Sea-glass green, pale sandstone, chalk white, soft pewter blue, muted shell pink, warm buff, charcoal brown, with precise accents of bullfinch rose, goldfinch red and yellow, blue tit blue, and robin ember-orange. Keep saturation controlled and premium, allowing colour to glow in small areas rather than dominate.",
+      "mood": "Quietly joyful, airy and composed, with a soft sense of early summer brightness filtered through cool northern coastal light. The feeling should be delicate rather than sweet, refined rather than decorative.",
+      "creative_collection": "BirdCanvas North Shields \u2014 Summer Morning",
+      "creative_brief": {
+        "collection": "BirdCanvas North Shields \u2014 Summer Morning",
+        "mood": "Quietly joyful, airy and composed, with a soft sense of early summer brightness filtered through cool northern coastal light. The feeling should be delicate rather than sweet, refined rather than decorative.",
+        "visual_language": "A contemporary portrait-format arrangement using layered translucent shapes, soft-edged paper-cut silhouettes, and fine linear details. Let the birds feel recognisable through posture, colour accents and proportion, but avoid literal naturalism. Introduce subtle salt-worn textures, pale washed surfaces and faint weathered-grain marks, as if the image has been built from sea glass, old paint and morning air.",
+        "palette": "Sea-glass green, pale sandstone, chalk white, soft pewter blue, muted shell pink, warm buff, charcoal brown, with precise accents of bullfinch rose, goldfinch red and yellow, blue tit blue, and robin ember-orange. Keep saturation controlled and premium, allowing colour to glow in small areas rather than dominate.",
+        "composition": "A tall, calm vertical composition with an implied open horizon low in the picture, not a landscape. Place the Bullfinch and Goldfinch as the main colour anchors in the upper and middle thirds, balanced by the delicate arc of a Long-tailed Tit. Use slender abstract branch forms like weathered lines rather than botanical detail. Let the smaller character birds punctuate the negative space like notes in a quiet morning arrangement, with the Blackbird grounding the base in a dark, elegant shape.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldfinch",
+          "Long-tailed Tit"
+        ],
+        "character_birds": [
+          "European Robin",
+          "Blue Tit",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [
+          "Blackbird"
+        ],
+        "avoid": [
+          "literal seaside scenery",
+          "wildlife-calendar realism",
+          "busy woodland illustration",
+          "overly cute garden-bird styling",
+          "bright tropical colour",
+          "dramatic action poses",
+          "photographic feathers",
+          "summer clich\u00e9s such as flowers, butterflies or blazing sun"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "black_mount",
+        "applied_mount": "black",
+        "style": "black_mount",
+        "style_name": "Black Mount",
+        "decision_reason": "The mount style was selected manually.",
+        "analysis": {
+          "edge_luminance": 220.24,
+          "centre_luminance": 193.22,
+          "edge_variation": 8.1,
+          "edge_centre_difference": 27.02,
+          "average_saturation": 42.9,
+          "edge_red": 227.51,
+          "edge_green": 220.77,
+          "edge_blue": 193.66
+        },
+        "mount_width": 78,
+        "output_size": [
+          1200,
+          1800
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by Goldfinch, Bullfinch, Long-tailed Tit, European Robin, Blue Tit, Great Spotted Woodpecker and Blackbird. The composition gives particular prominence to Bullfinch, Goldfinch, Long-tailed Tit. Its atmosphere is quietly joyful, airy and composed, with a soft sense of early summer brightness filtered through cool northern coastal light. the feeling should be delicate rather than sweet, refined rather than decorative.",
+        "collection": "BirdCanvas North Shields \u2014 Summer Morning",
+        "composition": "A tall, calm vertical composition with an implied open horizon low in the picture, not a landscape. Place the Bullfinch and Goldfinch as the main colour anchors in the upper and middle thirds, balanced by the delicate arc of a Long-tailed Tit. Use slender abstract branch forms like weathered lines rather than botanical detail. Let the smaller character birds punctuate the negative space like notes in a quiet morning arrangement, with the Blackbird grounding the base in a dark, elegant shape.",
+        "hero_birds": [
+          "Bullfinch",
+          "Goldfinch",
+          "Long-tailed Tit"
+        ],
+        "character_birds": [
+          "European Robin",
+          "Blue Tit",
+          "Great Spotted Woodpecker"
+        ],
+        "supporting_birds": [
+          "Blackbird"
+        ],
+        "visitor_count": 7,
+        "observation_date": "2026-07-12"
+      },
+      "provider": "birdcanvas",
+      "orientation": ""
+    },
+    {
+      "id": "birdcanvas-2026-07-09",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-09",
+      "observation_date": "2026-07-09",
+      "created_at": "2026-07-12T16:40:32+00:00",
+      "updated_at": "2026-07-12T16:40:32+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-09/artwork.png",
+      "image_size_bytes": 3055091,
+      "species": [],
+      "season": "",
+      "style": "",
+      "palette": "",
+      "mood": "",
+      "creative_collection": "",
+      "creative_brief": {
+        "note": "Migrated from output/final_scene.png"
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "black",
+        "style": "black_mount",
+        "style_name": "Black Mount",
+        "decision_reason": "The artwork has light outer edges, so a black mount gives clean separation.",
+        "analysis": {
+          "edge_luminance": 220.43,
+          "centre_luminance": 199.38,
+          "edge_variation": 13.28,
+          "edge_centre_difference": 21.04,
+          "average_saturation": 47.94,
+          "edge_red": 227.06,
+          "edge_green": 221.43,
+          "edge_blue": 190.91
+        },
+        "mount_width": 78,
+        "output_size": [
+          1200,
+          1800
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This early BirdCanvas artwork preserves a day in the garden, although the individual visitors were not recorded.",
+        "collection": "",
+        "composition": "",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 0,
+        "observation_date": "2026-07-09"
+      },
+      "provider": "birdcanvas",
+      "orientation": ""
+    }
+  ]
+}

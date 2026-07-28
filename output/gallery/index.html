@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GalleryOS Library</title>
+  <style>
+    :root { color-scheme: dark; font-family: Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #151515; color: #f5f5f5; }
+    main { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 60px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+    h1, h2, h3, p { margin-top: 0; }
+    .muted { color: #aaa; }
+    .collections { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+    .chip { padding: 8px 12px; border: 1px solid #444; border-radius: 999px; background: #222; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+    .card { background: #222; border: 1px solid #383838; border-radius: 14px; overflow: hidden; }
+    .card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; display: block; background: #0d0d0d; }
+    .card-body { padding: 14px; }
+    .species { color: #bcbcbc; font-size: 0.9rem; line-height: 1.4; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>GalleryOS Library</h1>
+        <p class="muted">Read-only artwork library for Phase 2.1</p>
+      </div>
+      <a href="../">Open display</a>
+    </header>
+    <section id="collections" class="collections"></section>
+    <section id="artworks" class="grid"></section>
+  </main>
+  <script>
+    async function loadLibrary() {
+      const response = await fetch('library.json', { cache: 'no-store' });
+      const library = await response.json();
+
+      const collections = document.querySelector('#collections');
+      const artworks = document.querySelector('#artworks');
+
+      for (const collection of library.collections) {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = `${collection.title} (${collection.count})`;
+        collections.append(chip);
+      }
+
+      for (const artwork of library.artworks) {
+        if (artwork.hidden) continue;
+
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const image = document.createElement('img');
+        image.src = artwork.image_url;
+        image.alt = artwork.title;
+
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const title = document.createElement('h3');
+        title.textContent = artwork.title;
+
+        const date = document.createElement('p');
+        date.className = 'muted';
+        date.textContent = artwork.observation_date || artwork.created_at;
+
+        const species = document.createElement('p');
+        species.className = 'species';
+        species.textContent = artwork.species.length
+          ? artwork.species.join(' · ')
+          : 'No species metadata';
+
+        body.append(title, date, species);
+        card.append(image, body);
+        artworks.append(card);
+      }
+    }
+
+    loadLibrary().catch(error => {
+      document.querySelector('#artworks').textContent = 'Gallery library could not be loaded.';
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Local environments
+.venv/
+venv/
+.env
+
+# Editor and OS files
+.vscode/
+.DS_Store
+
+# Generated release packages
+GalleryOS-Sprint-*.zip
+BirdCanvas-current.zip
+
+# Runtime-generated files
+runtime/logs/*.log
+backups/*.zip

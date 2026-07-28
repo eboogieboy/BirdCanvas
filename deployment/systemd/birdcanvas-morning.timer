@@ -1,0 +1,10 @@
+[Unit]
+Description=Generate the morning BirdCanvas artwork
+
+[Timer]
+OnCalendar=*-*-* 04:00:00 Europe/London
+Persistent=true
+Unit=birdcanvas-compose@morning.service
+
+[Install]
+WantedBy=timers.target

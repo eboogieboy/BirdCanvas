@@ -1,0 +1,10 @@
+[Unit]
+Description=Generate the midday BirdCanvas artwork
+
+[Timer]
+OnCalendar=*-*-* 12:00:00 Europe/London
+Persistent=true
+Unit=birdcanvas-compose@midday.service
+
+[Install]
+WantedBy=timers.target

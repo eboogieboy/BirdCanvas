@@ -1,0 +1,38 @@
+{
+  "id": "birdcanvas-2026-07-09",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-09",
+  "observation_date": "2026-07-09",
+  "created_at": "2026-07-12T16:40:32+00:00",
+  "image": "artwork.png",
+  "species": [],
+  "creative_brief": {
+    "note": "Migrated from output/final_scene.png"
+  },
+  "original_image": "original.png",
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "black",
+    "style": "black_mount",
+    "style_name": "Black Mount",
+    "decision_reason": "The artwork has light outer edges, so a black mount gives clean separation.",
+    "analysis": {
+      "edge_luminance": 220.43,
+      "centre_luminance": 199.38,
+      "edge_variation": 13.28,
+      "edge_centre_difference": 21.04,
+      "average_saturation": 47.94,
+      "edge_red": 227.06,
+      "edge_green": 221.43,
+      "edge_blue": 190.91
+    },
+    "mount_width": 78,
+    "output_size": [
+      1200,
+      1800
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  },
+  "schema_version": 1
+}

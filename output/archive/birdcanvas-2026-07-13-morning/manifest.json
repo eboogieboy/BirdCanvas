@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "birdcanvas-2026-07-13-morning",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Morning Exhibition \u2014 2026-07-13",
+  "observation_date": "2026-07-13",
+  "observation_window": "Previous calendar day",
+  "edition": "morning",
+  "created_at": "2026-07-18T17:24:48+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "Bullfinch",
+    "Goldfinch",
+    "Long-tailed Tit",
+    "Treecreeper",
+    "Nuthatch",
+    "Goldcrest",
+    "Great Spotted Woodpecker"
+  ],
+  "season": "",
+  "style": "A contemporary layered-paper and mineral-pigment aesthetic: flattened bird silhouettes, refined cut edges, translucent washes, fine bark-like scoring and small jewel-toned accents. Let the birds feel recognisable through posture, colour blocks and distinctive markings rather than detailed naturalism.",
+  "palette": "Sea-glass green, pale lichen, warm sandstone, weathered cream, soft charcoal, muted rose, bullfinch coral, goldcrest yellow, goldfinch ochre-gold, with tiny notes of nuthatch blue-grey and woodpecker red. Overall light should feel cool, northern and morning-clear.",
+  "mood": "Delicate, composed and quietly joyful, with the feeling of birds glimpsed in a sheltered green place just after dawn. Calm rather than busy; intimate rather than scenic.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "Morning edition \u2014 a quiet woodland-chamber piece shaped by cool North Sea light and the soft clarity of an early summer day.",
+    "mood": "Delicate, composed and quietly joyful, with the feeling of birds glimpsed in a sheltered green place just after dawn. Calm rather than busy; intimate rather than scenic.",
+    "visual_language": "A contemporary layered-paper and mineral-pigment aesthetic: flattened bird silhouettes, refined cut edges, translucent washes, fine bark-like scoring and small jewel-toned accents. Let the birds feel recognisable through posture, colour blocks and distinctive markings rather than detailed naturalism.",
+    "palette": "Sea-glass green, pale lichen, warm sandstone, weathered cream, soft charcoal, muted rose, bullfinch coral, goldcrest yellow, goldfinch ochre-gold, with tiny notes of nuthatch blue-grey and woodpecker red. Overall light should feel cool, northern and morning-clear.",
+    "composition": "Portrait format with a slender vertical structure suggesting a tree trunk or folded wooden screen slightly off-centre. Place the Bullfinch as the calm visual anchor in the lower-middle, rounded and still. Let the Goldcrest appear as a tiny luminous mark near the upper third, and the Treecreeper climb in a narrow vertical rhythm along the textured edge. Other birds should orbit as small, balanced presences across fine branch-lines and negative space, creating a gentle upward movement rather than a literal woodland scene.",
+    "hero_birds": [
+      "Bullfinch",
+      "Goldcrest",
+      "Treecreeper"
+    ],
+    "character_birds": [
+      "Goldfinch",
+      "Long-tailed Tit",
+      "Nuthatch",
+      "Great Spotted Woodpecker"
+    ],
+    "supporting_birds": [],
+    "avoid": [
+      "literal coastal scenery",
+      "wildlife-calendar realism",
+      "crowded branch arrangements",
+      "dramatic action poses",
+      "bright tropical colour saturation",
+      "obvious summer clich\u00e9s",
+      "photographic bark detail",
+      "cute cartoon styling"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "black",
+    "style": "black_mount",
+    "style_name": "Black Mount",
+    "decision_reason": "A black mount gives the strongest restrained contrast with the artwork edge.",
+    "analysis": {
+      "edge_luminance": 155.16,
+      "centre_luminance": 152.97,
+      "edge_variation": 16.03,
+      "edge_centre_difference": 2.18,
+      "average_saturation": 61.53,
+      "edge_red": 136.86,
+      "edge_green": 163.13,
+      "edge_blue": 130.05
+    },
+    "mount_width": 78,
+    "output_size": [
+      1200,
+      1800
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}

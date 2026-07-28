@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-28",
+  "source": "birdnet_live_phone",
+  "source_file": "BirdNET_Live_2026-07-28_07-23-33_#5.zip",
+  "confidence_threshold": 0.7,
+  "birds": [
+    "House Sparrow",
+    "Eurasian Blue Tit",
+    "Eurasian Collared Dove",
+    "European Goldfinch",
+    "Eurasian Tree Sparrow"
+  ],
+  "observations": [
+    {
+      "species": "House Sparrow",
+      "scientific_name": "Passer domesticus",
+      "confidence": 0.9363,
+      "detections": 1
+    },
+    {
+      "species": "Eurasian Blue Tit",
+      "scientific_name": "Cyanistes caeruleus",
+      "confidence": 0.8791,
+      "detections": 6
+    },
+    {
+      "species": "Eurasian Collared Dove",
+      "scientific_name": "Streptopelia decaocto",
+      "confidence": 0.8442,
+      "detections": 2
+    },
+    {
+      "species": "European Goldfinch",
+      "scientific_name": "Carduelis carduelis",
+      "confidence": 0.7936,
+      "detections": 1
+    },
+    {
+      "species": "Eurasian Tree Sparrow",
+      "scientific_name": "Passer montanus",
+      "confidence": 0.719,
+      "detections": 1
+    }
+  ],
+  "import_summary": {
+    "rows_read": 21,
+    "species_retained": 5,
+    "selections_file": "BirdNET_Live_2026-07-28_07-23-33_#5.selections.txt"
+  }
+}

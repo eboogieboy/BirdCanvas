@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "birdcanvas-2026-07-28-daily",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-28",
+  "observation_date": "2026-07-28",
+  "observation_window": "",
+  "edition": "daily",
+  "created_at": "2026-07-28T07:46:23+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "House Sparrow",
+    "Eurasian Blue Tit",
+    "Eurasian Collared Dove",
+    "European Goldfinch",
+    "Eurasian Tree Sparrow"
+  ],
+  "season": "",
+  "style": "Layered translucent rectangles, cyanotype exposure fields, reserved white bird silhouettes, ghosted botanical shadows, pin-prick alignment marks, specimen labels, pale pencil notes, torn vellum edges, soft water blooms and fine granular chemistry. The birds should be formed through negative space, softened outlines and selective detail rather than painted realism. Geometry should remain composed and gallery-like, with staggered sheets creating rhythm across the landscape format.",
+  "palette": "Deep Prussian blue, washed indigo, sea-glass green, chalk white, pale vellum grey, weathered timber beige, faint pollen ochre, blue-black pencil and occasional restrained accents of goldfinch red and yellow, blue tit blue and yellow, kept minimal and sun-faded.",
+  "mood": "Quiet, luminous, observational and gently summery; a calm field-science reverie with the delicacy of preserved daylight.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "Daily BirdCanvas \u2014 North Shields Summer Field Archive",
+    "style": "Prussian Vellum Hedgerow Ledger",
+    "style_guidance": "Develop Hedge Solargram Index as a refined contemporary archive of summer hedge observation: five translucent cyanotype specimen sheets layered across a landscape-format composition, each sheet holding a different bird as a sun-reserved presence among pressed grasses, chickweed, seed heads and pale field markings. The style should feel botanical-photographic rather than illustrative, with the birds emerging through exposure, shadow, registration and absence. Maintain the cool Prussian blue chemistry of cyanotype, softened by sea-glass greens, chalk whites, weathered grey and faint pollen warmth. The result should be calm, premium and spacious, like a set of fragile field records displayed as one resolved artwork.",
+    "curator_notes": "This exhibition should treat the day\u2019s birds as discoveries within a summer hedge rather than portraits posed for admiration. The House Sparrow, Eurasian Blue Tit, Eurasian Collared Dove, European Goldfinch and Eurasian Tree Sparrow are to be clearly recognisable, but translated into the language of sunlight, vellum, plant shadow and field indexing. The Collared Dove may provide the largest quiet void, a soft pale form anchoring the archive, while the Goldfinch and Blue Tit offer the sharpest points of recognition through small, precise silhouettes and restrained hints of colour. The sparrows should sit lower in the work, close to plant litter and hedge-base textures, giving the piece honesty and intimacy. Let North Shields enter only through atmosphere: cool northern daylight, salt-worn restraint, open horizontal breathing space and muted maritime blues, never through literal seaside imagery.",
+    "mood": "Quiet, luminous, observational and gently summery; a calm field-science reverie with the delicacy of preserved daylight.",
+    "visual_language": "Layered translucent rectangles, cyanotype exposure fields, reserved white bird silhouettes, ghosted botanical shadows, pin-prick alignment marks, specimen labels, pale pencil notes, torn vellum edges, soft water blooms and fine granular chemistry. The birds should be formed through negative space, softened outlines and selective detail rather than painted realism. Geometry should remain composed and gallery-like, with staggered sheets creating rhythm across the landscape format.",
+    "palette": "Deep Prussian blue, washed indigo, sea-glass green, chalk white, pale vellum grey, weathered timber beige, faint pollen ochre, blue-black pencil and occasional restrained accents of goldfinch red and yellow, blue tit blue and yellow, kept minimal and sun-faded.",
+    "composition": "A landscape-format arrangement of five oversized specimen sheets staggered from left to right like an opened field archive. The sheets overlap slightly, creating translucent blue intersections and quiet depth. The broadest pale exposure belongs to the Collared Dove near the upper centre-left, creating a calm central void. The Goldfinch appears smaller and sharper near seed heads in the upper right quadrant; the Blue Tit sits near a crisp tangle of chickweed and grass awns, readable at normal viewing distance. The House Sparrow and Eurasian Tree Sparrow occupy the lower margins, close to hedge-base textures, their silhouettes partially intersecting with plant shadows and annotation lines. Leave generous open space so the artwork breathes like cool summer light on vellum.",
+    "bird_integration": "Represent every observed bird as a recognisable cyanotype-reserved presence within the archive. The Eurasian Blue Tit should be immediately identifiable through its compact body, rounded head, fine beak, blue cap suggestion and small yellow wash held inside the otherwise white silhouette. The European Goldfinch should be crisp and delicate, with a slender beak, wing bar, and minimal sun-faded red and yellow accents near seed clusters. The Eurasian Collared Dove should appear as the largest calm pale void, with a soft dove profile and a faint charcoal-blue collar mark. The House Sparrow should be placed low in the composition with a sturdy, familiar silhouette, short beak, warm muted brown pencil hatching and hedge-base proximity. The Eurasian Tree Sparrow should sit near it but remain distinct through a neater rounded head, chestnut cap indication and small dark cheek spot. All birds must feel embedded in the cyanotype process: partly exposed, partly remembered, surrounded by plant shadows, tape marks and field annotations.",
+    "materials": "Ferric ammonium citrate and potassium ferricyanide chemistry on translucent blueprint vellum, layered archival papers, pressed chickweed, grass awns, seed heads, dried pollen dust, pale graphite, blue-black pencil, archival specimen tape, pin-prick registration marks, hand-washed water stains, salt-softened paper edges and faintly abraded matte surface textures.",
+    "visual_focus": "The viewer should first be drawn to the luminous overlap of translucent Prussian-blue specimen sheets and the broad chalk-white exposure void at the centre, where layered vellum, water stains and plant shadows create a quiet field of light before the individual forms resolve.",
+    "avoid": [
+      "literal seaside scenery",
+      "wildlife-calendar realism",
+      "crowded botanical decoration",
+      "bright summer clich\u00e9s",
+      "overly cute bird characterisation",
+      "heavy black outlines",
+      "dramatic skies or storm effects",
+      "making the common birds feel hidden or apologetic",
+      "imitating any living artist",
+      "turning the cyanotype language into a simple blue filter"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "no",
+    "style": "no_mount",
+    "style_name": "No Mount",
+    "decision_reason": "Samsung Frame full-screen mode.",
+    "analysis": {
+      "edge_luminance": 188.42,
+      "centre_luminance": 93.71,
+      "edge_variation": 42.36,
+      "edge_centre_difference": 94.71,
+      "average_saturation": 90.71,
+      "edge_red": 186.33,
+      "edge_green": 189.79,
+      "edge_blue": 180.96
+    },
+    "mount_width": 0,
+    "output_size": [
+      1920,
+      1080
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}

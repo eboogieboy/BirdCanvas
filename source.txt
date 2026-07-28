@@ -1,0 +1,706 @@
+do
+  echo
+  echo "===== $file ====="
+  cat "$file"
+done
+
+===== code/gallery_library.py =====
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+OUTPUT_DIR = Path("output")
+ARCHIVE_DIR = OUTPUT_DIR / "archive"
+CURRENT_MANIFEST = OUTPUT_DIR / "current" / "manifest.json"
+LIBRARY_DIR = OUTPUT_DIR / "gallery"
+LIBRARY_FILE = LIBRARY_DIR / "library.json"
+
+
+def _read_json(path: Path) -> dict[str, Any] | None:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str, Any] | None:
+    artwork_id = str(manifest.get("id", "")).strip()
+    image_name = str(manifest.get("image", "")).strip()
+    created_at = str(manifest.get("created_at", "")).strip()
+    image_path = ARCHIVE_DIR / folder_name / image_name
+
+    if not artwork_id or not image_name or not created_at or not image_path.is_file():
+        return None
+
+    species = manifest.get("species", [])
+    if not isinstance(species, list):
+        species = []
+
+    creative_brief = manifest.get("creative_brief", {})
+    if not isinstance(creative_brief, dict):
+        creative_brief = {}
+
+    return {
+        "id": artwork_id,
+        "collection": str(manifest.get("collection", "birdcanvas")),
+        "title": str(manifest.get("title", artwork_id)),
+        "observation_date": str(manifest.get("observation_date", "")),
+        "created_at": created_at,
+        "updated_at": str(manifest.get("updated_at", created_at)),
+        "image": image_name,
+        "image_url": f"../archive/{folder_name}/{image_name}",
+        "species": [str(item) for item in species],
+        "season": str(manifest.get("season", "")),
+        "style": str(manifest.get("style", creative_brief.get("visual_language", ""))),
+        "palette": str(manifest.get("palette", creative_brief.get("palette", ""))),
+        "mood": str(manifest.get("mood", creative_brief.get("mood", ""))),
+        "creative_collection": str(creative_brief.get("collection", "")),
+        "creative_brief": creative_brief,
+        "source": str(manifest.get("source", "birdcanvas")),
+        "favourite": bool(manifest.get("favourite", False)),
+        "hidden": bool(manifest.get("hidden", False)),
+        "presentation": manifest.get("presentation", {}) if isinstance(manifest.get("presentation", {}), dict) else {},
+    }
+
+
+def build_library() -> dict[str, Any]:
+    artworks: list[dict[str, Any]] = []
+
+    if ARCHIVE_DIR.exists():
+        for manifest_path in ARCHIVE_DIR.glob("*/manifest.json"):
+            manifest = _read_json(manifest_path)
+            if not manifest:
+                continue
+            normalised = _normalise_manifest(manifest, manifest_path.parent.name)
+            if normalised:
+                artworks.append(normalised)
+
+    artworks.sort(key=lambda item: item.get("created_at", ""), reverse=True)
+
+    collections: dict[str, dict[str, Any]] = {}
+    for artwork in artworks:
+        collection_id = artwork["collection"]
+        collection = collections.setdefault(
+            collection_id,
+            {
+                "id": collection_id,
+                "title": "BirdCanvas" if collection_id == "birdcanvas" else collection_id.replace("-", " ").title(),
+                "count": 0,
+                "latest_created_at": artwork["created_at"],
+            },
+        )
+        collection["count"] += 1
+
+    current = _read_json(CURRENT_MANIFEST) if CURRENT_MANIFEST.exists() else None
+    payload = {
+        "version": 2,
+        "current_artwork_id": current.get("id") if current else None,
+        "collections": list(collections.values()),
+        "artworks": artworks,
+    }
+
+    LIBRARY_DIR.mkdir(parents=True, exist_ok=True)
+    LIBRARY_FILE.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return payload
+
+
+if __name__ == "__main__":
+    library = build_library()
+    print(f"✓ Gallery library built with {len(library['artworks'])} artwork(s)")
+    print("✓ Saved to output/gallery/library.json")
+
+
+def update_artwork_metadata(artwork_id: str, *, title: str | None = None, favourite: bool | None = None, hidden: bool | None = None) -> dict[str, Any]:
+    """Update editable metadata for any archived artwork."""
+    manifest_path = None
+    for candidate in ARCHIVE_DIR.glob("*/manifest.json"):
+        manifest = _read_json(candidate)
+        if manifest and str(manifest.get("id", "")) == artwork_id:
+            manifest_path = candidate
+            break
+
+    if manifest_path is None:
+        raise ValueError("Artwork was not found.")
+
+    manifest = _read_json(manifest_path)
+    if manifest is None:
+        raise ValueError("The artwork manifest is damaged.")
+
+    if title is not None:
+        cleaned = str(title).strip()
+        if not cleaned:
+            raise ValueError("Title cannot be empty.")
+        manifest["title"] = cleaned[:120]
+    if favourite is not None:
+        manifest["favourite"] = bool(favourite)
+    if hidden is not None:
+        manifest["hidden"] = bool(hidden)
+
+    from datetime import datetime
+    manifest["updated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    build_library()
+    normalised = _normalise_manifest(manifest, manifest_path.parent.name)
+    if normalised is None:
+        raise ValueError("The updated artwork is invalid.")
+    return normalised
+
+===== code/server.py =====
+from __future__ import annotations
+
+import cgi
+import http.server
+import json
+import socketserver
+from http import HTTPStatus
+from pathlib import Path
+from urllib.parse import urlparse
+
+from custom_artwork import MAX_UPLOAD_BYTES, delete_custom_artwork, save_custom_artwork, update_custom_artwork
+from display_controller import (
+    cancel_override,
+    create_schedule,
+    delete_schedule,
+    list_schedules,
+    remove_artwork_references,
+    resolve_display,
+    set_temporary_override,
+)
+from gallery_library import build_library, update_artwork_metadata
+from presentation_manager import apply_presentation
+from display_settings import load_display_settings, save_display_settings
+from reliability import create_backup, create_diagnostics, health_report
+
+PORT = 8000
+OUTPUT_FOLDER = Path("output")
+
+
+class ReusableTCPServer(socketserver.ThreadingTCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=str(OUTPUT_FOLDER), **kwargs)
+
+    def do_GET(self) -> None:
+        route = urlparse(self.path).path
+        if route == "/api/display":
+            self.send_json(resolve_display())
+            return
+        if route == "/api/schedules":
+            self.send_json({"schedules": list_schedules()})
+            return
+        if route == "/api/library":
+            self.send_json(build_library())
+            return
+        if route == "/api/display/settings":
+            self.send_json(load_display_settings())
+            return
+        if route == "/api/health":
+            self.send_json(health_report(resolve_display()))
+            return
+        if route.startswith("/downloads/"):
+            filename = route.removeprefix("/downloads/")
+            path = Path("backups") / filename
+            if not path.exists() or not path.is_file():
+                self.send_error(404)
+                return
+            body = path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Content-Disposition", f'attachment; filename="{path.name}"')
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        super().do_GET()
+
+    def do_POST(self) -> None:
+        route = urlparse(self.path).path
+        try:
+            if route == "/api/backup":
+                path = create_backup()
+                self.send_json({"ok": True, "download_url": f"/downloads/{path.name}"})
+                return
+            if route == "/api/diagnostics":
+                path = create_diagnostics(resolve_display())
+                self.send_json({"ok": True, "download_url": f"/downloads/{path.name}"})
+                return
+            if route == "/api/display/settings":
+                payload = self.read_json_body()
+                self.send_json({"ok": True, "settings": save_display_settings(payload)})
+                return
+            if route == "/api/override":
+                payload = self.read_json_body()
+                self.send_json(set_temporary_override(str(payload.get("artwork_id", "")), int(payload.get("duration_minutes", 0))))
+                return
+            if route == "/api/override/cancel":
+                self.send_json(cancel_override())
+                return
+            if route == "/api/upload":
+                self.handle_upload()
+                return
+            if route == "/api/schedules":
+                payload = self.read_json_body()
+                schedule = create_schedule(str(payload.get("artwork_id", "")), str(payload.get("starts_at", "")), str(payload.get("ends_at", "")))
+                self.send_json({"ok": True, "schedule": schedule}, HTTPStatus.CREATED)
+                return
+            if route == "/api/schedules/delete":
+                payload = self.read_json_body()
+                delete_schedule(str(payload.get("schedule_id", "")))
+                self.send_json({"ok": True})
+                return
+            if route in {"/api/artwork/update", "/api/custom/update"}:
+                payload = self.read_json_body()
+                manifest = update_artwork_metadata(
+                    str(payload.get("artwork_id", "")),
+                    title=payload.get("title") if "title" in payload else None,
+                    favourite=payload.get("favourite") if "favourite" in payload else None,
+                    hidden=payload.get("hidden") if "hidden" in payload else None,
+                )
+                self.send_json({"ok": True, "artwork": manifest})
+                return
+            if route == "/api/artwork/presentation":
+                payload = self.read_json_body()
+                result = apply_presentation(
+                    str(payload.get("artwork_id", "")),
+                    str(payload.get("mode", "auto")),
+                )
+                self.send_json({"ok": True, **result})
+                return
+            if route == "/api/custom/delete":
+                payload = self.read_json_body()
+                artwork_id = str(payload.get("artwork_id", ""))
+                remove_artwork_references(artwork_id)
+                delete_custom_artwork(artwork_id)
+                self.send_json({"ok": True})
+                return
+        except (ValueError, TypeError, OSError) as error:
+            self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
+            return
+
+        self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
+
+    def handle_upload(self) -> None:
+        content_length = int(self.headers.get("Content-Length", "0"))
+        if content_length <= 0:
+            raise ValueError("No upload was received.")
+        if content_length > MAX_UPLOAD_BYTES + 1024 * 1024:
+            self.send_json({"error": "The upload is larger than the 20 MB limit."}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+            return
+        content_type = self.headers.get("Content-Type", "")
+        if not content_type.startswith("multipart/form-data"):
+            raise ValueError("Upload must use multipart form data.")
+
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={"REQUEST_METHOD": "POST", "CONTENT_TYPE": content_type, "CONTENT_LENGTH": str(content_length)},
+        )
+        image_field = form["image"] if "image" in form else None
+        if image_field is None or not getattr(image_field, "file", None):
+            raise ValueError("Choose an image to upload.")
+
+        manifest = save_custom_artwork(
+            file_stream=image_field.file,
+            filename=image_field.filename or "upload",
+            content_type=image_field.type or "",
+            title=form.getfirst("title", "Custom artwork"),
+        )
+        display = None
+        if form.getfirst("show_now", "false").lower() == "true":
+            display = set_temporary_override(manifest["id"], int(form.getfirst("duration_minutes", "0")))
+        self.send_json({"ok": True, "artwork": manifest, "display": display}, HTTPStatus.CREATED)
+
+    def read_json_body(self) -> dict:
+        length = int(self.headers.get("Content-Length", "0"))
+        try:
+            value = json.loads(self.rfile.read(length) or b"{}")
+        except json.JSONDecodeError as error:
+            raise ValueError("Invalid JSON request.") from error
+        if not isinstance(value, dict):
+            raise ValueError("Request must be a JSON object.")
+        return value
+
+    def send_json(self, value: dict, status: HTTPStatus = HTTPStatus.OK) -> None:
+        body = json.dumps(value).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+
+def start_server() -> None:
+    try:
+        with ReusableTCPServer(("", PORT), Handler) as httpd:
+            print("\nGalleryOS is running.")
+            print(f"Display: http://localhost:{PORT}")
+            print(f"Phone control: http://localhost:{PORT}/control/")
+            print(f"Library: http://localhost:{PORT}/gallery/\n")
+            print("Press Ctrl+C to stop.")
+            httpd.serve_forever()
+    except OSError as error:
+        if error.errno == 98:
+            print(f"\nGalleryOS server already appears to be running on port {PORT}.\n")
+        else:
+            raise
+
+
+if __name__ == "__main__":
+    start_server()
+
+===== output/gallery/index.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GalleryOS Library</title>
+  <style>
+    :root { color-scheme: dark; font-family: Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #151515; color: #f5f5f5; }
+    main { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 60px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+    h1, h2, h3, p { margin-top: 0; }
+    .muted { color: #aaa; }
+    .collections { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+    .chip { padding: 8px 12px; border: 1px solid #444; border-radius: 999px; background: #222; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+    .card { background: #222; border: 1px solid #383838; border-radius: 14px; overflow: hidden; }
+    .card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; display: block; background: #0d0d0d; }
+    .card-body { padding: 14px; }
+    .species { color: #bcbcbc; font-size: 0.9rem; line-height: 1.4; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>GalleryOS Library</h1>
+        <p class="muted">Read-only artwork library for Phase 2.1</p>
+      </div>
+      <a href="../">Open display</a>
+    </header>
+    <section id="collections" class="collections"></section>
+    <section id="artworks" class="grid"></section>
+  </main>
+  <script>
+    async function loadLibrary() {
+      const response = await fetch('library.json', { cache: 'no-store' });
+      const library = await response.json();
+
+      const collections = document.querySelector('#collections');
+      const artworks = document.querySelector('#artworks');
+
+      for (const collection of library.collections) {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = `${collection.title} (${collection.count})`;
+        collections.append(chip);
+      }
+
+      for (const artwork of library.artworks) {
+        if (artwork.hidden) continue;
+
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const image = document.createElement('img');
+        image.src = artwork.image_url;
+        image.alt = artwork.title;
+
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const title = document.createElement('h3');
+        title.textContent = artwork.title;
+
+        const date = document.createElement('p');
+        date.className = 'muted';
+        date.textContent = artwork.observation_date || artwork.created_at;
+
+        const species = document.createElement('p');
+        species.className = 'species';
+        species.textContent = artwork.species.length
+          ? artwork.species.join(' · ')
+          : 'No species metadata';
+
+        body.append(title, date, species);
+        card.append(image, body);
+        artworks.append(card);
+      }
+    }
+
+    loadLibrary().catch(error => {
+      document.querySelector('#artworks').textContent = 'Gallery library could not be loaded.';
+      console.error(error);
+    });
+  </script>
+</body>
+</html>
+
+===== output/control/index.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f2efe8">
+<title>Gallery</title>
+<style>
+:root{--paper:#f2efe8;--card:#fbfaf7;--ink:#1e2522;--muted:#6e746f;--line:#ddd8cf;--accent:#344b43;--soft:#e5e9e4;--danger:#8b3d3d;--shadow:0 12px 34px rgba(33,38,35,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{width:min(820px,100%);margin:0 auto;padding:env(safe-area-inset-top) 18px calc(96px + env(safe-area-inset-bottom))}.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 2px 14px}.brand{font:700 28px/1 Georgia,serif}.version{font-size:12px;color:var(--muted)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}.hero{position:relative;min-height:420px;background:#202522}.hero img{width:100%;height:420px;object-fit:cover;display:block}.hero-gradient{position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(8,12,10,.82))}.hero-label{position:absolute;left:22px;right:22px;bottom:22px;color:#fff}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800}.hero h1{margin:7px 0 4px;font:700 34px/1.05 Georgia,serif}.hero p{margin:0;color:rgba(255,255,255,.78)}.hero-empty{min-height:300px;display:grid;place-items:center;color:#bfc4c0}.section{margin-top:18px}.section h2{font:700 22px/1.1 Georgia,serif;margin:0 0 12px}.mode-row,.quick-grid,.stats{display:grid;gap:12px}.mode-row{grid-template-columns:1fr auto;align-items:center;padding:16px 18px}.pill{display:inline-flex;align-items:center;gap:8px;font-weight:700}.dot{width:9px;height:9px;border-radius:50%;background:#64816f}.subtle{color:var(--muted);font-size:13px;margin-top:3px}.quick-grid{grid-template-columns:1fr 1fr}.quick{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:18px;text-align:left;color:var(--ink)}.quick strong{display:block;font-size:17px;margin-bottom:4px}.quick span{color:var(--muted);font-size:13px}.btn{border:0;border-radius:14px;background:var(--accent);color:#fff;padding:13px 16px;font-weight:800}.btn.secondary{background:var(--soft);color:var(--ink)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.form-card{padding:18px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-weight:750;font-size:14px}.field input,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}.status{min-height:22px;color:var(--muted);margin-top:10px}.upload-preview{height:240px;border:1px dashed #bdb8af;border-radius:18px;display:grid;place-items:center;overflow:hidden;background:#eeeae2;color:var(--muted);text-align:center}.upload-preview img{width:100%;height:100%;object-fit:contain;background:#151515}.toolbar{display:grid;gap:10px;margin-bottom:14px}.search{display:flex;gap:8px}.search input{flex:1;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px}.chip{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 13px;border-radius:999px}.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}.library-summary{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 2px 12px}.art-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.art-tile{padding:0;border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden;text-align:left;color:var(--ink);box-shadow:0 6px 20px rgba(33,38,35,.05)}.art-tile img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#171717;display:block}.tile-body{padding:11px}.tile-title{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tile-meta{font-size:12px;color:var(--muted);margin-top:3px}.fav{color:#9a7730}.empty{padding:28px;text-align:center;color:var(--muted);background:var(--card);border-radius:18px;border:1px solid var(--line)}.schedule-row{padding:15px 0;border-bottom:1px solid var(--line)}.schedule-row:last-child{border:0}.schedule-row p{color:var(--muted);margin:5px 0 10px}.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(820px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(251,250,247,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}.nav{border:0;background:transparent;color:var(--muted);padding:8px 3px;font-size:12px}.nav strong{display:block;font-size:20px;line-height:1.1}.nav.active{color:var(--accent);font-weight:800}.modal{position:fixed;inset:0;background:rgba(20,24,22,.62);z-index:50;display:grid;align-items:end}.sheet{background:var(--paper);max-height:92vh;overflow:auto;border-radius:28px 28px 0 0;padding:16px 18px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.2)}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:0;background:var(--soft);width:38px;height:38px;border-radius:50%}.detail-img{width:100%;max-height:48vh;object-fit:contain;background:#151515;border-radius:18px}.detail-title{font:700 28px/1.1 Georgia,serif;margin:16px 0 5px}.detail-meta{color:var(--muted);margin:0 0 14px}.species{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.species span{background:var(--soft);padding:7px 10px;border-radius:999px;font-size:13px}.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.action-grid .btn{width:100%}.rename-row{display:flex;gap:8px;margin:12px 0}.rename-row input{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line)}.journal-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.journal-head p{margin:5px 0 0;color:var(--muted)}.journal-month{margin:22px 0 10px;font:700 21px/1.1 Georgia,serif}.journal-list{display:grid;gap:12px}.journal-entry{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:10px;text-align:left;color:var(--ink)}.journal-entry img{width:92px;height:116px;object-fit:cover;border-radius:12px;background:#171717}.journal-date{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.journal-entry h3{margin:5px 0 6px;font:700 20px/1.1 Georgia,serif}.journal-birds{color:var(--muted);font-size:13px;line-height:1.45}.brief-block{margin:14px 0;padding:14px;background:var(--soft);border-radius:15px}.brief-block h4{margin:0 0 6px}.brief-block p{margin:0;color:var(--muted);line-height:1.5}
+@media(min-width:650px){.art-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(4,1fr)}.sheet{width:min(720px,100%);margin:0 auto;border-radius:28px 28px 0 0}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="topbar"><div class="brand">Gallery</div><div class="version">v0.8.1</div></header>
+<section id="home" class="panel active">
+  <div class="card hero" id="hero"><div class="hero-empty">Loading gallery…</div></div>
+  <div class="card mode-row section"><div><div class="pill" id="mode-pill"><span class="dot"></span>Automatic</div><div class="subtle" id="hero-subtle">Loading…</div></div><button id="end-override" class="btn secondary hidden">End now</button></div>
+  <div id="assurance-card" class="card form-card section">
+    <strong id="assurance-title">Checking daily artwork…</strong>
+    <p id="assurance-message" class="subtle">GalleryOS is checking the current BirdCanvas artwork.</p>
+  </div>
+  <div class="section"><h2>Quick actions</h2><div class="quick-grid"><button class="quick" data-go="add"><strong>＋ Add artwork</strong><span>Upload from your phone</span></button><button class="quick" data-go="schedule"><strong>Calendar</strong><span>Plan a temporary display</span></button><button class="quick" data-go="library"><strong>Library</strong><span id="library-count">Browse artwork</span></button><button class="quick" data-filter="favourites"><strong>★ Favourites</strong><span id="fav-count">Your saved pieces</span></button><button class="quick" data-go="journal"><strong>BirdCanvas journal</strong><span>Browse the garden through time</span></button><button class="quick" data-go="settings"><strong>Display settings</strong><span>Hours, blackout and rotation</span></button><button class="quick" data-go="system"><strong>System status</strong><span>Health, backup and diagnostics</span></button></div></div>
+  <div class="card form-card section"><strong>Next change</strong><div class="subtle" id="next-change">Loading…</div></div>
+</section>
+<section id="add" class="panel"><h2>Add artwork</h2><form id="upload-form" class="card form-card"><div id="upload-preview" class="upload-preview"><div><strong>No image selected</strong><br><span>JPG, PNG or WebP · up to 20 MB</span></div></div><div class="field section"><label>Image</label><input id="upload-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required></div><div class="field"><label>Title</label><input id="upload-title" maxlength="120" placeholder="Custom artwork"></div><div class="field"><label>What should happen?</label><select id="upload-action"><option value="now">Display now</option><option value="schedule">Schedule it</option><option value="save">Save to library</option></select></div><div id="upload-now"><div class="field"><label>Display for</label><select id="upload-duration"><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="180">3 hours</option><option value="360">6 hours</option><option value="720">12 hours</option><option value="1440">24 hours</option></select></div></div><div id="upload-schedule" class="hidden"><div class="field"><label>Starts</label><input id="upload-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="upload-end" type="datetime-local"></div></div><button id="upload-button" class="btn" type="submit">Upload and display</button><div id="upload-status" class="status"></div></form></section>
+<section id="schedule" class="panel"><h2>Schedule</h2><div class="card form-card"><div class="field"><label>Artwork</label><select id="schedule-artwork"></select></div><div class="field"><label>Starts</label><input id="schedule-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="schedule-end" type="datetime-local"></div><button id="schedule-button" class="btn">Add schedule</button><div id="schedule-status" class="status"></div></div><div class="section"><h2>Upcoming and active</h2><div id="schedules" class="card form-card"></div></div></section>
+<section id="journal" class="panel"><div class="journal-head"><div><h2>BirdCanvas journal</h2><p>A dated record of the artwork and birds from your garden.</p></div></div><div id="journal-content"></div></section>
+<section id="library" class="panel"><h2>Library</h2><div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search title or bird species"></div><div class="chips" id="chips"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="birdcanvas">BirdCanvas</button><button class="chip" data-filter="custom">Custom</button><button class="chip" data-filter="favourites">Favourites</button><button class="chip" data-filter="hidden">Hidden</button></div></div><div class="library-summary"><span id="result-count">0 artworks</span><span id="collection-summary"></span></div><div id="art-grid" class="art-grid"></div></section>
+
+
+<section id="system" class="panel">
+  <h2>System status</h2>
+  <div id="health-card" class="card form-card"><p>Checking GalleryOS…</p></div>
+  <div class="card form-card section">
+    <button id="create-backup" class="btn" type="button">Create backup</button>
+    <button id="download-diagnostics" class="btn secondary" type="button">Download diagnostics</button>
+    <div id="system-action-status" class="status"></div>
+  </div>
+</section>
+<section id="settings" class="panel">
+  <h2>Display settings</h2>
+  <form id="display-settings-form" class="card form-card">
+    <div class="field">
+      <label><input id="display-enabled" type="checkbox"> Display enabled</label>
+    </div>
+    <div class="field">
+      <label><input id="use-display-hours" type="checkbox"> Use overnight display hours</label>
+    </div>
+    <div id="display-hours-fields">
+      <div class="field"><label>Black screen from</label><input id="sleep-start" type="time"></div>
+      <div class="field"><label>Wake display at</label><input id="wake-time" type="time"></div>
+    </div>
+    <div class="field">
+      <label><input id="wake-for-overrides" type="checkbox"> Wake for scheduled and temporary artwork</label>
+    </div>
+    <div class="field">
+      <label>Screen rotation</label>
+      <select id="display-rotation">
+        <option value="0">Standard</option>
+        <option value="90">90° clockwise</option>
+        <option value="270">90° anticlockwise</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Artwork fit</label>
+      <select id="display-fit-mode">
+        <option value="contain">Show the whole artwork</option>
+        <option value="cover">Fill the screen and crop edges</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Background behind artwork</label>
+      <select id="display-background">
+        <option value="black">Black</option>
+        <option value="soft_black">Soft black</option>
+        <option value="white">White</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Artwork transition</label>
+      <select id="display-transition">
+        <option value="fade">Gentle fade</option>
+        <option value="slow_fade">Slow gallery fade</option>
+        <option value="cut">Instant change</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Check for changes</label>
+      <select id="display-poll-seconds">
+        <option value="2">Every 2 seconds</option>
+        <option value="5">Every 5 seconds</option>
+        <option value="10">Every 10 seconds</option>
+        <option value="30">Every 30 seconds</option>
+      </select>
+    </div>
+    <button class="btn" type="submit">Save display settings</button>
+    <div id="display-settings-status" class="status"></div>
+  </form>
+  <div class="card form-card section">
+    <strong>How overnight mode works</strong>
+    <p class="subtle">GalleryOS shows a pure black screen during sleeping hours. An active scheduled or temporary artwork can wake it automatically when that option is enabled.</p>
+  </div>
+</section>
+
+</main>
+<nav class="bottom-nav"><button class="nav active" data-go="home"><strong>⌂</strong>Home</button><button class="nav" data-go="add"><strong>＋</strong>Add</button><button class="nav" data-go="schedule"><strong>◷</strong>Schedule</button><button class="nav" data-go="library"><strong>▦</strong>Library</button></nav>
+<div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Artwork</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><div id="detail-species" class="species"></div><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn">Display now</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div></div></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let libraryData={artworks:[]},displayData=null,currentFilter='all',selectedArtwork=null;
+async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}async function post(url,p={}){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}
+function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
+function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
+function openPanel(id){$$('.panel').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'})}
+$$('[data-go]').forEach(b=>b.onclick=()=>openPanel(b.dataset.go));$$('[data-filter]').forEach(b=>b.onclick=()=>{currentFilter=b.dataset.filter;openPanel('library');setFilter(currentFilter)});
+function controlImageUrl(artwork){
+  if(!artwork||!artwork.image_url)return '';
+  const revision=artwork.display_revision||artwork.revision||artwork.created_at||Date.now();
+  const separator=artwork.image_url.includes('?')?'&':'?';
+  return `${artwork.image_url}${separator}v=${encodeURIComponent(revision)}`;
+}
+function renderHero(s){
+  displayData=s;
+  const box=$('#hero'),a=s.artwork;
+  box.replaceChildren();
+
+  if(!a){
+    box.innerHTML='<div class="hero-empty">No valid BirdCanvas artwork is available.</div>';
+  }else{
+    const img=document.createElement('img');
+    img.src=controlImageUrl(a);
+    const grad=document.createElement('div');
+    grad.className='hero-gradient';
+    const label=document.createElement('div');
+    label.className='hero-label';
+
+    const modeLabel=
+      s.mode==='automatic'?'Current BirdCanvas':
+      s.mode==='fallback'?'BirdCanvas fallback':
+      s.mode==='scheduled'?'Scheduled artwork':
+      'Temporary artwork';
+
+    label.innerHTML=`<div class="eyebrow">${modeLabel}</div><h1>${escapeHtml(a.title||a.id)}</h1><p>${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom collection'}</p>`;
+    box.append(img,grad,label);
+  }
+
+  const modeText=
+    s.mode==='automatic'?'Current BirdCanvas':
+    s.mode==='fallback'?'BirdCanvas fallback':
+    s.mode==='scheduled'?'Scheduled':
+    'Temporary override';
+
+  $('#mode-pill').innerHTML=`<span class="dot"></span>${modeText}`;
+
+  $('#hero-subtle').textContent=
+    s.mode==='temporary_override'?`Ends ${fmt(s.override.ends_at)}`:
+    s.mode==='scheduled'?`Returns to the current BirdCanvas artwork ${fmt(s.schedule.ends_at)}`:
+    s.mode==='fallback'?'The most recent valid BirdCanvas artwork is being protected.':
+    'The newest valid BirdCanvas artwork is controlling the display.';
+
+  $('#end-override').classList.toggle('hidden',s.mode!=='temporary_override');
+
+  const assurance=s.assurance||{};
+  const assuranceTitle={
+    current:'Daily artwork current',
+    late:'Daily artwork delayed',
+    fallback:'Using BirdCanvas fallback',
+    missing:'BirdCanvas artwork unavailable'
+  }[assurance.status]||'Current artwork assurance';
+
+  $('#assurance-title').textContent=assuranceTitle;
+  $('#assurance-message').textContent=assurance.message||(
+    s.mode==='scheduled'||s.mode==='temporary_override'
+      ?'The current BirdCanvas artwork will return automatically when this temporary artwork ends.'
+      :'GalleryOS is protecting the current BirdCanvas artwork.'
+  );
+}
+function renderNext(schedules){const future=schedules.filter(x=>new Date(x.starts_at)>new Date()).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));$('#next-change').textContent=displayData?.mode==='temporary_override'?`Return to automatic mode ${fmt(displayData.override.ends_at)}`:displayData?.mode==='scheduled'?`Current schedule ends ${fmt(displayData.schedule.ends_at)}`:future.length?`${future[0].artwork.title} · ${fmt(future[0].starts_at)}`:'When the next daily BirdCanvas artwork is published'}
+function setFilter(filter){currentFilter=filter;$$('.chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===filter));renderLibrary()}
+function filteredArtworks(){const q=$('#search').value.trim().toLowerCase();return libraryData.artworks.filter(a=>{const matchesFilter=currentFilter==='all'?!a.hidden:currentFilter==='favourites'?a.favourite&&!a.hidden:currentFilter==='hidden'?a.hidden:a.collection===currentFilter&&!a.hidden;const hay=[a.title,a.collection,...(a.species||[])].join(' ').toLowerCase();return matchesFilter&&(!q||hay.includes(q))})}
+function monthLabel(value){const d=new Date(`${value||''}T12:00:00`);return Number.isNaN(d.getTime())?'Undated':d.toLocaleDateString(undefined,{month:'long',year:'numeric'})}
+function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const birds=(a.species||[]);entry.innerHTML=`<img src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${birds.length?`${birds.length} species · ${escapeHtml(birds.slice(0,4).join(', '))}${birds.length>4?'…':''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
+function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img src="${a.image_url}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
+function openDetail(a){selectedArtwork=a;$('#detail-img').src=a.image_url;$('#detail-title').textContent=a.title;$('#detail-meta').textContent=`${a.collection==='birdcanvas'?'BirdCanvas':'Custom'} · ${fmt(a.created_at)}`;$('#detail-rename').value=a.title;const sp=$('#detail-species');sp.replaceChildren(...(a.species||[]).map(x=>Object.assign(document.createElement('span'),{textContent:x})));sp.classList.toggle('hidden',!(a.species||[]).length);$('#favourite-button').textContent=a.favourite?'Remove favourite':'Favourite';$('#hide-button').textContent=a.hidden?'Unhide':'Hide';$('#delete-button').classList.toggle('hidden',a.collection!=='custom');const presentation=a.presentation||{};$('#detail-mount').value=presentation.mode||'auto';$('#mount-reason').textContent=presentation.decision_reason||'Automatic chooses the most suitable neutral mount from the artwork edges.';$('#detail-modal').classList.remove('hidden')}
+function closeDetail(){$('#detail-modal').classList.add('hidden');selectedArtwork=null}$('#detail-close').onclick=closeDetail;$('#detail-modal').onclick=e=>{if(e.target.id==='detail-modal')closeDetail()};
+$('#display-button').onclick=async()=>{await post('/api/override',{artwork_id:selectedArtwork.id,duration_minutes:60});closeDetail();openPanel('home');await refresh()};
+$('#schedule-detail-button').onclick=()=>{$('#schedule-artwork').value=selectedArtwork.id;closeDetail();openPanel('schedule')};
+$('#favourite-button').onclick=async()=>{await post('/api/artwork/update',{artwork_id:selectedArtwork.id,favourite:!selectedArtwork.favourite});await refresh();openDetail(libraryData.artworks.find(a=>a.id===selectedArtwork.id))};
+$('#hide-button').onclick=async()=>{await post('/api/artwork/update',{artwork_id:selectedArtwork.id,hidden:!selectedArtwork.hidden});closeDetail();await refresh()};
+$('#rename-button').onclick=async()=>{const title=$('#detail-rename').value.trim();if(!title)return;await post('/api/artwork/update',{artwork_id:selectedArtwork.id,title});await refresh();openDetail(libraryData.artworks.find(a=>a.id===selectedArtwork.id))};
+$('#apply-mount-button').onclick=async()=>{const button=$('#apply-mount-button'),mode=$('#detail-mount').value;button.disabled=true;button.textContent='Applying…';try{await post('/api/artwork/presentation',{artwork_id:selectedArtwork.id,mode});await refresh();openDetail(libraryData.artworks.find(a=>a.id===selectedArtwork.id))}catch(e){alert(e.message)}finally{button.disabled=false;button.textContent='Apply mount'}};
+$('#delete-button').onclick=async()=>{if(!confirm('Permanently delete this uploaded artwork?'))return;await post('/api/custom/delete',{artwork_id:selectedArtwork.id});closeDetail();await refresh()};
+$('#search').addEventListener('input',renderLibrary);$$('.chip').forEach(c=>c.onclick=()=>setFilter(c.dataset.filter));
+function fillScheduleOptions(){const selected=$('#schedule-artwork').value;$('#schedule-artwork').replaceChildren();for(const a of libraryData.artworks.filter(a=>!a.hidden)){const o=document.createElement('option');o.value=a.id;o.textContent=`${a.title} · ${a.collection==='birdcanvas'?'BirdCanvas':'Custom'}`;$('#schedule-artwork').append(o)}if([...$('#schedule-artwork').options].some(o=>o.value===selected))$('#schedule-artwork').value=selected}
+function renderSchedules(items){const box=$('#schedules');box.replaceChildren();if(!items.length){box.innerHTML='<p class="subtle">No upcoming schedules.</p>';return}for(const s of items){const row=document.createElement('div');row.className='schedule-row';row.innerHTML=`<strong>${escapeHtml(s.artwork.title)}</strong><p>${fmt(s.starts_at)} → ${fmt(s.ends_at)}</p>`;const del=document.createElement('button');del.className='btn ghost';del.textContent='Delete schedule';del.onclick=async()=>{if(confirm('Delete this schedule?')){await post('/api/schedules/delete',{schedule_id:s.id});await refresh()}};row.append(del);box.append(row)}}
+function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function renderDisplaySettings(settings){
+  $('#display-enabled').checked=settings.enabled!==false;
+  $('#use-display-hours').checked=!!settings.use_display_hours;
+  $('#sleep-start').value=settings.sleep_start||'23:00';
+  $('#wake-time').value=settings.wake_time||'07:00';
+  $('#wake-for-overrides').checked=settings.wake_for_overrides!==false;
+  $('#display-rotation').value=String(settings.rotation||0);
+  $('#display-fit-mode').value=settings.fit_mode||'contain';
+  $('#display-background').value=settings.background||'black';
+  $('#display-transition').value=settings.transition||'fade';
+  $('#display-poll-seconds').value=String(settings.poll_seconds||5);
+  $('#display-hours-fields').classList.toggle('hidden',!settings.use_display_hours);
+}
+async function refresh(){try{const [display,library,schedules,settings]=await Promise.all([api('/api/display'),api('/api/library'),api('/api/schedules'),api('/api/display/settings')]);libraryData=library;renderDisplaySettings(settings);renderHero(display);fillScheduleOptions();renderLibrary();renderJournal();renderSchedules(schedules.schedules);renderNext(schedules.schedules);$('#library-count').textContent=`${library.artworks.length} artworks`;$('#fav-count').textContent=`${library.artworks.filter(a=>a.favourite).length} favourites`}catch(e){console.error(e)}}
+$('#end-override').onclick=async()=>{await post('/api/override/cancel');await refresh()};
+$('#upload-action').onchange=()=>{const v=$('#upload-action').value;$('#upload-now').classList.toggle('hidden',v!=='now');$('#upload-schedule').classList.toggle('hidden',v!=='schedule');$('#upload-button').textContent=v==='now'?'Upload and display':v==='schedule'?'Upload and schedule':'Save to library'};
+let previewUrl=null;$('#upload-image').onchange=e=>{const f=e.target.files[0];if(previewUrl)URL.revokeObjectURL(previewUrl);if(!f)return;previewUrl=URL.createObjectURL(f);$('#upload-preview').innerHTML=`<img src="${previewUrl}" alt="Preview">`;if(!$('#upload-title').value.trim())$('#upload-title').value=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ')};
+$('#upload-form').onsubmit=async e=>{e.preventDefault();const file=$('#upload-image').files[0],action=$('#upload-action').value,status=$('#upload-status');if(!file){status.textContent='Choose an image first.';return}const form=new FormData();form.append('image',file);form.append('title',$('#upload-title').value);form.append('show_now',action==='now'?'true':'false');form.append('duration_minutes',$('#upload-duration').value);try{status.textContent='Uploading…';const r=await fetch('/api/upload',{method:'POST',body:form}),d=await r.json();if(!r.ok)throw new Error(d.error||'Upload failed');if(action==='schedule')await post('/api/schedules',{artwork_id:d.artwork.id,starts_at:$('#upload-start').value,ends_at:$('#upload-end').value});status.textContent=action==='now'?'Artwork is now displayed.':action==='schedule'?'Artwork uploaded and scheduled.':'Artwork saved to library.';await refresh();setTimeout(()=>openPanel(action==='now'?'home':action==='schedule'?'schedule':'library'),700)}catch(err){status.textContent=err.message}};
+$('#schedule-button').onclick=async()=>{try{await post('/api/schedules',{artwork_id:$('#schedule-artwork').value,starts_at:$('#schedule-start').value,ends_at:$('#schedule-end').value});$('#schedule-status').textContent='Schedule added.';await refresh()}catch(e){$('#schedule-status').textContent=e.message}};
+
+
+function healthLabel(status){if(status==='ok')return 'Healthy';if(status==='warning')return 'Attention';return 'Problem';}
+function renderHealth(report){const checks=report.checks||{};const rows=Object.entries(checks).map(([name,value])=>`<div class="schedule-row"><div><strong>${escapeHtml(name.replace('_',' '))}</strong><p>${escapeHtml(healthLabel(value.status))}</p></div><span>${escapeHtml(value.message||'')}</span></div>`).join('');$('#health-card').innerHTML=`<strong>GalleryOS ${escapeHtml(report.version||'')}</strong><p class="subtle">Checked ${escapeHtml(formatDate(report.checked_at))}</p>${rows}`;}
+async function refreshHealth(){try{renderHealth(await api('/api/health'));}catch(error){$('#health-card').innerHTML=`<p>${escapeHtml(error.message)}</p>`;}}
+$('#create-backup').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating backup…';const result=await post('/api/backup',{});status.innerHTML=`Backup ready. <a href="${result.download_url}">Download backup</a>`;}catch(error){status.textContent=error.message;}};
+$('#download-diagnostics').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating diagnostics…';const result=await post('/api/diagnostics',{});window.location.href=result.download_url;status.textContent='Diagnostics download ready.';}catch(error){status.textContent=error.message;}};
+
+$('#use-display-hours').onchange=()=>{
+  $('#display-hours-fields').classList.toggle('hidden',!$('#use-display-hours').checked);
+};
+$('#display-settings-form').onsubmit=async event=>{
+  event.preventDefault();
+  const status=$('#display-settings-status');
+  try{
+    status.textContent='Saving…';
+    await post('/api/display/settings',{
+      enabled:$('#display-enabled').checked,
+      use_display_hours:$('#use-display-hours').checked,
+      sleep_start:$('#sleep-start').value,
+      wake_time:$('#wake-time').value,
+      wake_for_overrides:$('#wake-for-overrides').checked,
+      rotation:Number($('#display-rotation').value),
+      fit_mode:$('#display-fit-mode').value,
+      background:$('#display-background').value,
+      transition:$('#display-transition').value,
+      transition_seconds:{fade:1.1,slow_fade:2.5,cut:0}[$('#display-transition').value],
+      poll_seconds:Number($('#display-poll-seconds').value)
+    });
+    status.textContent='Display settings saved.';
+    await refresh();
+  }catch(error){
+    status.textContent=error.message;
+  }
+};
+
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));refresh();setInterval(refresh,15000);
+</script>
+</body></html>@eboogieboy ➜ /workspaces/BirdCanvas $ C

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=CanvasOS Kiosk
+Comment=Start the passive GalleryOS display
+Exec=__PROJECT_DIR__/deployment/kiosk/start-kiosk.sh
+Terminal=false
+X-GNOME-Autostart-enabled=true

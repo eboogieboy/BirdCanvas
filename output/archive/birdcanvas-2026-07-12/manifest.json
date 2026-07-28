@@ -1,0 +1,80 @@
+{
+  "id": "birdcanvas-2026-07-12",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-12",
+  "observation_date": "2026-07-12",
+  "created_at": "2026-07-12T17:02:02+00:00",
+  "image": "artwork.png",
+  "species": [
+    "Goldfinch",
+    "Bullfinch",
+    "Long-tailed Tit",
+    "European Robin",
+    "Blue Tit",
+    "Great Spotted Woodpecker",
+    "Blackbird"
+  ],
+  "season": "",
+  "style": "A contemporary portrait-format arrangement using layered translucent shapes, soft-edged paper-cut silhouettes, and fine linear details. Let the birds feel recognisable through posture, colour accents and proportion, but avoid literal naturalism. Introduce subtle salt-worn textures, pale washed surfaces and faint weathered-grain marks, as if the image has been built from sea glass, old paint and morning air.",
+  "palette": "Sea-glass green, pale sandstone, chalk white, soft pewter blue, muted shell pink, warm buff, charcoal brown, with precise accents of bullfinch rose, goldfinch red and yellow, blue tit blue, and robin ember-orange. Keep saturation controlled and premium, allowing colour to glow in small areas rather than dominate.",
+  "mood": "Quietly joyful, airy and composed, with a soft sense of early summer brightness filtered through cool northern coastal light. The feeling should be delicate rather than sweet, refined rather than decorative.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "BirdCanvas North Shields \u2014 Summer Morning",
+    "mood": "Quietly joyful, airy and composed, with a soft sense of early summer brightness filtered through cool northern coastal light. The feeling should be delicate rather than sweet, refined rather than decorative.",
+    "visual_language": "A contemporary portrait-format arrangement using layered translucent shapes, soft-edged paper-cut silhouettes, and fine linear details. Let the birds feel recognisable through posture, colour accents and proportion, but avoid literal naturalism. Introduce subtle salt-worn textures, pale washed surfaces and faint weathered-grain marks, as if the image has been built from sea glass, old paint and morning air.",
+    "palette": "Sea-glass green, pale sandstone, chalk white, soft pewter blue, muted shell pink, warm buff, charcoal brown, with precise accents of bullfinch rose, goldfinch red and yellow, blue tit blue, and robin ember-orange. Keep saturation controlled and premium, allowing colour to glow in small areas rather than dominate.",
+    "composition": "A tall, calm vertical composition with an implied open horizon low in the picture, not a landscape. Place the Bullfinch and Goldfinch as the main colour anchors in the upper and middle thirds, balanced by the delicate arc of a Long-tailed Tit. Use slender abstract branch forms like weathered lines rather than botanical detail. Let the smaller character birds punctuate the negative space like notes in a quiet morning arrangement, with the Blackbird grounding the base in a dark, elegant shape.",
+    "hero_birds": [
+      "Bullfinch",
+      "Goldfinch",
+      "Long-tailed Tit"
+    ],
+    "character_birds": [
+      "European Robin",
+      "Blue Tit",
+      "Great Spotted Woodpecker"
+    ],
+    "supporting_birds": [
+      "Blackbird"
+    ],
+    "avoid": [
+      "literal seaside scenery",
+      "wildlife-calendar realism",
+      "busy woodland illustration",
+      "overly cute garden-bird styling",
+      "bright tropical colour",
+      "dramatic action poses",
+      "photographic feathers",
+      "summer clich\u00e9s such as flowers, butterflies or blazing sun"
+    ]
+  },
+  "original_image": "original.png",
+  "presentation": {
+    "mode": "black_mount",
+    "applied_mount": "black",
+    "style": "black_mount",
+    "style_name": "Black Mount",
+    "decision_reason": "The mount style was selected manually.",
+    "analysis": {
+      "edge_luminance": 220.24,
+      "centre_luminance": 193.22,
+      "edge_variation": 8.1,
+      "edge_centre_difference": 27.02,
+      "average_saturation": 42.9,
+      "edge_red": 227.51,
+      "edge_green": 220.77,
+      "edge_blue": 193.66
+    },
+    "mount_width": 78,
+    "output_size": [
+      1200,
+      1800
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  },
+  "schema_version": 1,
+  "updated_at": "2026-07-12T20:40:09+00:00"
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "birdcanvas-2026-07-13",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-13",
+  "observation_date": "2026-07-13",
+  "created_at": "2026-07-13T10:21:24+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "Bullfinch",
+    "Goldfinch",
+    "Long-tailed Tit",
+    "Treecreeper",
+    "Nuthatch",
+    "Goldcrest",
+    "Great Spotted Woodpecker"
+  ],
+  "season": "",
+  "style": "A premium contemporary portrait artwork built from elegant vertical layers: slender bark-like forms, translucent washes, fine etched lines and soft blocks of sea-glass colour. Let the birds feel recognisable but slightly distilled, as if composed from cut paper, mineral pigment and weathered wood grain rather than painted literally. Aim for delicacy, rhythm and negative space over detail.",
+  "palette": "Cool summer light: pale celadon, chalky blue, sea-glass green, warm sandstone, soft driftwood grey and muted cream, lifted by precise accents of bullfinch rose, goldfinch red and yellow, goldcrest amber, nuthatch blue-grey and woodpecker crimson.",
+  "mood": "Quietly joyful, poised and luminous, with the feeling of a sheltered summer morning after a cool night by the sea.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "Salt-Air Arboretum",
+    "mood": "Quietly joyful, poised and luminous, with the feeling of a sheltered summer morning after a cool night by the sea.",
+    "visual_language": "A premium contemporary portrait artwork built from elegant vertical layers: slender bark-like forms, translucent washes, fine etched lines and soft blocks of sea-glass colour. Let the birds feel recognisable but slightly distilled, as if composed from cut paper, mineral pigment and weathered wood grain rather than painted literally. Aim for delicacy, rhythm and negative space over detail.",
+    "palette": "Cool summer light: pale celadon, chalky blue, sea-glass green, warm sandstone, soft driftwood grey and muted cream, lifted by precise accents of bullfinch rose, goldfinch red and yellow, goldcrest amber, nuthatch blue-grey and woodpecker crimson.",
+    "composition": "Portrait format with a calm upward movement. Create an abstract tree-column rising through the centre, more like a weathered harbour post crossed with woodland bark than a literal trunk. Place the Bullfinch and Goldfinch as the main colour notes in the upper and mid sections, balanced by the tiny Goldcrest as a glowing jewel near the top. Let the other birds move around the structure in quieter gestures: creeping, clinging, tilting and flicking through the vertical space. Leave generous pale air around them, suggesting open northern light without depicting the coast.",
+    "hero_birds": [
+      "Bullfinch",
+      "Goldfinch",
+      "Goldcrest"
+    ],
+    "character_birds": [
+      "Long-tailed Tit",
+      "Treecreeper",
+      "Nuthatch",
+      "Great Spotted Woodpecker"
+    ],
+    "supporting_birds": [],
+    "avoid": [
+      "literal seaside scenery",
+      "busy woodland realism",
+      "wildlife-calendar composition",
+      "overly bright tropical colour",
+      "dramatic action poses",
+      "photographic feather detail",
+      "cute cartoon styling",
+      "obvious summer clich\u00e9s"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "black",
+    "style": "black_mount",
+    "style_name": "Black Mount",
+    "decision_reason": "The artwork has light outer edges, so a black mount gives clean separation.",
+    "analysis": {
+      "edge_luminance": 195.85,
+      "centre_luminance": 166.58,
+      "edge_variation": 25.38,
+      "edge_centre_difference": 29.27,
+      "average_saturation": 58.75,
+      "edge_red": 200.22,
+      "edge_green": 198.02,
+      "edge_blue": 161.55
+    },
+    "mount_width": 78,
+    "output_size": [
+      1200,
+      1800
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}

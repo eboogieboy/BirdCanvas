@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "id": "birdcanvas-2026-07-27-daily",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-27",
+  "observation_date": "2026-07-27",
+  "observation_window": "",
+  "edition": "daily",
+  "created_at": "2026-07-27T20:53:03+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "Herring Gull",
+    "Carrion Crow",
+    "Blue Tit",
+    "Tree Sparrow",
+    "Pigeon",
+    "Wren",
+    "Starling"
+  ],
+  "season": "",
+  "style": "A broad landscape wall of square and rectangular tiles with slight misalignment, milky grout, hand-painted cobalt linework, raised slip trailing, crackle glaze, oval medallions, shell-impressed margins, wave-like courses and occasional mother-of-pearl flashes. Forms should be simplified into confident silhouettes and ornamental profiles, with delicate feather markings translated into glaze marks, tesserae, stipples, scallops and transfer-like imperfections.",
+  "palette": "Tin white, Delft cobalt, copper sea-glass green, soft turquoise, manganese purple-black, antimony yellow, diluted sandstone beige, pearl lustre, pale grey grout, weathered wood brown and a few muted starling iridescences of petrol blue, violet and green.",
+  "mood": "Cool, buoyant, decorative, communal, salt-washed, quietly playful and premium; a calm northern summer light held inside glazed ceramic.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "BirdCanvas Daily Edition \u2014 North Shields Summer",
+    "style": "Tin-Glaze Estuary Bathhouse: Salt-Lit Ceramic Aviary",
+    "style_guidance": "Develop the selected movement as a refined landscape-format ceramic wall rather than a scene: a cool, luminous bathhouse surface made from hand-painted tin-glazed tiles, mismatched medallions, wave courses, shell-impressed borders and softened grout lines. The artwork should feel like a premium contemporary ceramic installation translated for the Samsung Frame: decorative, architectural, calm and quietly communal. Birds remain clearly legible, but they are absorbed into tile logic, glaze pooling, raised slip outlines, crackle and lustre rather than illustrated naturalistically.",
+    "curator_notes": "Today\u2019s exhibition should read first as an elegant tiled chamber of light, salt, glaze and geometry, with the birds appearing as resident emblems within a shared ceramic habitat. The North Shields atmosphere should be present through cool maritime illumination, sea-glass greens, milky whites, weathered blues and faint sandstone warmth, without becoming a literal coastal view. Summer is expressed through buoyant glaze, softened brightness and watery air, not through flowers or sunshine motifs. The common birds are treated honestly as part of the day\u2019s social rhythm, while the smaller, charming birds bring intimacy and delight.",
+    "mood": "Cool, buoyant, decorative, communal, salt-washed, quietly playful and premium; a calm northern summer light held inside glazed ceramic.",
+    "visual_language": "A broad landscape wall of square and rectangular tiles with slight misalignment, milky grout, hand-painted cobalt linework, raised slip trailing, crackle glaze, oval medallions, shell-impressed margins, wave-like courses and occasional mother-of-pearl flashes. Forms should be simplified into confident silhouettes and ornamental profiles, with delicate feather markings translated into glaze marks, tesserae, stipples, scallops and transfer-like imperfections.",
+    "palette": "Tin white, Delft cobalt, copper sea-glass green, soft turquoise, manganese purple-black, antimony yellow, diluted sandstone beige, pearl lustre, pale grey grout, weathered wood brown and a few muted starling iridescences of petrol blue, violet and green.",
+    "composition": "Landscape format. Arrange the image as a tiled bathhouse wall divided by a low horizontal waterline of wave-pattern courses. Above it, a large cobalt crest panel anchors the centre-left, surrounded by mismatched square tiles and oval bird medallions. Repeated pigeon motifs create a gentle architectural rhythm across the lower band. Smaller shell-bordered niches sit toward the corners and edges. A severe vertical manganese interruption offsets the decorative order on one side, preventing the design from becoming too sweet. Leave areas of pale tile and grout breathing space so the work remains calm and contemporary.",
+    "bird_integration": "Represent every observed bird as part of the ceramic language. The Herring Gull should be the most immediately identifiable at normal viewing distance: a large, clean cobalt-and-white crest with recognisable gull head, pale body, yellow bill accent and grey wing geometry, positioned above the central waterline. The Pigeon appears as a repeated bathhouse tile motif across the lower band, simplified into rounded heads, soft breast curves and small iridescent neck-glaze marks. The Starling is built from broken lustre tesserae, with a dark compact form, speckled pale slip dots and flashes of blue-green-violet overglaze. The Blue Tit occupies a crisp corner tile with yellow breast, blue cap and white cheek clearly retained inside Iznik-like ornament. The Tree Sparrow sits in a small shell-bordered niche with chestnut cap, pale cheek, black cheek spot and compact posture. The Wren occupies another small niche, tiny and warm brown, with raised tail and fine barred slip marks. The Carrion Crow interrupts the tiled rhythm as a severe manganese-purple silhouette with heavy bill and watchful stance, elegant but stark against pale glaze.",
+    "materials": "Tin-glazed earthenware, cobalt oxide brushwork, copper-green glaze, manganese purple, antimony yellow, raised white slip, crackle glaze, hand-painted tile transfers, shell-impressed ceramic borders, milky grout, pearl lustre overglaze, lightly abraded glaze edges and subtle sandstone-toned underpainting.",
+    "visual_focus": "The first attraction should be the luminous central field of cool tin-white glaze crossed by cobalt tile geometry and a low wave-like waterline, with pearl lustre and crackle catching the eye before the viewer resolves the individual bird forms.",
+    "avoid": [
+      "literal beach, harbour or seaside scenery",
+      "wildlife-calendar realism",
+      "crowded natural habitat illustration",
+      "overly cute cartoon birds",
+      "Mediterranean holiday clich\u00e9s",
+      "obvious summer symbols such as bright sunflowers, beach towels or blazing sun",
+      "dramatic storm imagery",
+      "photorealistic feathers",
+      "flat digital vector cleanliness without ceramic irregularity",
+      "imitating any living artist"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "no",
+    "style": "no_mount",
+    "style_name": "No Mount",
+    "decision_reason": "Samsung Frame full-screen mode.",
+    "analysis": {
+      "edge_luminance": 177.75,
+      "centre_luminance": 162.2,
+      "edge_variation": 33.99,
+      "edge_centre_difference": 15.55,
+      "average_saturation": 54.61,
+      "edge_red": 183.14,
+      "edge_green": 178.93,
+      "edge_blue": 150.24
+    },
+    "mount_width": 0,
+    "output_size": [
+      1920,
+      1080
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}

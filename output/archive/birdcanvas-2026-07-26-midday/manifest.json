@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "id": "birdcanvas-2026-07-26-midday",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Midday Exhibition \u2014 2026-07-26",
+  "observation_date": "2026-07-26",
+  "observation_window": "Today, midnight to 12:00",
+  "edition": "midday",
+  "created_at": "2026-07-26T19:50:54+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "Kingfisher",
+    "Barn Owl",
+    "Bullfinch",
+    "Goldcrest",
+    "Treecreeper",
+    "Long-tailed Tit",
+    "Great Spotted Woodpecker"
+  ],
+  "season": "",
+  "style": "Layered translucent planes, shallow relief marks, brushed mineral veils, fine engraved lines and softened geometric intervals. Forms should feel partially revealed, as if seen through frosted glass, pale glaze or sun-bleached vellum. Balance delicacy with structure: a contemporary landscape-format field where space, rhythm and restraint carry the emotion.",
+  "palette": "Sea-glass blue, oxidised teal, soft chalk, warm sandstone, muted flax, smoke grey, weathered timber brown, pearl white and very small accents of ember red, moss gold and deep ink. Keep the palette cool and coastal in temperament, lifted by subtle summer clarity rather than bright seasonal colour.",
+  "mood": "Still, lucid, refined and quietly joyful, with the sensation of cool noon light passing across a hand-finished surface.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "Midday Edition \u2014 Quiet Northern Radiance",
+    "style": "Salt-Glaze Luminism",
+    "style_guidance": "A newly invented gallery style combining the softened glow of early photographic contact prints, the mineral sheen of salt-glazed ceramics, the measured calm of architectural relief panels and the delicate incision of fine wood engraving. The work should feel like a luminous object rather than a scene: restrained, tactile, contemporary and quietly expensive. Use the birds as embedded presences within a larger atmospheric construction, allowing their identities to emerge through elegant contour, rhythm and surface detail rather than illustrative emphasis.",
+    "curator_notes": "Today\u2019s exhibition should honour a remarkable midday gathering without turning it into a wildlife display. The kingfisher, barn owl, bullfinch, goldcrest, treecreeper, long-tailed tit and great spotted woodpecker should all be present, but absorbed into an artwork led by light, surface and compositional poise. Let North Shields enter through cool maritime illumination, chalky sandstone warmth, faint sea-glass translucency and salt-worn texture, never through literal harbour or shoreline imagery. The result should feel like summer held in reserve: clear, airy, mineral and calm.",
+    "mood": "Still, lucid, refined and quietly joyful, with the sensation of cool noon light passing across a hand-finished surface.",
+    "visual_language": "Layered translucent planes, shallow relief marks, brushed mineral veils, fine engraved lines and softened geometric intervals. Forms should feel partially revealed, as if seen through frosted glass, pale glaze or sun-bleached vellum. Balance delicacy with structure: a contemporary landscape-format field where space, rhythm and restraint carry the emotion.",
+    "palette": "Sea-glass blue, oxidised teal, soft chalk, warm sandstone, muted flax, smoke grey, weathered timber brown, pearl white and very small accents of ember red, moss gold and deep ink. Keep the palette cool and coastal in temperament, lifted by subtle summer clarity rather than bright seasonal colour.",
+    "composition": "A wide horizontal arrangement built from calm bands of light, softly offset vertical traces and shallow relief-like intervals. The composition should read first as an abstract atmospheric panel, with a strong sense of open horizon and suspended stillness. Use asymmetry and generous negative space to create a premium domestic presence suitable for a Frame television.",
+    "bird_integration": "All seven observed birds are to be incorporated as refined, recognisable motifs embedded within the larger language of incised line, translucent silhouette and tonal interruption. Their forms should appear as discoveries within the surface rather than subjects placed on display, allowing species character to register through proportion and gesture without becoming anecdotal. The overall strategy is to make the birds part of the artwork\u2019s texture, cadence and quiet intelligence.",
+    "materials": "Digitally composed to evoke salt-glazed ceramic, frosted glass, mineral pigment wash, pale lime plaster, engraved maple block, weathered oak and translucent photographic emulsion. Include subtle surface grain, glaze pooling, rubbed edges and shallow relief shadows for depth on screen.",
+    "visual_focus": "The viewer should first be drawn to a broad passage of cool pearlescent light moving across layered mineral texture, where translucent geometry and shallow relief create a calm sense of depth before any representational detail is noticed.",
+    "avoid": [
+      "literal coastal scenery",
+      "wildlife-calendar realism",
+      "birds as the main focal point",
+      "dramatic hunting or predatory narrative",
+      "crowded illustrative composition",
+      "obvious summer clich\u00e9s",
+      "cute decorative bird patterning",
+      "bright postcard colour",
+      "imitating any living artist",
+      "harbour, beach or lighthouse motifs"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "no",
+    "style": "no_mount",
+    "style_name": "No Mount",
+    "decision_reason": "Samsung Frame full-screen mode.",
+    "analysis": {
+      "edge_luminance": 177.06,
+      "centre_luminance": 196.45,
+      "edge_variation": 12.88,
+      "edge_centre_difference": 19.39,
+      "average_saturation": 42.58,
+      "edge_red": 181.49,
+      "edge_green": 178.38,
+      "edge_blue": 150.9
+    },
+    "mount_width": 0,
+    "output_size": [
+      1920,
+      1080
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}

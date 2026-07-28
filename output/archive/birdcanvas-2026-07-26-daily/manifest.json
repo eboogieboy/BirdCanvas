@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "id": "birdcanvas-2026-07-26-daily",
+  "provider": "birdcanvas",
+  "collection": "birdcanvas",
+  "title": "Garden Birds \u2014 2026-07-26",
+  "observation_date": "2026-07-26",
+  "observation_window": "",
+  "edition": "daily",
+  "created_at": "2026-07-26T22:31:54+00:00",
+  "image": "artwork.png",
+  "original_image": "original.png",
+  "orientation": "portrait",
+  "species": [
+    "Kingfisher",
+    "Barn Owl",
+    "Bullfinch",
+    "Goldcrest",
+    "Treecreeper",
+    "Long-tailed Tit",
+    "Great Spotted Woodpecker"
+  ],
+  "season": "",
+  "style": "A landscape-format folding screen divided into subtle vertical panel intervals, with deep lacquer fields, irregular reed strokes, fine incised lines, translucent colour veils and small inlaid interruptions. Use asymmetry, silence, off-centre spacing and concealed forms. Edges should feel hand-worked and salt-softened. The birds are simplified into precise silhouettes, material marks and recognisable profiles, never cartooned and never naturalistically painted.",
+  "palette": "Vermilion ground muted under translucent celadon lacquer, deep black-brown urushi, smoke grey, sea-glass green, pale eggshell white, powdered mica silver, soft sandstone beige, weathered wood taupe, restrained bullfinch rose, kingfisher turquoise-blue and a single disciplined woodpecker red. Summer should appear as warmth beneath the lacquer rather than obvious seasonal colour.",
+  "mood": "Still, polished, intimate and observant, with the hush of warm summer air filtered through cool North Sea light. The mood should be contemplative rather than decorative, delicate rather than pretty, and quietly luminous rather than bright.",
+  "favourite": false,
+  "hidden": false,
+  "creative_brief": {
+    "collection": "BirdCanvas Daily",
+    "style": "Celadon Urushi Reed-Screen Inlay",
+    "style_guidance": "Develop the chosen Lacquered Reed Silence movement as a refined contemporary folding-screen language for landscape format display. The work should feel like a premium urushi object translated into light: restrained, polished, asymmetrical and quietly northern. Use the grammar of Japanese lacquer, kiri wood, crushed eggshell, translucent celadon layers and sparse reed notation, but avoid historic pastiche. The birds should appear as deliberate pauses within the lacquered field: visible, recognisable and composed with contemplative precision. The style should privilege surface depth, negative space, subtle glints and hidden edges over illustrative detail.",
+    "curator_notes": "Today's exhibition should read first as an elegant lacquer screen: a calm sequence of panels breathing across the Samsung Frame, with empty space carrying as much importance as the birds. The seven observed birds become the internal rhythm of the screen, each given a different material presence. The Kingfisher should provide the clearest immediate recognition, rendered as a poised celadon-and-copper streak within the reeds rather than a literal riverside portrait. The Barn Owl should appear as a pale, near-silent apparition in eggshell inlay. The smaller birds should reward slower looking: Bullfinch as a restrained rose-charcoal form, Goldcrest as a tiny mica flame, Treecreeper climbing through bark-like lacquer lines, Long-tailed Tit as a soft thread of pale ovals and tail, and Great Spotted Woodpecker as a disciplined black-white-vermilion accent. The North Shields atmosphere should be present only through cool light, salt-softened colour, harbour-worn texture and open horizontal breathing room.",
+    "mood": "Still, polished, intimate and observant, with the hush of warm summer air filtered through cool North Sea light. The mood should be contemplative rather than decorative, delicate rather than pretty, and quietly luminous rather than bright.",
+    "visual_language": "A landscape-format folding screen divided into subtle vertical panel intervals, with deep lacquer fields, irregular reed strokes, fine incised lines, translucent colour veils and small inlaid interruptions. Use asymmetry, silence, off-centre spacing and concealed forms. Edges should feel hand-worked and salt-softened. The birds are simplified into precise silhouettes, material marks and recognisable profiles, never cartooned and never naturalistically painted.",
+    "palette": "Vermilion ground muted under translucent celadon lacquer, deep black-brown urushi, smoke grey, sea-glass green, pale eggshell white, powdered mica silver, soft sandstone beige, weathered wood taupe, restrained bullfinch rose, kingfisher turquoise-blue and a single disciplined woodpecker red. Summer should appear as warmth beneath the lacquer rather than obvious seasonal colour.",
+    "composition": "A horizontal six-panel screen structure with alternating dense and empty zones. The left third contains mostly open lacquer with a few reed marks and a concealed Treecreeper moving along a bark-like vertical seam. The central area holds the clearest bird presence, with the Kingfisher placed low-to-mid height as a sleek celadon stroke crossing a quiet reed interval. A pale Barn Owl form hovers in the upper right as fractured eggshell inlay, softened into the lacquer field. The Bullfinch, Long-tailed Tit, Goldcrest and Great Spotted Woodpecker occupy smaller rhythmic positions across the remaining panels, creating a slow visual walk rather than a crowded bird arrangement.",
+    "bird_integration": "Kingfisher: immediately recognisable at normal viewing distance through its compact profile, sharp bill and brilliant celadon-turquoise body streak with a small warm copper breast note, perched within sparse reeds rather than shown in a literal waterside scene. Barn Owl: formed from crushed eggshell tesserae, with a clear heart-shaped facial disc, pale wings and a soft floating posture, emerging from negative space in the lacquer. Bullfinch: integrated as a rounded rose and charcoal silhouette partly screened by reed stems, with its heavy bill and compact form clearly readable. Goldcrest: represented as the smallest deliberate event in the piece, a tiny olive body with a precise mica-gold crown glint, recognisable on close viewing through its scale and crest. Treecreeper: embedded into vertical bark-like lacquer striations along one panel seam, with curved bill, stiff tail and climbing posture kept legible. Long-tailed Tit: shown as a pale, bead-like body with an exaggerated fine tail drawn in silk-thin lacquer line, moving lightly through the reed geometry. Great Spotted Woodpecker: rendered as a crisp black-and-white angular form with a controlled vermilion accent, partially aligned with a dark reed or wood seam so it feels like part of the screen structure while remaining unmistakable.",
+    "materials": "Urushi lacquer over kiri wood panels, rice-straw underlayer for subtle irregular relief, translucent celadon-green lacquer veils, muted vermilion lacquer ground, crushed eggshell inlay for the Barn Owl, powdered mica for Goldcrest glint and cool atmospheric shimmer, fine charcoal-black lacquer linework for reeds and bark marks, mineral pigments for restrained bird accents, silk-hinge references between panel divisions, and softly abraded surface textures suggesting salt-worn polish and weathered harbour wood.",
+    "visual_focus": "The viewer should first be drawn to the deep polished lacquer field and the off-centre passage of celadon light across the panel structure, where empty space, reed geometry and faint mica shimmer create a quiet horizontal pull before the individual forms resolve.",
+    "avoid": [
+      "literal coastal scenery",
+      "wildlife-calendar realism",
+      "busy reed-bed illustration",
+      "overly decorative Japanese pastiche",
+      "cartoon-like bird simplification",
+      "bright summer clich\u00e9s",
+      "crowded composition",
+      "dramatic action poses",
+      "photographic detail",
+      "making the birds too hidden to recognise"
+    ]
+  },
+  "presentation": {
+    "mode": "auto",
+    "applied_mount": "no",
+    "style": "no_mount",
+    "style_name": "No Mount",
+    "decision_reason": "Samsung Frame full-screen mode.",
+    "analysis": {
+      "edge_luminance": 72.47,
+      "centre_luminance": 107.22,
+      "edge_variation": 16.76,
+      "edge_centre_difference": 34.75,
+      "average_saturation": 71.63,
+      "edge_red": 77.14,
+      "edge_green": 73.04,
+      "edge_blue": 53.05
+    },
+    "mount_width": 0,
+    "output_size": [
+      1920,
+      1080
+    ],
+    "source_image": "original.png",
+    "presented_image": "artwork.png"
+  }
+}
