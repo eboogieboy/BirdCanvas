@@ -6,14 +6,14 @@
       "id": "birdcanvas",
       "title": "BirdCanvas",
       "count": 8,
-      "latest_created_at": "2026-07-28T10:22:45+00:00"
+      "latest_created_at": "2026-07-28T14:20:42+00:00"
     }
   ],
   "stats": {
     "artwork_count": 8,
     "favourite_count": 0,
     "hidden_count": 0,
-    "storage_bytes": 53961460
+    "storage_bytes": 52689838
   },
   "artworks": [
     {
@@ -21,46 +21,48 @@
       "collection": "birdcanvas",
       "title": "Garden Birds \u2014 2026-07-28",
       "observation_date": "2026-07-28",
-      "created_at": "2026-07-28T10:22:45+00:00",
-      "updated_at": "2026-07-28T10:22:45+00:00",
+      "created_at": "2026-07-28T14:20:42+00:00",
+      "updated_at": "2026-07-28T14:20:42+00:00",
       "image": "artwork.png",
       "image_url": "../archive/birdcanvas-2026-07-28-daily/artwork.png",
-      "image_size_bytes": 3876011,
+      "image_size_bytes": 3283905,
       "species": [
         "House Sparrow",
         "Eurasian Blue Tit",
         "Eurasian Collared Dove",
         "European Goldfinch",
-        "Eurasian Tree Sparrow"
+        "Eurasian Tree Sparrow",
+        "Yellow-legged Gull",
+        "European Herring Gull"
       ],
       "season": "",
-      "style": "A broad fresco-like landscape field with shallow incised plaster geometry: arcade, lunette, garden wall seams, orchard-trunk verticals and restrained seed-tray horizontals. Forms are simplified into elegant silhouettes and fresco-blocked colour masses, with sinopia underdrawing occasionally visible at the edges. Bird markings remain clear but reduced: caps, wing bars, cheek patches, red mask, collar and tail shapes are described with mineral economy rather than naturalistic detail.",
-      "palette": "Lime white, warm plaster cream, sandstone beige, yellow ochre, pale umber, terre verte, softened brick red, lime-safe ultramarine, blue-grey, muted lemon yellow, iron oxide red, dove grey, bone black, with faint sea-glass green and cool North Sea blue undertones worked into the shadows.",
-      "mood": "Calm, sun-warmed, civic, intimate, lightly formal, with a quiet northern freshness beneath the summer ochres.",
-      "creative_collection": "BirdCanvas Daily",
+      "style": "Horizontal staff lines, punched player-piano perforations, graphite registration grids, translucent vellum tabs, stamped station codes, faint frequency curves, carbon-transfer bird marks, silver ink circuitry, small amber lamp-like circles and red alignment points. Bird forms should be stylised as readable signal-glyphs: part silhouette, part notation, part radio trace. Use asymmetry, silence and generous spacing to keep the artwork elegant and uncluttered.",
+      "palette": "Warm cream paper, chalk white, radio-dial black, soft graphite, tarnished silver, maritime blue pencil, pale sea-glass green, muted turquoise-grey, sandstone beige, faded amber, tiny red registration marks and restrained charcoal shadows.",
+      "mood": "Calm, alert, airy, precise and quietly playful; a northern coastal morning translated into signals and rests.",
+      "creative_collection": "Daily Edition \u2014 North Shields Summer Signal",
       "creative_brief": {
-        "collection": "BirdCanvas Daily",
-        "style": "Civic Orchard Intonaco",
-        "style_guidance": "Develop Lime Orchard Fresco as a refined contemporary wall-cycle: a landscape-format fresco panel that feels discovered rather than illustrated, with shallow architectural divisions, softened summer lime light and carefully placed avian citizens. The work should preserve the calm authority of Renaissance fresco while stripping it back to spare modern geometry, mineral colour and breathing negative space. The birds are not decorative additions; they are the civic presence of the wall, each occupying a distinct register within the orchard architecture.",
-        "curator_notes": "Today\u2019s exhibition should feel like a fragment of a humane public mural from an imagined northern garden court: sun-warmed, salt-softened, orderly but tender. The five species form a quiet society. House Sparrow and Eurasian Tree Sparrow are treated as close neighbours in umber and brick, grounded near plaster cracks and seed-like marks. Eurasian Blue Tit brings the first crisp chromatic note, placed with precision against a muted lemon-branch curve. European Goldfinch becomes the red-faced herald crossing the central architectural rhythm. Eurasian Collared Dove is a pale, suspended figure in the upper lunette, almost a shade cast by summer light. The coastal North Shields atmosphere should enter only through cool undertones, weathered mineral surfaces and an open sense of air, never through literal harbour imagery.",
-        "mood": "Calm, sun-warmed, civic, intimate, lightly formal, with a quiet northern freshness beneath the summer ochres.",
-        "visual_language": "A broad fresco-like landscape field with shallow incised plaster geometry: arcade, lunette, garden wall seams, orchard-trunk verticals and restrained seed-tray horizontals. Forms are simplified into elegant silhouettes and fresco-blocked colour masses, with sinopia underdrawing occasionally visible at the edges. Bird markings remain clear but reduced: caps, wing bars, cheek patches, red mask, collar and tail shapes are described with mineral economy rather than naturalistic detail.",
-        "palette": "Lime white, warm plaster cream, sandstone beige, yellow ochre, pale umber, terre verte, softened brick red, lime-safe ultramarine, blue-grey, muted lemon yellow, iron oxide red, dove grey, bone black, with faint sea-glass green and cool North Sea blue undertones worked into the shadows.",
-        "composition": "A wide horizontal fresco wall divided into three shallow arcade bays and a pale upper lunette. The lower band carries small cracks, masonry ledges and seed-like marks where the two sparrows gather at slightly different distances. The middle band holds a curved lemon branch supporting the Blue Tit and opening the central rhythm. The Goldfinch crosses the central arch in a poised diagonal, giving the whole wall a gentle pulse. The Collared Dove rests high in the lunette as a pale balancing form. The structure should feel stable, airy and architectural, with generous unpainted plaster breathing between figures.",
-        "bird_integration": "Represent every observed bird clearly within the fresco language. House Sparrow: low left, compact and warm brown, with recognisable bib, crown and streaked back reduced to umber fresco marks. Eurasian Tree Sparrow: low right or slightly nearer the central crack, distinguished by chestnut cap, white cheek and dark cheek spot, echoing the House Sparrow but more graphic and precise. Eurasian Blue Tit: mid-height on the lemon branch, immediately identifiable at normal viewing distance through blue cap, yellow breast and dark eye stripe, rendered as the sharpest cool-warm accent. European Goldfinch: central crossing figure, recognisable by red face, black-and-white head and yellow wing flash, stylised as a heraldic fresco motif rather than a wildlife portrait. Eurasian Collared Dove: high in the pale lunette, soft grey-beige with a clean dark neck collar and long calm silhouette, integrated as a shade-like architectural presence. All birds should be visibly birds, with simplified fresco contours, mineral colour and restrained secco detailing.",
-        "materials": "Wet lime plaster ground, marble dust intonaco, sinopia underdrawing, terre verte wash, yellow ochre, lime-safe ultramarine, iron oxide red, pale umber, bone black, casein secco retouching, rubbed pumice abrasion, shallow incised plaster lines, softened dry-brush dusting and minute embedded summer grit for a salt-worn mineral surface.",
-        "visual_focus": "The viewer should first be drawn to the luminous central arch of warm lime plaster, where incised geometry, rubbed mineral texture and a cool undertone of sea-glass blue create a quiet glow across the wall.",
+        "collection": "Daily Edition \u2014 North Shields Summer Signal",
+        "style": "Vellum Broadcast Constructivism",
+        "style_guidance": "A premium contemporary score-work that treats the bird list as a summer transmission intercepted in cool coastal light. The piece should feel like a hybrid of radiotelegraph notation, gallery-grade paper construction, early electronic sound diagrams and restrained abstract printmaking. Birds are not decorative additions; they are the reason for the score. Their silhouettes, wing shapes, tails, beaks and flock behaviours must remain legible, but translated into signals, pauses, arcs, pulses and registration marks. The result should be intellectual, airy and quietly beautiful rather than mechanical or literal.",
+        "curator_notes": "Develop the selected movement, Radiotelegraph Dawn: The Aviary Score, into a long landscape-format artwork resembling a weather broadcast made visible. The work should feel discovered rather than designed: a cream vellum field crossed by graphite staves, maritime blue pencil lines, carbon ticks, silver conductive traces and translucent acetate overlays. Let North Shields appear only through atmosphere: cool North Sea brightness, salt-worn surfaces, pale sandstone warmth, harbour-blue shadows and the open spacing of a coastal horizon. Summer should enter as gentle clarity, a slightly warmer cream ground, faint amber signal glows and lightness in the gaps. The birds are rendered as a disciplined but lyrical sound-score: sparrows as dense social ticking, Blue Tit and Goldfinch as bright syncopations, Collared Dove as a slow repeated oval tone, and the gulls as broad high-register glides. Empty bars and tape-splice silences are essential, giving the work calm and breath.",
+        "mood": "Calm, alert, airy, precise and quietly playful; a northern coastal morning translated into signals and rests.",
+        "visual_language": "Horizontal staff lines, punched player-piano perforations, graphite registration grids, translucent vellum tabs, stamped station codes, faint frequency curves, carbon-transfer bird marks, silver ink circuitry, small amber lamp-like circles and red alignment points. Bird forms should be stylised as readable signal-glyphs: part silhouette, part notation, part radio trace. Use asymmetry, silence and generous spacing to keep the artwork elegant and uncluttered.",
+        "palette": "Warm cream paper, chalk white, radio-dial black, soft graphite, tarnished silver, maritime blue pencil, pale sea-glass green, muted turquoise-grey, sandstone beige, faded amber, tiny red registration marks and restrained charcoal shadows.",
+        "composition": "A long horizontal score-field spans the frame, with the lower third holding clustered sparrow rhythms and the upper third opening into wide gliding gull arcs. The centre contains the main syncopated activity: Blue Tit and Goldfinch bursts crossing the staves as small vivid signal-events. Collared Dove repeats as calm oval tones slightly off-centre, like a low-frequency pulse. Several bars should be intentionally empty, with visible tape-splice gaps and translucent overlays creating pauses. The overall structure should feel like a broadcast map, a musical score and a coastal horizon without becoming a literal landscape.",
+        "bird_integration": "House Sparrow appears as warm brown-black clustered ticks and tiny compact silhouettes near the lower staff lines, suggesting chatter and quick hops. Eurasian Tree Sparrow is nearby but distinct, marked with finer chestnut cap-notes and small cheek-dot registration marks so it reads as a related but separate sparrow signal. Eurasian Blue Tit becomes a clearly recognisable small bird-glyph at normal viewing distance: blue crown, yellow breast, crisp dark eye stripe and quick angular wing-notes rendered as bright syncopated bursts. European Goldfinch appears as elegant red-faced and gold-winged flashes, slightly more lyrical than the Blue Tit, with feather shapes translated into short gilded frequency bars. Eurasian Collared Dove is a pale repeated oval tone with a soft grey body, narrow black collar mark and rounded wing notation, placed in slow intervals. Yellow-legged Gull is a high gliding arc with long wings, pale body and discreet yellow leg marks encoded as small amber ticks beneath the arc. European Herring Gull is a broader cool-grey arc above or behind it, differentiated by softer grey mantle, heavier beak notation and steadier flight-line. All seven birds must remain visibly bird-derived, not purely abstract marks.",
+        "materials": "Layered cream rag paper, translucent vellum, acetate strips, graphite, carbon transfer marks, maritime blue pencil, conductive silver ink, pale gouache, restrained gold and amber ink, stamped station-code typography, simulated player-piano perforations, tape-splice textures, faint radio-dial glass reflections and small red registration marks. The final image should look materially rich but calm, suitable for display as a premium digital artwork on a Samsung Frame.",
+        "visual_focus": "The viewer should first notice the luminous horizontal field of cream vellum and graphite staves, interrupted by silver circuitry, amber signal glows and precise blue frequency lines, creating the impression of a quiet broadcast suspended in coastal summer light.",
         "avoid": [
           "literal seaside scenery",
           "wildlife-calendar realism",
-          "crowded garden illustration",
-          "overly cute bird characterisation",
-          "bright decorative summer clich\u00e9s",
-          "photographic feather detail",
-          "dramatic skies or theatrical lighting",
-          "imitating any living artist",
-          "making the architecture more important than the birds",
-          "hiding or abstracting the birds beyond recognition"
+          "crowded bird illustration",
+          "cartoon notation",
+          "overly bright primary colours",
+          "nostalgic nautical clich\u00e9s",
+          "dramatic storm atmosphere",
+          "making gulls dominate the whole artwork",
+          "pure abstraction where the birds are no longer recognisable",
+          "imitating any living artist"
         ]
       },
       "notes": "",
@@ -74,14 +76,14 @@
         "style_name": "No Mount",
         "decision_reason": "Samsung Frame full-screen mode.",
         "analysis": {
-          "edge_luminance": 185.64,
-          "centre_luminance": 187.0,
-          "edge_variation": 12.56,
-          "edge_centre_difference": 1.36,
-          "average_saturation": 109.4,
-          "edge_red": 215.63,
-          "edge_green": 183.43,
-          "edge_blue": 119.24
+          "edge_luminance": 227.62,
+          "centre_luminance": 219.42,
+          "edge_variation": 4.6,
+          "edge_centre_difference": 8.21,
+          "average_saturation": 54.12,
+          "edge_red": 241.97,
+          "edge_green": 227.39,
+          "edge_blue": 187.77
         },
         "mount_width": 0,
         "output_size": [
@@ -92,13 +94,13 @@
         "presented_image": "artwork.png"
       },
       "exhibition": {
-        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Eurasian Blue Tit, Eurasian Collared Dove, European Goldfinch and Eurasian Tree Sparrow. Its atmosphere is calm, sun-warmed, civic, intimate, lightly formal, with a quiet northern freshness beneath the summer ochres.",
-        "collection": "BirdCanvas Daily",
-        "composition": "A wide horizontal fresco wall divided into three shallow arcade bays and a pale upper lunette. The lower band carries small cracks, masonry ledges and seed-like marks where the two sparrows gather at slightly different distances. The middle band holds a curved lemon branch supporting the Blue Tit and opening the central rhythm. The Goldfinch crosses the central arch in a poised diagonal, giving the whole wall a gentle pulse. The Collared Dove rests high in the lunette as a pale balancing form. The structure should feel stable, airy and architectural, with generous unpainted plaster breathing between figures.",
+        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Eurasian Blue Tit, Eurasian Collared Dove, European Goldfinch, Eurasian Tree Sparrow, Yellow-legged Gull and European Herring Gull. Its atmosphere is calm, alert, airy, precise and quietly playful; a northern coastal morning translated into signals and rests.",
+        "collection": "Daily Edition \u2014 North Shields Summer Signal",
+        "composition": "A long horizontal score-field spans the frame, with the lower third holding clustered sparrow rhythms and the upper third opening into wide gliding gull arcs. The centre contains the main syncopated activity: Blue Tit and Goldfinch bursts crossing the staves as small vivid signal-events. Collared Dove repeats as calm oval tones slightly off-centre, like a low-frequency pulse. Several bars should be intentionally empty, with visible tape-splice gaps and translucent overlays creating pauses. The overall structure should feel like a broadcast map, a musical score and a coastal horizon without becoming a literal landscape.",
         "hero_birds": [],
         "character_birds": [],
         "supporting_birds": [],
-        "visitor_count": 5,
+        "visitor_count": 7,
         "observation_date": "2026-07-28"
       },
       "provider": "birdcanvas",

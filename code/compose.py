@@ -912,13 +912,19 @@ Be practical. If a bird is stylised or abstract but reasonably identifiable, acc
 
 
 def compose(source="today", birds=None, edition="daily", observation_window=""):
+
+    print("compose() started")
+    print("Loading birds...")
     birds = list(birds) if birds is not None else load_birds_for_source(source)
+    print(f"Loaded {len(birds)} birds")
 
     if not birds:
         print(f"No birds recorded in {source}.")
         return None
 
+    print("Creating movement options...")
     movements = create_movement_options(birds, current_season(), edition)
+    print(f"Created {len(movements)} movement options")
 
     print("Movement options:")
     for i, m in enumerate(movements, 1):

@@ -3,13 +3,15 @@
   "date": "2026-07-28",
   "source": "birdnet_live_phone",
   "source_file": "BirdNET_Live_2026-07-28_07-23-33_#5.zip",
-  "confidence_threshold": 0.7,
+  "confidence_threshold": 0.5,
   "birds": [
     "House Sparrow",
     "Eurasian Blue Tit",
     "Eurasian Collared Dove",
     "European Goldfinch",
-    "Eurasian Tree Sparrow"
+    "Eurasian Tree Sparrow",
+    "Yellow-legged Gull",
+    "European Herring Gull"
   ],
   "observations": [
     {
@@ -22,13 +24,13 @@
       "species": "Eurasian Blue Tit",
       "scientific_name": "Cyanistes caeruleus",
       "confidence": 0.8791,
-      "detections": 6
+      "detections": 9
     },
     {
       "species": "Eurasian Collared Dove",
       "scientific_name": "Streptopelia decaocto",
       "confidence": 0.8442,
-      "detections": 2
+      "detections": 5
     },
     {
       "species": "European Goldfinch",
@@ -40,12 +42,24 @@
       "species": "Eurasian Tree Sparrow",
       "scientific_name": "Passer montanus",
       "confidence": 0.719,
+      "detections": 3
+    },
+    {
+      "species": "Yellow-legged Gull",
+      "scientific_name": "Larus michahellis",
+      "confidence": 0.5823,
+      "detections": 1
+    },
+    {
+      "species": "European Herring Gull",
+      "scientific_name": "Larus argentatus",
+      "confidence": 0.5707,
       "detections": 1
     }
   ],
   "import_summary": {
     "rows_read": 21,
-    "species_retained": 5,
+    "species_retained": 7,
     "selections_file": "BirdNET_Live_2026-07-28_07-23-33_#5.selections.txt"
   }
 }

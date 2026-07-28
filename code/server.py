@@ -22,7 +22,9 @@ from gallery_library import build_library, delete_artwork, update_artwork_metada
 from presentation_manager import apply_presentation
 from display_settings import load_display_settings, save_display_settings
 from reliability import create_backup, create_diagnostics, health_report
-
+from import_birdnet import import_zip
+from compose import compose
+from display import build_display_page
 PORT = 8000
 OUTPUT_FOLDER = Path("output")
 
@@ -94,6 +96,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if route == "/api/upload":
                 self.handle_upload()
                 return
+            if route == "/api/birdnet/upload":
+                self.handle_birdnet_upload()
+                return
+            if route == "/api/birdnet/generate":
+                self.handle_birdnet_generate()
+                return    
             if route == "/api/schedules":
                 payload = self.read_json_body()
                 schedule = create_schedule(str(payload.get("artwork_id", "")), str(payload.get("starts_at", "")), str(payload.get("ends_at", "")))
@@ -189,6 +197,62 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if form.getfirst("show_now", "false").lower() == "true":
             display = set_temporary_override(manifest["id"], int(form.getfirst("duration_minutes", "0")))
         self.send_json({"ok": True, "artwork": manifest, "display": display}, HTTPStatus.CREATED)
+    def handle_birdnet_upload(self) -> None:
+        content_length = int(self.headers.get("Content-Length", "0"))
+        if content_length <= 0:
+            raise ValueError("No upload was received.")
+
+        content_type = self.headers.get("Content-Type", "")
+        if not content_type.startswith("multipart/form-data"):
+            raise ValueError("Upload must use multipart form data.")
+
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={
+                "REQUEST_METHOD": "POST",
+                "CONTENT_TYPE": content_type,
+                "CONTENT_LENGTH": str(content_length),
+            },
+        )
+
+        zip_field = form["zip_file"] if "zip_file" in form else None
+        if zip_field is None or not getattr(zip_field, "file", None):
+            raise ValueError("Choose a BirdNET ZIP file.")
+
+        uploads = Path("data/uploads")
+        uploads.mkdir(parents=True, exist_ok=True)
+
+        zip_path = uploads / (zip_field.filename or "birdnet.zip")
+
+        with zip_path.open("wb") as output:
+            output.write(zip_field.file.read())
+
+        result = import_zip(
+            zip_path=zip_path,
+            output_path=Path("data/today.json"),
+            threshold=0.5,
+        )
+
+        self.send_json(
+            {
+                "ok": True,
+                "result": result,
+                "generated": False,
+                "message": "BirdNET detections imported successfully.",
+            },
+            HTTPStatus.CREATED,
+        )
+    def handle_birdnet_generate(self) -> None:
+        compose()
+        build_display_page()
+
+        self.send_json(
+            {
+                "ok": True,
+                "message": "Today's BirdCanvas artwork has been generated.",
+            }
+        )    
 
     def read_json_body(self) -> dict:
         length = int(self.headers.get("Content-Length", "0"))

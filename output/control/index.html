@@ -21,35 +21,10 @@
     <strong id="assurance-title">Checking daily artwork…</strong>
     <p id="assurance-message" class="subtle">GalleryOS is checking the current BirdCanvas artwork.</p>
   </div>
-  <div class="section"><h2>Quick actions</h2><div class="quick-grid"><button class="quick" data-go="add"><strong>＋ Add artwork</strong><span>Upload from your phone</span></button><button class="quick" data-go="birdnet">
-  <strong>🐦 BirdNET Import</strong>
-  <span>Upload a BirdNET Live ZIP</span>
-</button><button class="quick" data-go="schedule"><strong>Calendar</strong><span>Plan a temporary display</span></button><button class="quick" data-go="library"><strong>Library</strong><span id="library-count">Browse artwork</span></button><button class="quick" data-filter="favourites"><strong>★ Favourites</strong><span id="fav-count">Your saved pieces</span></button><button class="quick" data-go="journal"><strong>BirdCanvas journal</strong><span>Browse the garden through time</span></button><button class="quick" data-go="settings"><strong>Display settings</strong><span>Hours, blackout and rotation</span></button><button class="quick" data-go="system"><strong>System status</strong><span>Health, backup and diagnostics</span></button></div></div>
+  <div class="section"><h2>Quick actions</h2><div class="quick-grid"><button class="quick" data-go="add"><strong>＋ Add artwork</strong><span>Upload from your phone</span></button><button class="quick" data-go="schedule"><strong>Calendar</strong><span>Plan a temporary display</span></button><button class="quick" data-go="library"><strong>Library</strong><span id="library-count">Browse artwork</span></button><button class="quick" data-filter="favourites"><strong>★ Favourites</strong><span id="fav-count">Your saved pieces</span></button><button class="quick" data-go="journal"><strong>BirdCanvas journal</strong><span>Browse the garden through time</span></button><button class="quick" data-go="settings"><strong>Display settings</strong><span>Hours, blackout and rotation</span></button><button class="quick" data-go="system"><strong>System status</strong><span>Health, backup and diagnostics</span></button></div></div>
   <div class="card form-card section"><strong>Next change</strong><div class="subtle" id="next-change">Loading…</div></div>
 </section>
-<section id="add" class="panel"><h2>Add artwork</h2><form id="upload-form" class="card form-card"><div id="upload-preview" class="upload-preview"><div><strong>No image selected</strong><br><span>JPG, PNG or WebP · up to 20 MB</span></div></div><div class="field section"><label>Image</label><input id="upload-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required></div><div class="field"><label>Title</label><input id="upload-title" maxlength="120" placeholder="Custom artwork"></div><div class="field"><label>What should happen?</label><select id="upload-action"><option value="now">Display now</option><option value="schedule">Schedule it</option><option value="save">Save to library</option></select></div><div id="upload-now"><div class="field"><label>Display for</label><select id="upload-duration"><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="180">3 hours</option><option value="360">6 hours</option><option value="720">12 hours</option><option value="1440">24 hours</option></select></div></div><div id="upload-schedule" class="hidden"><div class="field"><label>Starts</label><input id="upload-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="upload-end" type="datetime-local"></div></div><button id="upload-button" class="btn" type="submit">Upload and display</button><div id="upload-status" class="status"></div></form></section><section id="birdnet" class="panel">
-  <h2>BirdNET Import</h2>
-
-  <form id="birdnet-form" class="card form-card">
-
-    <div class="field section">
-      <label>BirdNET Live ZIP</label>
-      <input
-        id="birdnet-zip"
-        name="zip_file"
-        type="file"
-        accept=".zip"
-        required>
-    </div>
-
-    <button id="birdnet-button" class="btn" type="submit">
-      Import BirdNET Session
-    </button>
-
-    <div id="birdnet-status" class="status"></div>
-
-  </form>
-</section>
+<section id="add" class="panel"><h2>Add artwork</h2><form id="upload-form" class="card form-card"><div id="upload-preview" class="upload-preview"><div><strong>No image selected</strong><br><span>JPG, PNG or WebP · up to 20 MB</span></div></div><div class="field section"><label>Image</label><input id="upload-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required></div><div class="field"><label>Title</label><input id="upload-title" maxlength="120" placeholder="Custom artwork"></div><div class="field"><label>What should happen?</label><select id="upload-action"><option value="now">Display now</option><option value="schedule">Schedule it</option><option value="save">Save to library</option></select></div><div id="upload-now"><div class="field"><label>Display for</label><select id="upload-duration"><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="180">3 hours</option><option value="360">6 hours</option><option value="720">12 hours</option><option value="1440">24 hours</option></select></div></div><div id="upload-schedule" class="hidden"><div class="field"><label>Starts</label><input id="upload-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="upload-end" type="datetime-local"></div></div><button id="upload-button" class="btn" type="submit">Upload and display</button><div id="upload-status" class="status"></div></form></section>
 <section id="schedule" class="panel"><h2>Schedule</h2><div class="card form-card"><div class="field"><label>Artwork</label><select id="schedule-artwork"></select></div><div class="field"><label>Starts</label><input id="schedule-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="schedule-end" type="datetime-local"></div><button id="schedule-button" class="btn">Add schedule</button><div id="schedule-status" class="status"></div></div><div class="section"><h2>Upcoming and active</h2><div id="schedules" class="card form-card"></div></div></section>
 <section id="journal" class="panel"><div class="journal-head"><div><h2>BirdCanvas journal</h2><p>A dated record of the artwork and birds from your garden.</p></div></div><div id="journal-content"></div></section>
 <section id="library" class="panel"><h2>Library</h2><div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search title or bird species"></div><div class="chips" id="chips"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="birdcanvas">BirdCanvas</button><button class="chip" data-filter="custom">Custom</button><button class="chip" data-filter="favourites">Favourites</button><button class="chip" data-filter="hidden">Hidden</button></div></div><div class="library-summary"><span id="result-count">0 artworks</span><span id="collection-summary"></span></div><div id="art-grid" class="art-grid"></div></section>
@@ -299,8 +274,6 @@ $('#end-override').onclick=async()=>{await post('/api/override/cancel');await re
 $('#upload-action').onchange=()=>{const v=$('#upload-action').value;$('#upload-now').classList.toggle('hidden',v!=='now');$('#upload-schedule').classList.toggle('hidden',v!=='schedule');$('#upload-button').textContent=v==='now'?'Upload and display':v==='schedule'?'Upload and schedule':'Save to library'};
 let previewUrl=null;$('#upload-image').onchange=e=>{const f=e.target.files[0];if(previewUrl)URL.revokeObjectURL(previewUrl);if(!f)return;previewUrl=URL.createObjectURL(f);$('#upload-preview').innerHTML=`<img src="${previewUrl}" alt="Preview">`;if(!$('#upload-title').value.trim())$('#upload-title').value=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ')};
 $('#upload-form').onsubmit=async e=>{e.preventDefault();const file=$('#upload-image').files[0],action=$('#upload-action').value,status=$('#upload-status');if(!file){status.textContent='Choose an image first.';return}const form=new FormData();form.append('image',file);form.append('title',$('#upload-title').value);form.append('show_now',action==='now'?'true':'false');form.append('duration_minutes',$('#upload-duration').value);try{status.textContent='Uploading…';const r=await fetch('/api/upload',{method:'POST',body:form}),d=await r.json();if(!r.ok)throw new Error(d.error||'Upload failed');if(action==='schedule')await post('/api/schedules',{artwork_id:d.artwork.id,starts_at:$('#upload-start').value,ends_at:$('#upload-end').value});status.textContent=action==='now'?'Artwork is now displayed.':action==='schedule'?'Artwork uploaded and scheduled.':'Artwork saved to library.';await refresh();setTimeout(()=>openPanel(action==='now'?'home':action==='schedule'?'schedule':'library'),700)}catch(err){status.textContent=err.message}};
-$('#birdnet-form').onsubmit=async e=>{e.preventDefault();const file=$('#birdnet-zip').files[0],status=$('#birdnet-status');if(!file){status.textContent='Choose a BirdNET ZIP first.';return}const form=new FormData();form.append('zip_file',file);try{status.textContent='Importing…';const r=await fetch('/api/birdnet/upload',{method:'POST',body:form}),d=await r.json();if(!r.ok)throw new Error(d.error||'Import failed');status.textContent='BirdNET session imported successfully.';await refresh();setTimeout(()=>openPanel('home'),700)}catch(err){status.textContent=err.message}};
-
 $('#schedule-button').onclick=async()=>{try{await post('/api/schedules',{artwork_id:$('#schedule-artwork').value,starts_at:$('#schedule-start').value,ends_at:$('#schedule-end').value});$('#schedule-status').textContent='Schedule added.';await refresh()}catch(e){$('#schedule-status').textContent=e.message}};
 
 
@@ -337,7 +310,6 @@ $('#display-settings-form').onsubmit=async event=>{
     status.textContent=error.message;
   }
 };
-
 
 const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));refresh();setInterval(refresh,15000);
 </script>
