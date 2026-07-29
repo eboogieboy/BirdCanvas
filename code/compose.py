@@ -662,10 +662,9 @@ Forget everything you know about bird illustration.
 
 Create a piece of contemporary art.
 
-The birds are simply one layer within the artwork.
+Every listed bird is an essential primary subject within the artwork.
 
-The image should feel collectible.
-
+Each bird must remain clearly visible, individually readable and recognisable, while the complete image still feels collectible.
 It should look expensive.
 
 It should reward repeated viewing.
@@ -757,6 +756,8 @@ Mandatory instructions for the image-generation prompt:
 - Include every listed species exactly once.
 - Show exactly {exact_bird_count} birds in total.
 - Do not omit any listed species.
+- Before choosing the artistic composition, reserve one separate visible position for every listed species.
+- Design the artwork around those reserved bird positions; never sacrifice a bird to improve balance, scale, negative space or artistic impact.
 - Do not duplicate any species.
 - Do not add any other birds.
 - Keep every bird fully separate from the others.
@@ -819,7 +820,7 @@ species appears once and only once.
         model="gpt-image-1",
         prompt=final_prompt,
         size=IMAGE_SIZE,
-        quality="high"
+        quality="medium"
     )
 
     return base64.b64decode(result.data[0].b64_json)
