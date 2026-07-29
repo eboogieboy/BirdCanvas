@@ -11,7 +11,7 @@ from artwork_store import publish_artwork
 from paths import OUTPUT_DIR, DATA_DIR
 OUTPUT = OUTPUT_DIR / "final_scene.png"
 CANDIDATE_DIR = OUTPUT_DIR / "candidates"
-MAX_ATTEMPTS = 1
+MAX_ATTEMPTS = 2
 IMAGE_SIZE = "1536x1024"
 
 client = OpenAI(
@@ -458,9 +458,33 @@ QUALITY REVIEW
 
 The previous artwork failed validation.
 
+Verifier findings:
+
 {correction}
 
-Create a new artwork that corrects these issues while remaining artistically excellent.
+This retry MUST correct every issue above.
+
+The artistic style, movement, materials, colour palette and composition were
+successful and should be preserved wherever possible.
+Treat the previous artwork as Revision 1.
+
+Create Revision 2 of the same artwork.
+
+Do not produce a different interpretation.
+
+The goal is to correct the verifier findings while making the smallest possible changes to the successful artwork.
+Do NOT redesign the artwork from scratch.
+
+Instead:
+
+- Reserve a separate visible position for every missing species before composing.
+- Every missing species becomes a mandatory primary subject.
+- Do not remove species that were already present.
+- Do not duplicate any species.
+- Preserve correct anatomy and identifying plumage.
+- Before rendering, internally confirm that every expected species appears exactly once.
+
+Only when every verification issue has been corrected should the artwork be rendered.
 """
 
     return f"""
@@ -1017,18 +1041,11 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
             observation_window=observation_window
         )
 
-        structured = compose_structured_image_prompt(birds, brief)
-
-        print("Structured prompt:")
-        print(json.dumps(structured, indent=2))
-        print()
+  
 
         prompt = create_image_prompt(
             birds,
-            {
-                **brief,
-                "structured_prompt": structured
-            }
+            brief
         )
 
         print("Final image prompt:")
@@ -1067,7 +1084,7 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                     "movement_options": movements,
                     "selected_movement": selected_movement,
                     "selection_reason": selection_reason,
-                    "structured_prompt": structured,
+                    
                     "image_prompt": prompt,
                     "critique": critique,
                 },
@@ -1098,7 +1115,7 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
             "movement_options": movements,
             "selected_movement": selected_movement,
             "selection_reason": selection_reason,
-            "structured_prompt": structured,
+            
             "image_prompt": prompt,
             "verification_failed": True,
         },
