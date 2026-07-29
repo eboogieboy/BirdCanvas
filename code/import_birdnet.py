@@ -13,11 +13,12 @@ import zipfile
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
+from paths import DATA_DIR, IMPORTS_DIR
 from typing import Any
 
 DEFAULT_THRESHOLD = 0.70
-DEFAULT_IMPORTS_DIR = Path("imports")
-DEFAULT_OUTPUT = Path("data/today.json")
+DEFAULT_IMPORTS_DIR = IMPORTS_DIR
+DEFAULT_OUTPUT = DATA_DIR / "today.json"
 
 
 def parse_args() -> argparse.Namespace:

@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from presentation import DEFAULT_STYLE, STYLES, create_gallery_presentation
-
-ARCHIVE_DIR = Path("output/archive")
-CURRENT_DIR = Path("output/current")
+from paths import OUTPUT_DIR
+ARCHIVE_DIR = OUTPUT_DIR / "archive"
+CURRENT_DIR = OUTPUT_DIR / "current"
 
 
 def _read_json(path: Path) -> dict[str, Any] | None:

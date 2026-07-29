@@ -10,9 +10,9 @@ from gallery_library import build_library
 from display_settings import load_display_settings, is_within_display_hours
 from reliability import load_last_good, log_event, remember_last_good
 from current_artwork import assurance_status, newest_valid_birdcanvas
-from paths import OUTPUT_DIR
+from paths import DATA_DIR, OUTPUT_DIR
 
-STATE_FILE = Path("data/galleryos_state.json")
+STATE_FILE = DATA_DIR / "galleryos_state.json"
 CURRENT_MANIFEST = OUTPUT_DIR / "current" / "manifest.json"
 SCHEDULE_LIMIT = 100
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")

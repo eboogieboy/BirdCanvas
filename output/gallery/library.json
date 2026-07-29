@@ -6,14 +6,14 @@
       "id": "birdcanvas",
       "title": "BirdCanvas",
       "count": 9,
-      "latest_created_at": "2026-07-29T16:37:27+00:00"
+      "latest_created_at": "2026-07-29T18:47:41+00:00"
     }
   ],
   "stats": {
     "artwork_count": 9,
     "favourite_count": 0,
     "hidden_count": 0,
-    "storage_bytes": 60885924
+    "storage_bytes": 59753034
   },
   "artworks": [
     {
@@ -21,11 +21,11 @@
       "collection": "birdcanvas",
       "title": "Garden Birds \u2014 2026-07-29",
       "observation_date": "2026-07-29",
-      "created_at": "2026-07-29T16:37:27+00:00",
-      "updated_at": "2026-07-29T16:37:27+00:00",
+      "created_at": "2026-07-29T18:47:41+00:00",
+      "updated_at": "2026-07-29T18:47:41+00:00",
       "image": "artwork.png",
       "image_url": "../archive/birdcanvas-2026-07-29-daily/artwork.png",
-      "image_size_bytes": 4139811,
+      "image_size_bytes": 3735917,
       "species": [
         "House Sparrow",
         "Common Wood Pigeon",
@@ -36,33 +36,33 @@
         "Great Tit"
       ],
       "season": "",
-      "style": "Landscape-format brutalist relief composed from interlocking concrete planes, cast metal bird recesses, black rubber expansion seams, zinc drainage channels, service-box apertures, etched vibration lines and small reflective colour insets. Bird forms should be simplified into silhouettes, cast shadows, cut-outs and surface impressions, but retain clear beaks, tails, wing proportions and posture. The composition should read first as an abstract architectural fa\u00e7ade, then resolve into an aviary of daily birds embedded in its structure.",
-      "palette": "Aerated concrete grey, warm road-dust beige, pale sandstone, oxidised zinc blue-grey, smoked acrylic charcoal, black EPDM rubber, dull aluminium, mica asphalt flecks, muted harbour green, safety yellow, soft goldfinch red, small black-and-white accents, and a faint oil-slick violet-green interference reserved for the Wood Pigeon.",
-      "mood": "Calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
+      "style": "A landscape hanging composed of uneven vertical raffia falls, braided palm-rib rails, stitched indigo cotton panels and suspended bird-oracle clusters. Forms should be simplified into crests, breast patches, wings, tails and beaks using shells, beads, seed pods and metal discs. Use negative space between hanging columns so the artwork breathes. Edges should be fringed, knotted and imperfect, but the overall composition must remain carefully balanced and gallery-clean.",
+      "palette": "Sea-glass green, faded indigo, raffia straw, red laterite, palm-kernel black, sandstone ochre, chalk white, dull brass, oxidised copper, shell cream, sparrow umber, goldfinch yellow, restrained crimson and gull-grey.",
+      "mood": "Warm, tactile, watchful and quietly animated; summer heat softened by cool northern light, with a sense of dry fibre, faint bells, long shadows and salt-polished surfaces.",
       "creative_collection": "BirdCanvas Daily",
       "creative_brief": {
         "collection": "BirdCanvas Daily",
-        "style": "Civic Thermal Relief",
-        "style_guidance": "Develop Heat-Sink Aviary as a premium landscape-format wall relief: severe, architectural and sun-stored, but refined enough for a contemporary interior. The birds should appear as recognisable civic imprints within an infrastructure surface, as if heat, weight and summer dust have temporarily fixed them into concrete, zinc and aluminium. Keep the language orthogonal, restrained and material-led, with small moments of colour acting like municipal signals rather than decoration.",
-        "curator_notes": "Today's work should feel like a fragment of public architecture removed from a quiet northern town and elevated into a gallery object. The bird list becomes a record of daily life held in slabs, seams, service apertures and drainage marks. The tone is dry and slightly tense, but not harsh; summer is present as absorbed heat, pale glare and mineral dust. The North Shields atmosphere should be indirect: cool maritime greys, salt-softened metal, weathered surfaces and a wide horizontal calm beneath the industrial severity.",
-        "mood": "Calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
-        "visual_language": "Landscape-format brutalist relief composed from interlocking concrete planes, cast metal bird recesses, black rubber expansion seams, zinc drainage channels, service-box apertures, etched vibration lines and small reflective colour insets. Bird forms should be simplified into silhouettes, cast shadows, cut-outs and surface impressions, but retain clear beaks, tails, wing proportions and posture. The composition should read first as an abstract architectural fa\u00e7ade, then resolve into an aviary of daily birds embedded in its structure.",
-        "palette": "Aerated concrete grey, warm road-dust beige, pale sandstone, oxidised zinc blue-grey, smoked acrylic charcoal, black EPDM rubber, dull aluminium, mica asphalt flecks, muted harbour green, safety yellow, soft goldfinch red, small black-and-white accents, and a faint oil-slick violet-green interference reserved for the Wood Pigeon.",
-        "composition": "A broad horizontal heat plane spans the lower half, interrupted by rubber seams and shallow zinc runnels. The upper band is lighter and more open, with a narrow aluminium glider-form near the top edge. Left-centre holds the largest recessed cast form, balanced by a boxed aperture to the right and a small high-intensity colour signal off-centre. Along the lower edge, pavement-like notches create a scale of smaller bird presences. The whole image should feel measured, architectural and deliberate, with enough negative space for the television frame to breathe.",
-        "bird_integration": "Represent every bird as a recognisable participant in the civic relief. The Common Wood Pigeon occupies the largest left-centre cast recess, broad-bodied with a rounded breast, small head, neck collar indication and a subtle oil-slick interference film suggesting its iridescence. The Yellow-legged Gull becomes a high aluminium glider-form near the upper edge, with long wings, assertive beak and a restrained yellow leg detail visible as enamel marks. The European Goldfinch is a small but immediately identifiable safety-yellow and red signal inset off-centre, with black wing bars rendered as crisp enamel stripes. The Great Tit sits in a boxed service aperture, recognisable through its yellow breast panel, black head block and central dark stripe. The Common Chiffchaff appears as a slim etched bird silhouette accompanied by fine vibration marks, suggesting song without pastoral softness. The House Sparrow and Eurasian Tree Sparrow cluster near lower pavement notches: both compact and social, with the Tree Sparrow distinguished by a chestnut cap and dark cheek spot, and the House Sparrow by softer brown-grey civic tones. All birds must remain visibly bird-like at normal viewing distance, even while absorbed into the industrial surface.",
-        "materials": "Cast aluminium, aerated concrete, patinated zinc, black EPDM rubber expansion joints, oxidised rebar impressions, road-marking enamel, mica-fleck asphalt aggregate, safety-yellow reflective beads, etched stainless steel plaques, smoked acrylic inspection windows, faint oil-slick interference film, sealed mineral pigment, and lightly abraded sandstone-toned plaster.",
-        "visual_focus": "The viewer should first be drawn to the broad lower concrete heat plane and its crossing black rubber seams, where pale summer glare, mineral texture and cool zinc lines create a strong architectural rhythm before the embedded forms reveal themselves.",
+        "style": "Salt-Raffia Divination Frieze",
+        "style_guidance": "Develop 'Raffia Oracle of the Dry Lagoon' into a landscape-format contemporary textile-assemblage conceived as a suspended ritual frieze rather than a picture of birds. The work should feel tactile, percussive and sun-dried, with seven bird-oracle forms emerging from raffia, shell, bead, brass and stitched pigment. Keep the inherited language of raffia curtains, calabash, cowrie, recycled plastic tassels and indigo cloth, but refine it for a premium interior: spacious, deliberate, asymmetrical and materially elegant. The North Shields atmosphere should enter quietly through cool sea-glass greens, pale shell whites, weathered-sandstone ochres and salt-worn grey shadows, not through literal coastal scenery.",
+        "curator_notes": "Today's exhibition should read as an artwork first: a wide hanging field of divinatory bird presences, arranged like a low summer wind passing through market relics, shrine fragments and harbour-worn materials. The birds are not illustrated in a naturalistic setting; they are translated into recognisable ceremonial silhouettes, charms and masks. Preserve calm despite the percussive materiality: the piece should rustle visually but not shout. The most memorable bird should be immediately legible from across the room, while the others reward slower looking through colour, weight, bead rhythm and symbolic construction.",
+        "mood": "Warm, tactile, watchful and quietly animated; summer heat softened by cool northern light, with a sense of dry fibre, faint bells, long shadows and salt-polished surfaces.",
+        "visual_language": "A landscape hanging composed of uneven vertical raffia falls, braided palm-rib rails, stitched indigo cotton panels and suspended bird-oracle clusters. Forms should be simplified into crests, breast patches, wings, tails and beaks using shells, beads, seed pods and metal discs. Use negative space between hanging columns so the artwork breathes. Edges should be fringed, knotted and imperfect, but the overall composition must remain carefully balanced and gallery-clean.",
+        "palette": "Sea-glass green, faded indigo, raffia straw, red laterite, palm-kernel black, sandstone ochre, chalk white, dull brass, oxidised copper, shell cream, sparrow umber, goldfinch yellow, restrained crimson and gull-grey.",
+        "composition": "A wide horizontal frieze with a shallow upper suspension line and long descending raffia curtains of varied lengths. The heaviest mass sits slightly below centre, grounding the work, while lighter tassels and shell forms rise toward the upper right. Seven bird-oracle zones are distributed asymmetrically across the field: low paired bundles at the left, a compact jewel-like cluster near the upper middle, a narrow vibrating strip crossing the centre, a brass-and-black charm to the right, a pale crest high in the composition and a broad calabash-cowrie body anchoring the lower centre. Leave generous quiet gaps so the Frame screen reads as a refined textile installation rather than a crowded collage.",
+        "bird_integration": "Represent every observed bird as a recognisable stylised presence within the assemblage. European Goldfinch should be the most immediately identifiable at normal viewing distance: a compact bead-and-shell bird with a clear red facial mask, yellow wing flash, black cap and pale body, suspended like a precious oracle token. Common Wood Pigeon becomes the largest grounded form: a soft grey-lilac calabash body with a pale neck crescent made from cowries and muted green-purple bead iridescence. Yellow-legged Gull appears as a high pale shell-and-recycled-plastic crest with long angular wings, cool grey back, white head and discreet yellow leg-strips. Great Tit is a paired brass-and-black charm with a bright yellow cotton breast panel, black central stripe, white cheek discs and olive edging. Common Chiffchaff is a slim green-brown vibrating strip of beads and raffia, with a fine pointed beak and pale eye-line suggested by a single stitched thread. House Sparrow and Eurasian Tree Sparrow form twin low seed-pod bundles: the House Sparrow warmer and dustier with a grey crown and black bib tab, the Tree Sparrow neater with a chestnut cap, white cheek and small black cheek mark. All birds should remain visible as birds through silhouette, beak direction, wing rhythm and key field marks, even while transformed into ceremonial assemblage.",
+        "materials": "Dyed raffia cascades, braided palm ribs, carved calabash segments, cowrie shells, recycled plastic strip tassels, glass trade beads, brass bottle-cap discs, hammered copper bells, indigo-starched cotton, red laterite pigment, charcoal rubbings, palm-kernel black, stitched leather tabs, seed pods, linen cord, shell fragments, dull metal wire and weathered wood-toned supports.",
+        "visual_focus": "The viewer should first be drawn to the central gravity of the hanging field: the dense meeting of calabash, cowrie, raffia shadow and muted metallic glints against cooler indigo gaps, creating a strong tactile centre before individual forms resolve.",
         "avoid": [
           "literal seaside scenery",
           "wildlife-calendar realism",
-          "pastoral softness",
-          "crowded bird illustration",
-          "cute character treatment",
-          "obvious summer clich\u00e9s",
-          "dramatic storm lighting",
-          "decorative coastal motifs",
-          "overly colourful naturalism",
-          "making common urban birds disappear"
+          "cartoon birds",
+          "overcrowded folk-art patterning",
+          "bright tropical clich\u00e9",
+          "direct imitation of any living artist",
+          "generic African pastiche",
+          "flat digital collage appearance",
+          "dramatic storm atmosphere",
+          "placing birds in a conventional landscape"
         ]
       },
       "notes": "",
@@ -76,14 +76,14 @@
         "style_name": "No Mount",
         "decision_reason": "Samsung Frame full-screen mode.",
         "analysis": {
-          "edge_luminance": 127.36,
-          "centre_luminance": 112.1,
-          "edge_variation": 37.65,
-          "edge_centre_difference": 15.26,
-          "average_saturation": 71.82,
-          "edge_red": 143.33,
-          "edge_green": 125.43,
-          "edge_blue": 99.49
+          "edge_luminance": 193.21,
+          "centre_luminance": 148.25,
+          "edge_variation": 15.52,
+          "edge_centre_difference": 44.97,
+          "average_saturation": 87.65,
+          "edge_red": 210.13,
+          "edge_green": 191.56,
+          "edge_blue": 159.75
         },
         "mount_width": 0,
         "output_size": [
@@ -94,9 +94,9 @@
         "presented_image": "artwork.png"
       },
       "exhibition": {
-        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Common Wood Pigeon, Eurasian Tree Sparrow, European Goldfinch, Common Chiffchaff, Yellow-legged Gull and Great Tit. Its atmosphere is calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
+        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Common Wood Pigeon, Eurasian Tree Sparrow, European Goldfinch, Common Chiffchaff, Yellow-legged Gull and Great Tit. Its atmosphere is warm, tactile, watchful and quietly animated; summer heat softened by cool northern light, with a sense of dry fibre, faint bells, long shadows and salt-polished surfaces.",
         "collection": "BirdCanvas Daily",
-        "composition": "A broad horizontal heat plane spans the lower half, interrupted by rubber seams and shallow zinc runnels. The upper band is lighter and more open, with a narrow aluminium glider-form near the top edge. Left-centre holds the largest recessed cast form, balanced by a boxed aperture to the right and a small high-intensity colour signal off-centre. Along the lower edge, pavement-like notches create a scale of smaller bird presences. The whole image should feel measured, architectural and deliberate, with enough negative space for the television frame to breathe.",
+        "composition": "A wide horizontal frieze with a shallow upper suspension line and long descending raffia curtains of varied lengths. The heaviest mass sits slightly below centre, grounding the work, while lighter tassels and shell forms rise toward the upper right. Seven bird-oracle zones are distributed asymmetrically across the field: low paired bundles at the left, a compact jewel-like cluster near the upper middle, a narrow vibrating strip crossing the centre, a brass-and-black charm to the right, a pale crest high in the composition and a broad calabash-cowrie body anchoring the lower centre. Leave generous quiet gaps so the Frame screen reads as a refined textile installation rather than a crowded collage.",
         "hero_birds": [],
         "character_birds": [],
         "supporting_birds": [],

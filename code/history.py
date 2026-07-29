@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
-
-FILE = Path("data/history.json")
+from paths import DATA_DIR
+FILE = DATA_DIR / "history.json"
 
 MAX_HISTORY = 10
 

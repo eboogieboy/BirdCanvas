@@ -8,9 +8,9 @@ from openai import OpenAI
 
 from storage import get_birds, get_yesterday_birds
 from artwork_store import publish_artwork
-
-OUTPUT = Path("output/final_scene.png")
-CANDIDATE_DIR = Path("output/candidates")
+from paths import OUTPUT_DIR, DATA_DIR
+OUTPUT = OUTPUT_DIR / "final_scene.png"
+CANDIDATE_DIR = OUTPUT_DIR / "candidates"
 MAX_ATTEMPTS = 1
 IMAGE_SIZE = "1536x1024"
 
@@ -59,7 +59,7 @@ def current_season():
 
 from pathlib import Path as _Path
 
-HISTORY_FILE = _Path("data/creative_history.json")
+HISTORY_FILE = DATA_DIR / "creative_history.json"
 
 
 def load_creative_history(limit=10):

@@ -9,8 +9,8 @@ from typing import Any, BinaryIO
 
 from gallery_library import build_library
 from presentation import DEFAULT_STYLE, create_gallery_presentation
-
-ARCHIVE_DIR = Path("output/archive")
+from paths import OUTPUT_DIR
+ARCHIVE_DIR = OUTPUT_DIR / "archive"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 ALLOWED_TYPES = {
     "image/jpeg": (".jpg", b"\xff\xd8\xff"),

@@ -3,10 +3,11 @@ from __future__ import annotations
 import json
 from datetime import datetime, time
 from pathlib import Path
+from paths import DATA_DIR
 from typing import Any
 from zoneinfo import ZoneInfo
 
-SETTINGS_FILE = Path("data/display_settings.json")
+SETTINGS_FILE = DATA_DIR / "display_settings.json"
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
 
 DEFAULT_SETTINGS: dict[str, Any] = {

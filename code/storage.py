@@ -1,9 +1,9 @@
 import json
 from datetime import date
 from pathlib import Path
-
-TODAY_FILE = Path("data/today.json")
-YESTERDAY_FILE = Path("data/yesterday.json")
+from paths import DATA_DIR
+TODAY_FILE = DATA_DIR / "today.json"
+YESTERDAY_FILE = DATA_DIR / "yesterday.json"
 
 
 def _today():

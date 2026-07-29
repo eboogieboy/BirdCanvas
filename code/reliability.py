@@ -12,9 +12,7 @@ from paths import DATA_DIR
 from paths import OUTPUT_DIR
 
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
-DATA_DIR = DATA_DIR
-OUTPUT_DIR = OUTPUT_DIR
-BACKUP_DIR = BACKUP_DIR
+
 LOG_DIR = Path("runtime/logs")
 LAST_GOOD_FILE = DATA_DIR / "last_good_artwork.json"
 VERSION_FILE = Path("VERSION")
@@ -109,7 +107,13 @@ def create_backup() -> Path:
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(LOCAL_TIMEZONE).strftime("%Y%m%d-%H%M%S")
     destination = BACKUP_DIR / f"canvasos-backup-{stamp}.zip"
-    include = [DATA_DIR, Path("output/archive"), Path("output/current"), Path("VERSION"), Path("requirements.txt")]
+    include = [
+    DATA_DIR,
+    OUTPUT_DIR / "archive",
+    OUTPUT_DIR / "current",
+    Path("VERSION"),
+    Path("requirements.txt"),
+]
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("backup-metadata.json", json.dumps({"created_at": now_iso(), "version": read_version(), "format": 1}, indent=2))
         for item in include:
