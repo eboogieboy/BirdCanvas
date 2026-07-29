@@ -732,27 +732,59 @@ Return ONLY JSON:
 
 
 def create_image_prompt(birds, brief):
-    bird_list = ", ".join(birds)
+    
+    numbered_birds = "\n".join(
+        f"{index}. {bird}"
+        for index, bird in enumerate(birds, start=1)
+    )
+    exact_bird_count = len(birds)
 
     response = client.responses.create(
         model="gpt-5.5",
         input=f"""
 You are the Image Prompt Writer for BirdCanvas.
 
-Convert the curator's brief into a concise, highly effective prompt for gpt-image-1.
+Convert the curator's brief into ONE concise, highly effective prompt for
+gpt-image-1.
 
-Today's birds:
-{bird_list}
+BIRD ACCURACY IS THE HIGHEST PRIORITY.
+
+The finished artwork must contain exactly {exact_bird_count} individual birds:
+{numbered_birds}
+
+Mandatory instructions for the image-generation prompt:
+
+- Include every listed species exactly once.
+- Show exactly {exact_bird_count} birds in total.
+- Do not omit any listed species.
+- Do not duplicate any species.
+- Do not add any other birds.
+- Keep every bird fully separate from the others.
+- Do not merge, overlap or partially hide birds.
+- Give every bird a distinct position within the composition.
+- Each species must be recognisable from its correct body shape, proportions,
+  plumage colours and distinctive field markings.
+- Preserve realistic bird anatomy even when the surrounding artwork is stylised.
+- Artistic style may affect texture, materials, lighting and background, but it
+  must not distort identifying features.
+- Do not turn birds into silhouettes, vague motifs, fragments or purely abstract
+  shapes.
+- Make every bird large enough to identify on a landscape Samsung Frame display.
+- Describe each listed species individually in the final prompt.
+- State the exact total number of birds clearly near the beginning and end of
+  the final prompt.
 
 Creative brief:
 {json.dumps(brief, indent=2)}
 
 Write ONE image-generation prompt.
 
-Do not explain.
+Do not explain your work.
 Do not use headings.
-Do not repeat the JSON.
-Focus on visual execution.
+Do not repeat the JSON verbatim.
+Focus on precise visual execution.
+The final prompt must retain both the bird-accuracy rules and the intended
+museum-quality artistic direction.
 """
     )
 
@@ -761,17 +793,36 @@ Focus on visual execution.
     except Exception:
         return build_prompt(birds, brief)
 
-
 def generate_image(prompt):
+    final_prompt = f"""
+{prompt}
+
+MANDATORY BIRD ACCURACY CHECKLIST:
+
+- Show exactly the number of birds specified in the prompt.
+- Include every listed bird species exactly once.
+- Do not omit, duplicate or invent any bird.
+- Place each bird in a separate, clearly readable position.
+- Keep every bird fully visible; do not crop, merge, overlap or conceal them.
+- Preserve correct anatomy, proportions, posture and identifying plumage.
+- Each species must be recognisable from its distinctive field markings.
+- Artistic materials and stylisation may affect the surrounding artwork, but
+  must not obscure or distort the birds.
+- Do not replace birds with silhouettes, symbols, fragments or vague motifs.
+- Make all birds large enough to identify when viewed across a room.
+
+Before rendering, internally count the birds and confirm that every listed
+species appears once and only once.
+"""
+
     result = client.images.generate(
         model="gpt-image-1",
-        prompt=prompt,
+        prompt=final_prompt,
         size=IMAGE_SIZE,
         quality="high"
     )
 
     return base64.b64decode(result.data[0].b64_json)
-
 
 def save_image(image_bytes, output_path=OUTPUT):
     output_path = Path(output_path)
