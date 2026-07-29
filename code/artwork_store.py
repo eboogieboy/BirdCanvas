@@ -4,11 +4,11 @@ import json
 import re
 import shutil
 from datetime import datetime
-from pathlib import Path
+from paths import OUTPUT_DIR
 
 from presentation import DEFAULT_STYLE, create_gallery_presentation
 
-OUTPUT_DIR = Path("output")
+
 CURRENT_DIR = OUTPUT_DIR / "current"
 ARCHIVE_DIR = OUTPUT_DIR / "archive"
 LEGACY_IMAGE = OUTPUT_DIR / "final_scene.png"

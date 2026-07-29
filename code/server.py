@@ -26,7 +26,9 @@ from import_birdnet import import_zip
 from compose import compose
 from display import build_display_page
 PORT = 8000
-OUTPUT_FOLDER = Path("output")
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_FOLDER = PROJECT_ROOT / "output"
 
 
 class ReusableTCPServer(socketserver.ThreadingTCPServer):
@@ -57,7 +59,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route.startswith("/downloads/"):
             filename = route.removeprefix("/downloads/")
-            path = Path("backups") / filename
+            path = PROJECT_ROOT / "backups" / filename
             if not path.exists() or not path.is_file():
                 self.send_error(404)
                 return
@@ -220,7 +222,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if zip_field is None or not getattr(zip_field, "file", None):
             raise ValueError("Choose a BirdNET ZIP file.")
 
-        uploads = Path("data/uploads")
+        uploads = PROJECT_ROOT / "data/uploads"
         uploads.mkdir(parents=True, exist_ok=True)
 
         zip_path = uploads / (zip_field.filename or "birdnet.zip")
@@ -230,7 +232,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         result = import_zip(
             zip_path=zip_path,
-            output_path=Path("data/today.json"),
+            output_path=PROJECT_ROOT / "data/today.json",
             threshold=0.5,
         )
 

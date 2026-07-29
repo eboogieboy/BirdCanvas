@@ -7,10 +7,11 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from gallery_library import build_library
+from paths import OUTPUT_DIR
 
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
-CURRENT_MANIFEST = Path("output/current/manifest.json")
-CURRENT_DIR = Path("output/current")
+CURRENT_MANIFEST = OUTPUT_DIR / "current" / "manifest.json"
+CURRENT_DIR = OUTPUT_DIR / "current"
 EXPECTED_READY_TIME = time(hour=6, minute=0)
 
 
@@ -58,7 +59,7 @@ def _normalise_archive_url(artwork: dict[str, Any]) -> dict[str, Any]:
     url = str(result.get("image_url", ""))
     result["image_url"] = f"/{url.removeprefix('../').removeprefix('/')}"
     relative = result["image_url"].split("?", 1)[0].lstrip("/")
-    path = Path("output") / relative
+    path = OUTPUT_DIR / relative
     result["display_revision"] = _image_revision(path)
     return result
 

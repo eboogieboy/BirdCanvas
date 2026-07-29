@@ -254,5 +254,37 @@
       "geometry": "Flattened aerial charbagh garden with symmetrical water channels, central pool, gold ruling and manuscript borders",
       "overall_character": "An intimate landscape-format summer manuscript page where ordinary birds are elevated into ceremonial miniature roles, balancing jewel-like ornament with cool North Sea calm and contemporary restraint"
     }
+  },
+  {
+    "date": "2026-07-29",
+    "movement": "Heat-Sink Aviary: Brutalist Summer Commons",
+    "materials": "Cast aluminium, aerated concrete, patinated zinc, black EPDM rubber expansion joints, oxidised rebar impressions, road-marking enamel, mica-fleck asphalt aggregate, safety-yellow reflective beads, etched stainless steel plaques, smoked acrylic inspection windows, faint oil-slick interference film, sealed mineral pigment, and lightly abraded sandstone-toned plaster.",
+    "palette": "Aerated concrete grey, warm road-dust beige, pale sandstone, oxidised zinc blue-grey, smoked acrylic charcoal, black EPDM rubber, dull aluminium, mica asphalt flecks, muted harbour green, safety yellow, soft goldfinch red, small black-and-white accents, and a faint oil-slick violet-green interference reserved for the Wood Pigeon.",
+    "composition": "A broad horizontal heat plane spans the lower half, interrupted by rubber seams and shallow zinc runnels. The upper band is lighter and more open, with a narrow aluminium glider-form near the top edge. Left-centre holds the largest recessed cast form, balanced by a boxed aperture to the right and a small high-intensity colour signal off-centre. Along the lower edge, pavement-like notches create a scale of smaller bird presences. The whole image should feel measured, architectural and deliberate, with enough negative space for the television frame to breathe.",
+    "originality": 8,
+    "creative_dna": {
+      "dominant_family": "Architectural brutalist civic relief / material-led urban aviary",
+      "materials": [
+        "aerated concrete",
+        "cast aluminium",
+        "patinated zinc",
+        "black EPDM rubber",
+        "dull aluminium",
+        "smoked acrylic",
+        "road-marking enamel",
+        "mica-fleck asphalt aggregate",
+        "etched stainless steel",
+        "oxidised rebar impressions",
+        "sandstone-toned plaster",
+        "safety-yellow reflective beads",
+        "oil-slick interference film"
+      ],
+      "palette_type": "Muted civic-industrial neutrals with maritime greys, warm dust tones, restrained municipal signal accents and rare iridescence",
+      "energy": "Calm, weighty, sun-stored, dry, restrained and quietly alert",
+      "complexity": "Moderate to high: abstract architectural structure with embedded readable bird identities and carefully placed civic details",
+      "surface": "Textured, mineral, cast, abraded, weathered, heat-warmed and seam-cut with recessed impressions, apertures and etched marks",
+      "geometry": "Orthogonal landscape composition with interlocking planes, horizontal bands, rubber seams, zinc runnels, boxed apertures and simplified bird silhouettes",
+      "overall_character": "A severe yet refined fragment of northern public architecture transformed into a gallery-grade wall relief, where common urban birds appear as civic imprints held in concrete, metal, dust and summer glare"
+    }
   }
 ]

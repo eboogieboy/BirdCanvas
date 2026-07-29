@@ -5,8 +5,9 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from paths import OUTPUT_DIR
 
-OUTPUT_DIR = Path("output")
+OUTPUT_DIR = OUTPUT_DIR
 ARCHIVE_DIR = OUTPUT_DIR / "archive"
 CURRENT_MANIFEST = OUTPUT_DIR / "current" / "manifest.json"
 LIBRARY_DIR = OUTPUT_DIR / "gallery"

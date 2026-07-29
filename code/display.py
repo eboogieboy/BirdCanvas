@@ -2,14 +2,15 @@ from pathlib import Path
 
 from artwork_store import migrate_legacy_artwork
 from gallery_library import build_library
+from paths import OUTPUT_DIR
 
 
 def build_display_page() -> None:
     migrate_legacy_artwork()
     build_library()
-    Path("output").mkdir(parents=True, exist_ok=True)
-    Path("output/index.html").write_text(DISPLAY_HTML, encoding="utf-8")
-    control_dir = Path("output/control")
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUTPUT_DIR / "index.html").write_text(DISPLAY_HTML, encoding="utf-8")
+    control_dir = OUTPUT_DIR / "control"
     control_dir.mkdir(parents=True, exist_ok=True)
     (control_dir / "index.html").write_text(CONTROL_HTML, encoding="utf-8")
     print("✓ Dumb display page saved to output/index.html")

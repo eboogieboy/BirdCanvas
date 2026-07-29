@@ -6,14 +6,14 @@
       "id": "birdcanvas",
       "title": "BirdCanvas",
       "count": 9,
-      "latest_created_at": "2026-07-29T16:25:13+00:00"
+      "latest_created_at": "2026-07-29T16:37:27+00:00"
     }
   ],
   "stats": {
     "artwork_count": 9,
     "favourite_count": 0,
     "hidden_count": 0,
-    "storage_bytes": 60622069
+    "storage_bytes": 60885924
   },
   "artworks": [
     {
@@ -21,11 +21,11 @@
       "collection": "birdcanvas",
       "title": "Garden Birds \u2014 2026-07-29",
       "observation_date": "2026-07-29",
-      "created_at": "2026-07-29T16:25:13+00:00",
-      "updated_at": "2026-07-29T16:25:13+00:00",
+      "created_at": "2026-07-29T16:37:27+00:00",
+      "updated_at": "2026-07-29T16:37:27+00:00",
       "image": "artwork.png",
       "image_url": "../archive/birdcanvas-2026-07-29-daily/artwork.png",
-      "image_size_bytes": 4105550,
+      "image_size_bytes": 4139811,
       "species": [
         "House Sparrow",
         "Common Wood Pigeon",
@@ -36,33 +36,33 @@
         "Great Tit"
       ],
       "season": "",
-      "style": "Flattened aerial garden geometry, razor-thin gold ruling, pierced paper borders, tiny floral margins, symmetrical water channels, calligraphic vinework, soft indigo washes, malachite foliage, shell-gold highlights, stippled white heat-haze and delicate carbon-black contour drawing. The page should feel handmade and precious, with tiny variations in pigment density and burnish catching the light.",
-      "palette": "Lapis lazuli blue, sea-glass turquoise, malachite green, orpiment yellow, carmine lake, saffron glaze, shell gold, sandstone rose, pigeon mauve-grey, indigo shadow, warm parchment, salt-white stippling and muted harbour green-black.",
-      "mood": "Courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
-      "creative_collection": "Daily BirdCanvas: North Shields Summer Folio",
+      "style": "Landscape-format brutalist relief composed from interlocking concrete planes, cast metal bird recesses, black rubber expansion seams, zinc drainage channels, service-box apertures, etched vibration lines and small reflective colour insets. Bird forms should be simplified into silhouettes, cast shadows, cut-outs and surface impressions, but retain clear beaks, tails, wing proportions and posture. The composition should read first as an abstract architectural fa\u00e7ade, then resolve into an aviary of daily birds embedded in its structure.",
+      "palette": "Aerated concrete grey, warm road-dust beige, pale sandstone, oxidised zinc blue-grey, smoked acrylic charcoal, black EPDM rubber, dull aluminium, mica asphalt flecks, muted harbour green, safety yellow, soft goldfinch red, small black-and-white accents, and a faint oil-slick violet-green interference reserved for the Wood Pigeon.",
+      "mood": "Calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
+      "creative_collection": "BirdCanvas Daily",
       "creative_brief": {
-        "collection": "Daily BirdCanvas: North Shields Summer Folio",
-        "style": "Sea-Glass Charbagh Miniature",
-        "style_guidance": "Develop the Monsoon Miniature Aviary into a landscape-format illuminated folio: a contemporary Indo-Persian and Rajasthani miniature language cooled by North Sea light. Keep the jewel-like precision, burnished surfaces, shell-gold rules, flattened garden geometry and courtly stillness, but temper the saturation with sea-glass greens, harbour blues, sandstone pinks and salt-softened whites. The result should feel like a precious manuscript page made for a modern interior rather than a historical reconstruction.",
-        "curator_notes": "Today's exhibition should read as an intimate summer manuscript of ordinary birds elevated into ceremony. The birds are not set in a literal coastal scene; instead, the coast is present as cool luminosity, pale mineral texture and an open horizontal calm. The artwork should feel precise, fragrant and ornamental, but never busy. Use miniature discipline to make common birds feel treasured: each species is given a designated architectural or botanical role inside the folio, with the European Goldfinch carrying the richest ornament while the sparrows, tit, chiffchaff, pigeon and gull form a balanced court around it.",
-        "mood": "Courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
-        "visual_language": "Flattened aerial garden geometry, razor-thin gold ruling, pierced paper borders, tiny floral margins, symmetrical water channels, calligraphic vinework, soft indigo washes, malachite foliage, shell-gold highlights, stippled white heat-haze and delicate carbon-black contour drawing. The page should feel handmade and precious, with tiny variations in pigment density and burnish catching the light.",
-        "palette": "Lapis lazuli blue, sea-glass turquoise, malachite green, orpiment yellow, carmine lake, saffron glaze, shell gold, sandstone rose, pigeon mauve-grey, indigo shadow, warm parchment, salt-white stippling and muted harbour green-black.",
-        "composition": "A landscape illuminated folio arranged as a wide charbagh garden viewed from above. Four narrow water channels cross at a small square pool near the centre, creating a calm geometric anchor. Flowering beds extend horizontally like an opened manuscript, framed by pierced borders and hairline gold rules. A narrow upper register holds a pale cloud band; a lower terrace band introduces architectural balance. The composition should feel spacious despite the ornament, with breathable intervals of burnished paper and cool blue wash.",
-        "bird_integration": "Represent every observed bird clearly within the miniature system. The European Goldfinch is the most ornate figure, perched at the central crossing of the four garden channels, immediately recognisable through its red face, black-and-white head, warm buff body and bright yellow wing flash. House Sparrow and Eurasian Tree Sparrow mirror one another in the lower left and lower right garden beds: the House Sparrow with grey crown and black bib, the Tree Sparrow with chestnut cap and cheek spot, both simplified into elegant courtly profiles. The Great Tit appears inside a rounded foliage cartouche, recognisable by its yellow breast, black head, white cheek and central black stripe. The Common Chiffchaff is small but visible in the marginal vinework, a quiet olive-brown note with fine legs and a delicate insect-seeking posture. The Common Wood Pigeon rests as a calm mauve-grey mass on a terrace balcony, with white neck patch and soft rose breast subtly indicated. The Yellow-legged Gull becomes a pale cloud-bird above the top border, interrupting the order of the manuscript with white-grey wings and distinct yellow legs, present but secondary.",
-        "materials": "Handmade wasli paper texture, burnished agate sheen, opaque gouache, shell gold, lapis and malachite mineral colour, saffron staining, indigo wash, carbon-black hairline drawing, gum arabic gloss, microscopic white stippling, pierced-paper border effects and fine squirrel-hair brushwork translated into a contemporary digital artwork for a landscape Samsung Frame display.",
-        "visual_focus": "The viewer should first be drawn to the luminous central pool and its precise shell-gold cross of channels, where burnished blue, gold geometry and sea-glass greens create a jewel-like point of stillness before the eye discovers the surrounding birds.",
+        "collection": "BirdCanvas Daily",
+        "style": "Civic Thermal Relief",
+        "style_guidance": "Develop Heat-Sink Aviary as a premium landscape-format wall relief: severe, architectural and sun-stored, but refined enough for a contemporary interior. The birds should appear as recognisable civic imprints within an infrastructure surface, as if heat, weight and summer dust have temporarily fixed them into concrete, zinc and aluminium. Keep the language orthogonal, restrained and material-led, with small moments of colour acting like municipal signals rather than decoration.",
+        "curator_notes": "Today's work should feel like a fragment of public architecture removed from a quiet northern town and elevated into a gallery object. The bird list becomes a record of daily life held in slabs, seams, service apertures and drainage marks. The tone is dry and slightly tense, but not harsh; summer is present as absorbed heat, pale glare and mineral dust. The North Shields atmosphere should be indirect: cool maritime greys, salt-softened metal, weathered surfaces and a wide horizontal calm beneath the industrial severity.",
+        "mood": "Calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
+        "visual_language": "Landscape-format brutalist relief composed from interlocking concrete planes, cast metal bird recesses, black rubber expansion seams, zinc drainage channels, service-box apertures, etched vibration lines and small reflective colour insets. Bird forms should be simplified into silhouettes, cast shadows, cut-outs and surface impressions, but retain clear beaks, tails, wing proportions and posture. The composition should read first as an abstract architectural fa\u00e7ade, then resolve into an aviary of daily birds embedded in its structure.",
+        "palette": "Aerated concrete grey, warm road-dust beige, pale sandstone, oxidised zinc blue-grey, smoked acrylic charcoal, black EPDM rubber, dull aluminium, mica asphalt flecks, muted harbour green, safety yellow, soft goldfinch red, small black-and-white accents, and a faint oil-slick violet-green interference reserved for the Wood Pigeon.",
+        "composition": "A broad horizontal heat plane spans the lower half, interrupted by rubber seams and shallow zinc runnels. The upper band is lighter and more open, with a narrow aluminium glider-form near the top edge. Left-centre holds the largest recessed cast form, balanced by a boxed aperture to the right and a small high-intensity colour signal off-centre. Along the lower edge, pavement-like notches create a scale of smaller bird presences. The whole image should feel measured, architectural and deliberate, with enough negative space for the television frame to breathe.",
+        "bird_integration": "Represent every bird as a recognisable participant in the civic relief. The Common Wood Pigeon occupies the largest left-centre cast recess, broad-bodied with a rounded breast, small head, neck collar indication and a subtle oil-slick interference film suggesting its iridescence. The Yellow-legged Gull becomes a high aluminium glider-form near the upper edge, with long wings, assertive beak and a restrained yellow leg detail visible as enamel marks. The European Goldfinch is a small but immediately identifiable safety-yellow and red signal inset off-centre, with black wing bars rendered as crisp enamel stripes. The Great Tit sits in a boxed service aperture, recognisable through its yellow breast panel, black head block and central dark stripe. The Common Chiffchaff appears as a slim etched bird silhouette accompanied by fine vibration marks, suggesting song without pastoral softness. The House Sparrow and Eurasian Tree Sparrow cluster near lower pavement notches: both compact and social, with the Tree Sparrow distinguished by a chestnut cap and dark cheek spot, and the House Sparrow by softer brown-grey civic tones. All birds must remain visibly bird-like at normal viewing distance, even while absorbed into the industrial surface.",
+        "materials": "Cast aluminium, aerated concrete, patinated zinc, black EPDM rubber expansion joints, oxidised rebar impressions, road-marking enamel, mica-fleck asphalt aggregate, safety-yellow reflective beads, etched stainless steel plaques, smoked acrylic inspection windows, faint oil-slick interference film, sealed mineral pigment, and lightly abraded sandstone-toned plaster.",
+        "visual_focus": "The viewer should first be drawn to the broad lower concrete heat plane and its crossing black rubber seams, where pale summer glare, mineral texture and cool zinc lines create a strong architectural rhythm before the embedded forms reveal themselves.",
         "avoid": [
           "literal seaside scenery",
           "wildlife-calendar realism",
-          "overcrowded botanical decoration",
-          "cartoon birds",
-          "muddy colours",
-          "dramatic storm or sunset effects",
-          "historical pastiche without contemporary restraint",
-          "making the gull dominant",
-          "hiding the birds so thoroughly that they become decorative marks",
-          "imitating any living artist"
+          "pastoral softness",
+          "crowded bird illustration",
+          "cute character treatment",
+          "obvious summer clich\u00e9s",
+          "dramatic storm lighting",
+          "decorative coastal motifs",
+          "overly colourful naturalism",
+          "making common urban birds disappear"
         ]
       },
       "notes": "",
@@ -76,14 +76,14 @@
         "style_name": "No Mount",
         "decision_reason": "Samsung Frame full-screen mode.",
         "analysis": {
-          "edge_luminance": 174.42,
-          "centre_luminance": 162.41,
-          "edge_variation": 23.18,
-          "edge_centre_difference": 12.0,
-          "average_saturation": 97.03,
-          "edge_red": 199.54,
-          "edge_green": 172.36,
-          "edge_blue": 120.78
+          "edge_luminance": 127.36,
+          "centre_luminance": 112.1,
+          "edge_variation": 37.65,
+          "edge_centre_difference": 15.26,
+          "average_saturation": 71.82,
+          "edge_red": 143.33,
+          "edge_green": 125.43,
+          "edge_blue": 99.49
         },
         "mount_width": 0,
         "output_size": [
@@ -94,9 +94,9 @@
         "presented_image": "artwork.png"
       },
       "exhibition": {
-        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Common Wood Pigeon, Eurasian Tree Sparrow, European Goldfinch, Common Chiffchaff, Yellow-legged Gull and Great Tit. Its atmosphere is courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
-        "collection": "Daily BirdCanvas: North Shields Summer Folio",
-        "composition": "A landscape illuminated folio arranged as a wide charbagh garden viewed from above. Four narrow water channels cross at a small square pool near the centre, creating a calm geometric anchor. Flowering beds extend horizontally like an opened manuscript, framed by pierced borders and hairline gold rules. A narrow upper register holds a pale cloud band; a lower terrace band introduces architectural balance. The composition should feel spacious despite the ornament, with breathable intervals of burnished paper and cool blue wash.",
+        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Common Wood Pigeon, Eurasian Tree Sparrow, European Goldfinch, Common Chiffchaff, Yellow-legged Gull and Great Tit. Its atmosphere is calm, sun-struck, weighty, civic, dry, restrained and quietly alert, with a faint maritime coolness under the stored heat.",
+        "collection": "BirdCanvas Daily",
+        "composition": "A broad horizontal heat plane spans the lower half, interrupted by rubber seams and shallow zinc runnels. The upper band is lighter and more open, with a narrow aluminium glider-form near the top edge. Left-centre holds the largest recessed cast form, balanced by a boxed aperture to the right and a small high-intensity colour signal off-centre. Along the lower edge, pavement-like notches create a scale of smaller bird presences. The whole image should feel measured, architectural and deliberate, with enough negative space for the television frame to breathe.",
         "hero_birds": [],
         "character_birds": [],
         "supporting_birds": [],

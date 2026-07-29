@@ -10,9 +10,10 @@ from gallery_library import build_library
 from display_settings import load_display_settings, is_within_display_hours
 from reliability import load_last_good, log_event, remember_last_good
 from current_artwork import assurance_status, newest_valid_birdcanvas
+from paths import OUTPUT_DIR
 
 STATE_FILE = Path("data/galleryos_state.json")
-CURRENT_MANIFEST = Path("output/current/manifest.json")
+CURRENT_MANIFEST = OUTPUT_DIR / "current" / "manifest.json"
 SCHEDULE_LIMIT = 100
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
 
@@ -79,7 +80,7 @@ def _find_artwork(artwork_id: str, include_hidden: bool = False) -> dict[str, An
 def _image_revision(image_url: str) -> str:
     """Return a stable cache-busting revision for an image served from output/."""
     relative = image_url.split("?", 1)[0].lstrip("/")
-    path = Path("output") / relative
+    path = OUTPUT_DIR / relative
     try:
         stat = path.stat()
     except OSError:
