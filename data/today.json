@@ -1,65 +1,65 @@
 {
   "schema_version": 1,
-  "date": "2026-07-28",
+  "date": "2026-07-29",
   "source": "birdnet_live_phone",
-  "source_file": "BirdNET_Live_2026-07-28_07-23-33_#5.zip",
+  "source_file": "BirdNET_Live_2026-07-29_09-29-43_#3 (1).zip",
   "confidence_threshold": 0.5,
   "birds": [
     "House Sparrow",
-    "Eurasian Blue Tit",
-    "Eurasian Collared Dove",
-    "European Goldfinch",
+    "Common Wood Pigeon",
     "Eurasian Tree Sparrow",
+    "European Goldfinch",
+    "Common Chiffchaff",
     "Yellow-legged Gull",
-    "European Herring Gull"
+    "Great Tit"
   ],
   "observations": [
     {
       "species": "House Sparrow",
       "scientific_name": "Passer domesticus",
-      "confidence": 0.9363,
-      "detections": 1
+      "confidence": 0.9436,
+      "detections": 11
     },
     {
-      "species": "Eurasian Blue Tit",
-      "scientific_name": "Cyanistes caeruleus",
-      "confidence": 0.8791,
-      "detections": 9
-    },
-    {
-      "species": "Eurasian Collared Dove",
-      "scientific_name": "Streptopelia decaocto",
-      "confidence": 0.8442,
-      "detections": 5
-    },
-    {
-      "species": "European Goldfinch",
-      "scientific_name": "Carduelis carduelis",
-      "confidence": 0.7936,
+      "species": "Common Wood Pigeon",
+      "scientific_name": "Columba palumbus",
+      "confidence": 0.9306,
       "detections": 1
     },
     {
       "species": "Eurasian Tree Sparrow",
       "scientific_name": "Passer montanus",
-      "confidence": 0.719,
-      "detections": 3
+      "confidence": 0.8604,
+      "detections": 6
+    },
+    {
+      "species": "European Goldfinch",
+      "scientific_name": "Carduelis carduelis",
+      "confidence": 0.8073,
+      "detections": 2
+    },
+    {
+      "species": "Common Chiffchaff",
+      "scientific_name": "Phylloscopus collybita",
+      "confidence": 0.7688,
+      "detections": 1
     },
     {
       "species": "Yellow-legged Gull",
       "scientific_name": "Larus michahellis",
-      "confidence": 0.5823,
+      "confidence": 0.6709,
       "detections": 1
     },
     {
-      "species": "European Herring Gull",
-      "scientific_name": "Larus argentatus",
-      "confidence": 0.5707,
+      "species": "Great Tit",
+      "scientific_name": "Parus major",
+      "confidence": 0.6656,
       "detections": 1
     }
   ],
   "import_summary": {
-    "rows_read": 21,
+    "rows_read": 23,
     "species_retained": 7,
-    "selections_file": "BirdNET_Live_2026-07-28_07-23-33_#5.selections.txt"
+    "selections_file": "BirdNET_Live_2026-07-29_09-29-43_#3.selections.txt"
   }
 }

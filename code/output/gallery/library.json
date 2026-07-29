@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "current_artwork_id": null,
+  "collections": [],
+  "stats": {
+    "artwork_count": 0,
+    "favourite_count": 0,
+    "hidden_count": 0,
+    "storage_bytes": 0
+  },
+  "artworks": []
+}

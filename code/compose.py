@@ -144,9 +144,9 @@ def create_movement_options(birds, season, edition="daily"):
         input=f"""
 You are the Exhibition Programme Director for BirdCanvas.
 
-Generate TEN radically different exhibition movements for today's birds.
+Generate FIVE radically different exhibition movements for today's birds.
 
-Imagine these are proposals from ten different world-class galleries competing to exhibit today's birds.
+Imagine these are proposals from FIVE different world-class galleries competing to exhibit today's birds.
 
 Each movement must come from a distinctly different artistic tradition, material language, compositional philosophy and emotional atmosphere.
 
@@ -171,7 +171,7 @@ Edition: {edition}
 
 Each movement must be unmistakably different from every other movement.
 
-Across the ten movements, maximise diversity in:
+Across the FIVE movements, maximise diversity in:
 
 - artistic tradition
 - medium
@@ -186,12 +186,12 @@ Across the ten movements, maximise diversity in:
 
 Avoid repeating words, concepts or materials unless absolutely necessary.
 
-Someone viewing the ten movement titles should immediately imagine ten completely different exhibitions.
+Someone viewing the FIVE movement titles should immediately imagine FIVE completely different exhibitions.
 Before returning your final list, critically review it.
 
 If two movements feel similar, replace the weaker one.
 
-Do not stop until all TEN movements feel like they belong in completely different exhibitions.
+Do not stop until all FIVE movements feel like they belong in completely different exhibitions.
 
 The final list should maximise creative diversity rather than consistency.
 Return ONLY valid JSON:
@@ -1011,6 +1011,14 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                 birds=birds,
                 brief=brief,
                 edition=edition,
+                generation={
+                    "movement_options": movements,
+                    "selected_movement": selected_movement,
+                    "selection_reason": selection_reason,
+                    "structured_prompt": structured,
+                    "image_prompt": prompt,
+                    "critique": critique,
+                },
             )
 
             return {
@@ -1029,11 +1037,19 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
     print("⚠ Maximum attempts reached. Publishing latest artwork.")
 
     publish_artwork(
-    source_image=OUTPUT,
-    observation_date=str(date.today()),
-    birds=birds,
-    brief=brief,
-    edition=edition,
+        source_image=OUTPUT,
+        observation_date=str(date.today()),
+        birds=birds,
+        brief=brief,
+        edition=edition,
+        generation={
+            "movement_options": movements,
+            "selected_movement": selected_movement,
+            "selection_reason": selection_reason,
+            "structured_prompt": structured,
+            "image_prompt": prompt,
+            "verification_failed": True,
+        },
     )
 
     print(f"✓ Artwork published to {OUTPUT}")

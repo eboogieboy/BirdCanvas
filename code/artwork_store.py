@@ -40,6 +40,7 @@ def publish_artwork(
     edition: str = "daily",
     title: str | None = None,
     observation_window: str = "",
+    generation: dict | None = None,
 ) -> dict:
     if not source_image.exists():
         raise FileNotFoundError(f"Artwork image not found: {source_image}")
@@ -89,6 +90,7 @@ def publish_artwork(
         "favourite": False,
         "hidden": False,
         "creative_brief": brief,
+        "generation": generation or {},
         "presentation": presentation,
     }
 

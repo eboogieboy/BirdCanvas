@@ -1,21 +1,111 @@
 {
   "version": 3,
-  "current_artwork_id": "birdcanvas-2026-07-28-daily",
+  "current_artwork_id": "birdcanvas-2026-07-29-daily",
   "collections": [
     {
       "id": "birdcanvas",
       "title": "BirdCanvas",
-      "count": 8,
-      "latest_created_at": "2026-07-28T14:20:42+00:00"
+      "count": 9,
+      "latest_created_at": "2026-07-29T16:25:13+00:00"
     }
   ],
   "stats": {
-    "artwork_count": 8,
+    "artwork_count": 9,
     "favourite_count": 0,
     "hidden_count": 0,
-    "storage_bytes": 52689838
+    "storage_bytes": 60622069
   },
   "artworks": [
+    {
+      "id": "birdcanvas-2026-07-29-daily",
+      "collection": "birdcanvas",
+      "title": "Garden Birds \u2014 2026-07-29",
+      "observation_date": "2026-07-29",
+      "created_at": "2026-07-29T16:25:13+00:00",
+      "updated_at": "2026-07-29T16:25:13+00:00",
+      "image": "artwork.png",
+      "image_url": "../archive/birdcanvas-2026-07-29-daily/artwork.png",
+      "image_size_bytes": 4105550,
+      "species": [
+        "House Sparrow",
+        "Common Wood Pigeon",
+        "Eurasian Tree Sparrow",
+        "European Goldfinch",
+        "Common Chiffchaff",
+        "Yellow-legged Gull",
+        "Great Tit"
+      ],
+      "season": "",
+      "style": "Flattened aerial garden geometry, razor-thin gold ruling, pierced paper borders, tiny floral margins, symmetrical water channels, calligraphic vinework, soft indigo washes, malachite foliage, shell-gold highlights, stippled white heat-haze and delicate carbon-black contour drawing. The page should feel handmade and precious, with tiny variations in pigment density and burnish catching the light.",
+      "palette": "Lapis lazuli blue, sea-glass turquoise, malachite green, orpiment yellow, carmine lake, saffron glaze, shell gold, sandstone rose, pigeon mauve-grey, indigo shadow, warm parchment, salt-white stippling and muted harbour green-black.",
+      "mood": "Courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
+      "creative_collection": "Daily BirdCanvas: North Shields Summer Folio",
+      "creative_brief": {
+        "collection": "Daily BirdCanvas: North Shields Summer Folio",
+        "style": "Sea-Glass Charbagh Miniature",
+        "style_guidance": "Develop the Monsoon Miniature Aviary into a landscape-format illuminated folio: a contemporary Indo-Persian and Rajasthani miniature language cooled by North Sea light. Keep the jewel-like precision, burnished surfaces, shell-gold rules, flattened garden geometry and courtly stillness, but temper the saturation with sea-glass greens, harbour blues, sandstone pinks and salt-softened whites. The result should feel like a precious manuscript page made for a modern interior rather than a historical reconstruction.",
+        "curator_notes": "Today's exhibition should read as an intimate summer manuscript of ordinary birds elevated into ceremony. The birds are not set in a literal coastal scene; instead, the coast is present as cool luminosity, pale mineral texture and an open horizontal calm. The artwork should feel precise, fragrant and ornamental, but never busy. Use miniature discipline to make common birds feel treasured: each species is given a designated architectural or botanical role inside the folio, with the European Goldfinch carrying the richest ornament while the sparrows, tit, chiffchaff, pigeon and gull form a balanced court around it.",
+        "mood": "Courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
+        "visual_language": "Flattened aerial garden geometry, razor-thin gold ruling, pierced paper borders, tiny floral margins, symmetrical water channels, calligraphic vinework, soft indigo washes, malachite foliage, shell-gold highlights, stippled white heat-haze and delicate carbon-black contour drawing. The page should feel handmade and precious, with tiny variations in pigment density and burnish catching the light.",
+        "palette": "Lapis lazuli blue, sea-glass turquoise, malachite green, orpiment yellow, carmine lake, saffron glaze, shell gold, sandstone rose, pigeon mauve-grey, indigo shadow, warm parchment, salt-white stippling and muted harbour green-black.",
+        "composition": "A landscape illuminated folio arranged as a wide charbagh garden viewed from above. Four narrow water channels cross at a small square pool near the centre, creating a calm geometric anchor. Flowering beds extend horizontally like an opened manuscript, framed by pierced borders and hairline gold rules. A narrow upper register holds a pale cloud band; a lower terrace band introduces architectural balance. The composition should feel spacious despite the ornament, with breathable intervals of burnished paper and cool blue wash.",
+        "bird_integration": "Represent every observed bird clearly within the miniature system. The European Goldfinch is the most ornate figure, perched at the central crossing of the four garden channels, immediately recognisable through its red face, black-and-white head, warm buff body and bright yellow wing flash. House Sparrow and Eurasian Tree Sparrow mirror one another in the lower left and lower right garden beds: the House Sparrow with grey crown and black bib, the Tree Sparrow with chestnut cap and cheek spot, both simplified into elegant courtly profiles. The Great Tit appears inside a rounded foliage cartouche, recognisable by its yellow breast, black head, white cheek and central black stripe. The Common Chiffchaff is small but visible in the marginal vinework, a quiet olive-brown note with fine legs and a delicate insect-seeking posture. The Common Wood Pigeon rests as a calm mauve-grey mass on a terrace balcony, with white neck patch and soft rose breast subtly indicated. The Yellow-legged Gull becomes a pale cloud-bird above the top border, interrupting the order of the manuscript with white-grey wings and distinct yellow legs, present but secondary.",
+        "materials": "Handmade wasli paper texture, burnished agate sheen, opaque gouache, shell gold, lapis and malachite mineral colour, saffron staining, indigo wash, carbon-black hairline drawing, gum arabic gloss, microscopic white stippling, pierced-paper border effects and fine squirrel-hair brushwork translated into a contemporary digital artwork for a landscape Samsung Frame display.",
+        "visual_focus": "The viewer should first be drawn to the luminous central pool and its precise shell-gold cross of channels, where burnished blue, gold geometry and sea-glass greens create a jewel-like point of stillness before the eye discovers the surrounding birds.",
+        "avoid": [
+          "literal seaside scenery",
+          "wildlife-calendar realism",
+          "overcrowded botanical decoration",
+          "cartoon birds",
+          "muddy colours",
+          "dramatic storm or sunset effects",
+          "historical pastiche without contemporary restraint",
+          "making the gull dominant",
+          "hiding the birds so thoroughly that they become decorative marks",
+          "imitating any living artist"
+        ]
+      },
+      "notes": "",
+      "source": "birdcanvas",
+      "favourite": false,
+      "hidden": false,
+      "presentation": {
+        "mode": "auto",
+        "applied_mount": "no",
+        "style": "no_mount",
+        "style_name": "No Mount",
+        "decision_reason": "Samsung Frame full-screen mode.",
+        "analysis": {
+          "edge_luminance": 174.42,
+          "centre_luminance": 162.41,
+          "edge_variation": 23.18,
+          "edge_centre_difference": 12.0,
+          "average_saturation": 97.03,
+          "edge_red": 199.54,
+          "edge_green": 172.36,
+          "edge_blue": 120.78
+        },
+        "mount_width": 0,
+        "output_size": [
+          1920,
+          1080
+        ],
+        "source_image": "original.png",
+        "presented_image": "artwork.png"
+      },
+      "exhibition": {
+        "narrative": "This BirdCanvas artwork preserves a garden visit by House Sparrow, Common Wood Pigeon, Eurasian Tree Sparrow, European Goldfinch, Common Chiffchaff, Yellow-legged Gull and Great Tit. Its atmosphere is courtly, luminous, still, intimate, warm but sea-cooled; a summer hush held inside burnished paper and fine gold geometry.",
+        "collection": "Daily BirdCanvas: North Shields Summer Folio",
+        "composition": "A landscape illuminated folio arranged as a wide charbagh garden viewed from above. Four narrow water channels cross at a small square pool near the centre, creating a calm geometric anchor. Flowering beds extend horizontally like an opened manuscript, framed by pierced borders and hairline gold rules. A narrow upper register holds a pale cloud band; a lower terrace band introduces architectural balance. The composition should feel spacious despite the ornament, with breathable intervals of burnished paper and cool blue wash.",
+        "hero_birds": [],
+        "character_birds": [],
+        "supporting_birds": [],
+        "visitor_count": 7,
+        "observation_date": "2026-07-29"
+      },
+      "provider": "birdcanvas",
+      "orientation": "portrait"
+    },
     {
       "id": "birdcanvas-2026-07-28-daily",
       "collection": "birdcanvas",
