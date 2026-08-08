@@ -7,7 +7,7 @@ from typing import Any
 from PIL import Image, ImageEnhance, ImageOps, ImageStat
 
 DEFAULT_STYLE = "auto"
-OUTPUT_SIZE = (1920, 1080)
+OUTPUT_SIZE = (1080, 1920)
 
 STYLES: dict[str, dict[str, Any]] = {
     "auto": {"name": "Automatic Mount"},

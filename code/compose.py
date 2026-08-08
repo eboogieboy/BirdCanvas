@@ -12,7 +12,7 @@ from paths import OUTPUT_DIR, DATA_DIR
 OUTPUT = OUTPUT_DIR / "final_scene.png"
 CANDIDATE_DIR = OUTPUT_DIR / "candidates"
 MAX_ATTEMPTS = 2
-IMAGE_SIZE = "1536x1024"
+IMAGE_SIZE = "1024x1536"
 
 client = OpenAI(
     api_key=os.environ["OPENAI_API_KEY"]
@@ -216,7 +216,7 @@ Return ONLY valid JSON:
                 "name":"Quiet Mineral Abstraction",
                 "concept":"Layered contemporary abstraction.",
                 "materials":"Plaster, pigment, wood.",
-                "composition":"Open landscape.",
+                "composition":"Open vertical composition.",
                 "why_it_is_distinct":"Fallback."
             }
         ]
@@ -272,7 +272,7 @@ def create_creative_brief(birds, movement=None, edition="daily", observation_win
         input=f"""
 You are the Creative Director for BirdCanvas.
 
-BirdCanvas creates changing landscape-format contemporary artworks for a Samsung Frame television, inspired by birds observed during a defined time window.
+BirdCanvas creates changing portrait-format contemporary artworks for a Samsung Frame television mounted in portrait orientation, inspired by birds observed during a defined time window.
 
 Edition: {edition}
 Observation window: {observation_window or "current bird list"}
@@ -417,9 +417,9 @@ Rules:
             "style_guidance": "Elegant contemporary wall art with restrained composition.",
             "curator_notes": "Fallback creative direction.",
             "mood": "calm",
-            "visual_language": "minimal contemporary landscape-format wall art with restrained abstract forms",
+            "visual_language": "minimal contemporary portrait-format wall art with restrained abstract forms",
             "palette": "warm neutrals, sea glass, soft greens, charcoal, sandstone and linen",
-            "composition": "16:9 landscape composition with full-width balance and generous negative space",
+            "composition": "9:16 portrait composition with strong vertical balance and generous negative space",
             "bird_integration": "Integrate every bird naturally into the artwork so they are discovered rather than presented.",
 "materials": "Layered paper, limewashed wood, mineral pigments and subtle textured surfaces.",
 "visual_focus": "The composition and materials should attract attention before the birds are noticed.",
@@ -520,11 +520,23 @@ The artistic movement should enhance the birds, not hide them.
 
 A person viewing the Samsung Frame from across the room should understand that this is artwork inspired by today's birds.
 
-Landscape format.
+Portrait format.
 
-Designed for a Samsung Frame television.
+Designed specifically for a 32-inch Samsung Frame television mounted vertically.
 
-Fill the entire 16:9 canvas.
+The final displayed artwork will be 9:16 portrait at exactly 1080 × 1920 pixels.
+
+The image generator produces a slightly wider 2:3 portrait source which will be centre-cropped to 9:16.
+
+Compose specifically for that final 9:16 crop.
+
+Keep every bird, face, body and important visual element safely inside the central 80% of the canvas width.
+
+Do not place important birds or identifying features close to the extreme left or right edges.
+
+Background textures, colour and abstract material may extend fully beyond that safe area.
+
+The finished artwork must fill the entire portrait screen with no border, mount, mat or blank margin.
 
 {bird_list}
 
@@ -772,6 +784,31 @@ gpt-image-1.
 
 BIRD ACCURACY IS THE HIGHEST PRIORITY.
 
+DISPLAY FORMAT IS ALSO MANDATORY.
+
+The artwork is for a 32-inch Samsung Frame television mounted vertically.
+
+Generate a PORTRAIT composition.
+
+The source image will be generated at 1024 × 1536 and then centre-cropped
+to the final Samsung Frame format of exactly 1080 × 1920 (9:16 portrait).
+
+Compose specifically for that final 9:16 crop.
+
+Keep every bird, face, body and important identifying feature safely inside
+the central 80% of the source canvas width.
+
+Do not place important subjects close to the extreme left or right edges.
+
+Background colour, texture and abstract material should extend fully to
+every edge so that the final 9:16 image is completely full bleed.
+
+No border.
+No mount.
+No mat.
+No blank margin.
+No landscape composition.
+
 The finished artwork must contain exactly {exact_bird_count} individual birds:
 {numbered_birds}
 
@@ -794,7 +831,7 @@ Mandatory instructions for the image-generation prompt:
   must not distort identifying features.
 - Do not turn birds into silhouettes, vague motifs, fragments or purely abstract
   shapes.
-- Make every bird large enough to identify on a landscape Samsung Frame display.
+- Make every bird large enough to identify on a portrait Samsung Frame display.
 - Describe each listed species individually in the final prompt.
 - State the exact total number of birds clearly near the beginning and end of
   the final prompt.
@@ -821,6 +858,16 @@ museum-quality artistic direction.
 def generate_image(prompt):
     final_prompt = f"""
 {prompt}
+
+MANDATORY DISPLAY FORMAT:
+
+- Portrait orientation only.
+- Source canvas: 1024 × 1536.
+- Final display crop: 1080 × 1920, exact 9:16 portrait.
+- Keep all birds and important features within the central 80% of the width.
+- Allow only background/material/texture to occupy the extreme side edges.
+- Artwork must be full bleed.
+- No border, mount, mat, blank margin or landscape layout.
 
 MANDATORY BIRD ACCURACY CHECKLIST:
 
