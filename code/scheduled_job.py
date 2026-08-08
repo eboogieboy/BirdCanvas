@@ -31,7 +31,18 @@ def birds_for_slot(slot: str) -> tuple[list[str], str]:
     settings = SLOTS[slot]
     if settings["source"] == "yesterday":
         data = load_yesterday()
-        return list(data.get("birds", [])), str(data.get("date", ""))
+
+        expected_date = (
+            date.today() - timedelta(days=1)
+        ).isoformat()
+
+        if str(data.get("date", "")) != expected_date:
+            return [], expected_date
+
+        return (
+            list(data.get("birds", [])),
+            expected_date,
+        )
 
     return list(get_birds()), date.today().isoformat()
 
