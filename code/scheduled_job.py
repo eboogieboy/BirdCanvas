@@ -7,6 +7,8 @@ from pathlib import Path
 from artwork_store import publish_artwork
 from compose import compose
 from display import build_display_page
+from frame_upload import upload_to_frame
+from paths import OUTPUT_DIR
 from storage import get_birds, load_yesterday
 
 SLOTS = {
@@ -73,6 +75,24 @@ def main() -> int:
         observation_window=window,
     )
     build_display_page()
+
+    current_artwork = OUTPUT_DIR / "current" / manifest["image"]
+
+    try:
+        frame_result = upload_to_frame(current_artwork)
+
+        if frame_result:
+            print(
+                "✓ Samsung Frame updated: "
+                f"{frame_result['content_id']}"
+            )
+        else:
+            print("Samsung Frame integration disabled.")
+
+    except Exception as error:
+        # Never lose the day's BirdCanvas artwork simply because
+        # the television or home network is unavailable.
+        print(f"⚠ Samsung Frame update failed: {error}")
 
     print(f"✓ {args.slot.title()} BirdCanvas edition complete")
     print(f"✓ Current artwork: output/current/{manifest['image']}")
