@@ -766,94 +766,361 @@ Return ONLY JSON:
         }
 
 
-def create_image_prompt(birds, brief):
-    
+def _fallback_bird_position(index, total):
+    return (
+        f"reserved visual position {index} of {total}, "
+        "inside the central 80% of the portrait canvas"
+    )
+
+
+def create_bird_plan(birds):
+    """
+    Build a species-by-species visual accuracy plan before image generation.
+
+    The text model is much better than the image model at reasoning about
+    diagnostic field marks. We therefore decide what each bird MUST look like
+    before asking the image model to render the artwork.
+    """
+
+    exact_count = len(birds)
+
     numbered_birds = "\n".join(
         f"{index}. {bird}"
         for index, bird in enumerate(birds, start=1)
     )
+
+    response = client.responses.create(
+        model="gpt-5.5",
+        input=f"""
+You are the BirdCanvas Ornithology Director.
+
+Create a strict visual identification plan for the bird species below.
+
+These birds are being rendered in contemporary artwork, but each species
+must remain visually identifiable.
+
+The artwork is viewed in Britain, so use normal British/European field
+identification characteristics where relevant.
+
+Bird list:
+
+{numbered_birds}
+
+Return ONLY valid JSON in exactly this structure:
+
+{{
+  "birds": [
+    {{
+      "index": 1,
+      "species": "",
+      "position": "",
+      "required_features": [
+        "",
+        "",
+        ""
+      ],
+      "avoid_confusions": [
+        ""
+      ]
+    }}
+  ]
+}}
+
+STRICT RULES:
+
+- Return exactly {exact_count} bird entries.
+- Preserve the exact species names and exact order supplied above.
+- Do not add or remove species.
+- Give each bird a different visible position within a portrait composition.
+- Keep all positions inside the central 80% of the canvas width.
+- Do not overlap birds.
+- Each bird must have 3 to 5 concise REQUIRED VISIBLE FEATURES.
+- Choose features that are genuinely useful for identifying that species:
+  body shape, bill shape, head pattern, wing markings, breast colour,
+  rump colour, tail shape or other diagnostic field marks.
+- Prefer features that remain visible in stylised artwork.
+- Do not rely on tiny details that cannot be seen across a room.
+- Avoid unnecessarily sex-specific or age-specific plumage.
+- If males and females differ significantly, favour the most recognisable
+  conventional adult appearance unless that would be misleading.
+- avoid_confusions should name visual mistakes that could make the bird look
+  like another likely species.
+- Keep the wording visual and concise.
+- This is an ornithological specification, not an artistic description.
+"""
+    )
+
+    try:
+        result = json.loads(
+            clean_json_text(response.output_text)
+        )
+
+        planned = result.get("birds", [])
+
+        if len(planned) != exact_count:
+            raise ValueError(
+                "Bird plan returned the wrong number of species."
+            )
+
+        cleaned = []
+
+        for index, expected_species in enumerate(
+            birds,
+            start=1,
+        ):
+            item = planned[index - 1]
+
+            actual_species = str(
+                item.get("species", "")
+            ).strip()
+
+            if actual_species != expected_species:
+                raise ValueError(
+                    "Bird plan changed species order: "
+                    f"expected {expected_species!r}, "
+                    f"received {actual_species!r}"
+                )
+
+            features = [
+                str(value).strip()
+                for value in item.get(
+                    "required_features",
+                    [],
+                )
+                if str(value).strip()
+            ]
+
+            confusions = [
+                str(value).strip()
+                for value in item.get(
+                    "avoid_confusions",
+                    [],
+                )
+                if str(value).strip()
+            ]
+
+            if len(features) < 2:
+                raise ValueError(
+                    f"Too few identifying features for "
+                    f"{expected_species}."
+                )
+
+            position = str(
+                item.get("position", "")
+            ).strip()
+
+            if not position:
+                position = _fallback_bird_position(
+                    index,
+                    exact_count,
+                )
+
+            cleaned.append(
+                {
+                    "index": index,
+                    "species": expected_species,
+                    "position": position,
+                    "required_features": features[:5],
+                    "avoid_confusions": confusions[:3],
+                }
+            )
+
+        return cleaned
+
+    except Exception as error:
+        print(
+            "Bird accuracy planning failed; "
+            f"using safe fallback plan: {error}"
+        )
+
+        return [
+            {
+                "index": index,
+                "species": species,
+                "position": _fallback_bird_position(
+                    index,
+                    exact_count,
+                ),
+                "required_features": [
+                    "correct species-specific body shape and proportions",
+                    "correct species-specific plumage colours",
+                    "clearly visible diagnostic field markings",
+                ],
+                "avoid_confusions": [
+                    "do not substitute or visually merge with another species"
+                ],
+            }
+            for index, species in enumerate(
+                birds,
+                start=1,
+            )
+        ]
+
+
+def format_bird_plan_for_prompt(bird_plan):
+    sections = []
+
+    for bird in bird_plan:
+        features = "; ".join(
+            bird["required_features"]
+        )
+
+        confusions = "; ".join(
+            bird.get("avoid_confusions", [])
+        )
+
+        section = (
+            f'BIRD {bird["index"]}: '
+            f'{bird["species"]}\n'
+            f'RESERVED POSITION: {bird["position"]}\n'
+            f'REQUIRED VISIBLE FEATURES: {features}'
+        )
+
+        if confusions:
+            section += (
+                "\nAVOID THESE IDENTIFICATION ERRORS: "
+                f"{confusions}"
+            )
+
+        sections.append(section)
+
+    return "\n\n".join(sections)
+
+
+def create_image_prompt(
+    birds,
+    brief,
+    bird_plan,
+    correction=None,
+):
     exact_bird_count = len(birds)
+
+    plan_text = format_bird_plan_for_prompt(
+        bird_plan
+    )
+
+    correction_text = ""
+
+    if correction:
+        correction_text = f"""
+
+THIS IS A CORRECTIVE RETRY.
+
+The previous generated artwork failed verification for these reasons:
+
+{correction}
+
+Correct every failure above.
+
+Do not compensate for a missing or incorrect species by adding another copy
+of a bird that was already correct.
+
+Every species in the Bird Accuracy Plan below remains mandatory.
+"""
 
     response = client.responses.create(
         model="gpt-5.5",
         input=f"""
 You are the Image Prompt Writer for BirdCanvas.
 
-Convert the curator's brief into ONE concise, highly effective prompt for
-gpt-image-1.
+Write the artistic portion of ONE image-generation prompt.
 
-BIRD ACCURACY IS THE HIGHEST PRIORITY.
+The final image will be generated by gpt-image-1.
 
-DISPLAY FORMAT IS ALSO MANDATORY.
+The artwork is premium contemporary gallery art for a vertically mounted
+32-inch Samsung Frame.
 
-The artwork is for a 32-inch Samsung Frame television mounted vertically.
+The source canvas is 1024 × 1536 portrait and is subsequently centre-cropped
+to exactly 1080 × 1920.
 
-Generate a PORTRAIT composition.
+The artistic composition must therefore:
 
-The source image will be generated at 1024 × 1536 and then centre-cropped
-to the final Samsung Frame format of exactly 1080 × 1920 (9:16 portrait).
+- be portrait
+- be full bleed
+- have no border, mount or mat
+- keep every bird safely within the central 80% of the width
+- leave the extreme side edges for background/material only
+- remain visually successful after the 9:16 crop
 
-Compose specifically for that final 9:16 crop.
-
-Keep every bird, face, body and important identifying feature safely inside
-the central 80% of the source canvas width.
-
-Do not place important subjects close to the extreme left or right edges.
-
-Background colour, texture and abstract material should extend fully to
-every edge so that the final 9:16 image is completely full bleed.
-
-No border.
-No mount.
-No mat.
-No blank margin.
-No landscape composition.
-
-The finished artwork must contain exactly {exact_bird_count} individual birds:
-{numbered_birds}
-
-Mandatory instructions for the image-generation prompt:
-
-- Include every listed species exactly once.
-- Show exactly {exact_bird_count} birds in total.
-- Do not omit any listed species.
-- Before choosing the artistic composition, reserve one separate visible position for every listed species.
-- Design the artwork around those reserved bird positions; never sacrifice a bird to improve balance, scale, negative space or artistic impact.
-- Do not duplicate any species.
-- Do not add any other birds.
-- Keep every bird fully separate from the others.
-- Do not merge, overlap or partially hide birds.
-- Give every bird a distinct position within the composition.
-- Each species must be recognisable from its correct body shape, proportions,
-  plumage colours and distinctive field markings.
-- Preserve realistic bird anatomy even when the surrounding artwork is stylised.
-- Artistic style may affect texture, materials, lighting and background, but it
-  must not distort identifying features.
-- Do not turn birds into silhouettes, vague motifs, fragments or purely abstract
-  shapes.
-- Make every bird large enough to identify on a portrait Samsung Frame display.
-- Describe each listed species individually in the final prompt.
-- State the exact total number of birds clearly near the beginning and end of
-  the final prompt.
+There are exactly {exact_bird_count} individual birds.
 
 Creative brief:
+
 {json.dumps(brief, indent=2)}
 
-Write ONE image-generation prompt.
+Bird Accuracy Plan:
+
+{plan_text}
+
+{correction_text}
+
+IMPORTANT:
+
+Do NOT rewrite, reinterpret or simplify the Bird Accuracy Plan.
+
+Do NOT change the species.
+
+Do NOT exchange identifying features between birds.
+
+Do NOT invent extra birds.
+
+Your job is to describe HOW the specified birds and artistic movement form
+one beautiful contemporary artwork.
+
+Keep the artistic prompt concise and visually precise.
 
 Do not explain your work.
-Do not use headings.
-Do not repeat the JSON verbatim.
-Focus on precise visual execution.
-The final prompt must retain both the bird-accuracy rules and the intended
-museum-quality artistic direction.
 """
     )
 
     try:
-        return response.output_text.strip()
+        artistic_prompt = (
+            response.output_text.strip()
+        )
     except Exception:
-        return build_prompt(birds, brief)
+        artistic_prompt = (
+            brief.get(
+                "style_guidance",
+                "Create premium contemporary gallery art.",
+            )
+        )
+
+    # The ornithology block below is assembled directly by Python rather than
+    # rewritten by another model. This prevents species names or identifying
+    # features being lost during prompt composition.
+    final_prompt = f"""
+{artistic_prompt}
+
+NON-NEGOTIABLE BIRD ACCURACY PLAN
+
+The finished image contains EXACTLY {exact_bird_count} birds in total.
+
+{plan_text}
+
+BIRD EXECUTION RULES
+
+- Every numbered bird above must appear exactly once.
+- No other birds may appear.
+- Every bird gets its own reserved position.
+- Birds must remain physically separate and fully visible.
+- Do not overlap, merge, obscure or crop any bird.
+- The identifying features listed for one species belong ONLY to that bird.
+- Never transfer colours, markings, bill shape, head pattern or wing pattern
+  from one species to another.
+- Preserve realistic bird anatomy and proportions.
+- Artistic stylisation applies to material, texture and rendering language;
+  it must not erase diagnostic species features.
+- When artistic composition conflicts with species accuracy, species accuracy
+  wins.
+- Before rendering, internally account for birds 1 through
+  {exact_bird_count}, one by one.
+- Final bird count: exactly {exact_bird_count}.
+
+{correction_text}
+""".strip()
+
+    return final_prompt
+
 
 def generate_image(prompt):
     final_prompt = f"""
@@ -968,9 +1235,15 @@ Return ONLY JSON:
         }
 
 
-def verify_image(expected_birds):
-    expected_text = "\n".join(f"- {bird}" for bird in expected_birds)
+def verify_image(expected_birds, bird_plan):
     image_url = image_to_data_url(OUTPUT)
+
+    plan_text = json.dumps(
+        {
+            "birds": bird_plan,
+        },
+        indent=2,
+    )
 
     response = client.responses.create(
         model="gpt-5.5",
@@ -981,57 +1254,268 @@ def verify_image(expected_birds):
                     {
                         "type": "input_text",
                         "text": f"""
-You are checking a generated BirdCanvas artwork.
+You are the BirdCanvas Ornithology Verifier.
 
-Expected bird species:
-{expected_text}
+Inspect the generated artwork carefully.
 
-Return ONLY valid JSON:
+Expected Bird Accuracy Plan:
+
+{plan_text}
+
+There must be exactly {len(expected_birds)} birds.
+
+Evaluate EACH expected species independently.
+
+Return ONLY valid JSON in exactly this structure:
 
 {{
   "passed": true,
+  "bird_results": [
+    {{
+      "species": "",
+      "status": "correct",
+      "severity": "none",
+      "problems": []
+    }}
+  ],
+  "extra_birds": [],
   "issues": []
 }}
 
-or
+Allowed status values:
 
-{{
-  "passed": false,
-  "issues": [
-    "Specific issue here"
-  ]
-}}
+- "correct"
+- "missing"
+- "incorrect"
+- "uncertain"
 
-Check for:
-- birds are reasonably recognisable
-- missing expected species
-- obvious extra bird species not listed
+Allowed severity values:
 
-Only flag duplication when:
-- the same bird is clearly repeated as a replacement for a missing expected species
-- the artwork has obviously failed the bird list
+- "none"
+- "minor"
+- "major"
 
-Do not fail because of:
-- decorative repeated motifs
-- similar background shapes
-- abstract artistic elements
-- minor ambiguity in small birds
+SEVERITY RULES:
 
-Be practical. If a bird is stylised or abstract but reasonably identifiable, accept it.
+Use "major" only when:
+- an expected species is missing
+- an obvious extra bird is present
+- one expected species has clearly been substituted by another
+- a bird is so wrong that it clearly resembles a different species
+- the total bird list has materially failed
+
+Use "minor" when:
+- the species is still reasonably identifiable
+- a plumage shade is slightly wrong
+- a leg, bill or small marking colour is imperfect
+- a fine wing, neck or tail marking is missing or unclear
+- the bird position differs from the plan
+- stylisation has softened a diagnostic feature without changing the species
+
+Use "none" for a correct bird.
+
+VERIFICATION RULES:
+
+- Include one bird_results entry for EVERY expected species.
+- Preserve the supplied species order.
+- Compare each bird against its required visible features.
+- Mark "correct" when the bird is reasonably identifiable.
+- Mark "missing" if that expected species is absent.
+- Mark "incorrect" when a bird occupies its place but has materially wrong
+  identifying features or clearly resembles another species.
+- Mark "uncertain" only when there genuinely is not enough visual evidence.
+- Do not fail because artistic rendering is stylised.
+- Do not demand photographic realism.
+- Do fail when diagnostic plumage, shape or markings make the bird the wrong
+  species.
+- Report duplicate/substitute birds when one expected species appears to have
+  been replaced by another expected species.
+- extra_birds should contain only clearly additional real birds, not decorative
+  motifs or abstract marks.
+- issues should contain concise actionable corrections.
+- passed may be true ONLY if every expected bird is correct and there are no
+  obvious extra birds.
+- Be conservative about severity. BirdCanvas is artwork, not a field-guide
+  plate. A recognisable species with a small detail wrong is MINOR, not MAJOR.
 """
                     },
                     {
                         "type": "input_image",
-                        "image_url": image_url
-                    }
-                ]
+                        "image_url": image_url,
+                    },
+                ],
             }
-        ]
+        ],
     )
 
-    text = clean_json_text(response.output_text)
+    result = json.loads(
+        clean_json_text(response.output_text)
+    )
 
-    return json.loads(text)
+    bird_results = result.get(
+        "bird_results",
+        [],
+    )
+
+    # Do not trust a malformed "passed": true response.
+    if len(bird_results) != len(expected_birds):
+        result["passed"] = False
+        result.setdefault(
+            "issues",
+            [],
+        ).append(
+            "Verifier did not return one result "
+            "for every expected species."
+        )
+        return result
+
+    for expected, bird_result in zip(
+        expected_birds,
+        bird_results,
+    ):
+        if (
+            str(
+                bird_result.get(
+                    "species",
+                    "",
+                )
+            ).strip()
+            != expected
+        ):
+            result["passed"] = False
+
+        if bird_result.get("status") != "correct":
+            result["passed"] = False
+
+    if result.get("extra_birds"):
+        result["passed"] = False
+
+    return result
+
+
+def verification_has_major_failure(verification):
+    """
+    Return True only when another paid image-generation attempt is justified.
+
+    Minor ornithological imperfections are deliberately accepted so
+    BirdCanvas can keep generation costs low while still producing fresh
+    artwork every day.
+    """
+
+    if verification.get("extra_birds"):
+        return True
+
+    for result in verification.get(
+        "bird_results",
+        [],
+    ):
+        severity = str(
+            result.get("severity", "")
+        ).strip().lower()
+
+        status = str(
+            result.get("status", "")
+        ).strip().lower()
+
+        # Missing birds are always worth correcting.
+        if status == "missing":
+            return True
+
+        if severity == "major":
+            return True
+
+    return False
+
+
+def build_verification_correction(
+    verification,
+):
+    """
+    Build a focused retry instruction.
+
+    A paid second generation should concentrate ONLY on major bird-list
+    failures. Minor field-mark imperfections are deliberately ignored.
+    """
+
+    corrections = []
+    preserve = []
+
+    for result in verification.get(
+        "bird_results",
+        [],
+    ):
+        species = str(
+            result.get("species", "")
+        ).strip()
+
+        status = str(
+            result.get("status", "")
+        ).strip().lower()
+
+        severity = str(
+            result.get("severity", "minor")
+        ).strip().lower()
+
+        problems = [
+            str(problem).strip()
+            for problem in result.get(
+                "problems",
+                [],
+            )
+            if str(problem).strip()
+        ]
+
+        if status == "correct" and severity != "major":
+            if species:
+                preserve.append(species)
+            continue
+
+        if status == "missing" or severity == "major":
+            detail = (
+                "; ".join(problems)
+                if problems
+                else "major species error"
+            )
+
+            corrections.append(
+                f"{species}: {status}. {detail}"
+            )
+
+    for extra in verification.get(
+        "extra_birds",
+        [],
+    ):
+        extra_text = str(extra).strip()
+
+        if extra_text:
+            corrections.append(
+                f"Remove this extra bird: {extra_text}"
+            )
+
+    if preserve:
+        corrections.append(
+            "PRESERVE these already acceptable species and do not "
+            "replace, duplicate or redesign them: "
+            + ", ".join(preserve)
+            + "."
+        )
+
+    if not corrections:
+        corrections.append(
+            "Re-check the bird list and correct only major "
+            "missing, substituted or extra birds."
+        )
+
+    corrections.append(
+        "Do not spend the retry improving minor plumage details. "
+        "The priority is the exact species list and exact bird count."
+    )
+
+    return "\n".join(
+        f"- {item}"
+        for item in corrections
+    )
+
 
 
 def compose(source="today", birds=None, edition="daily", observation_window=""):
@@ -1075,24 +1559,28 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
     print(json.dumps(brief, indent=2))
     print()
 
+    print("Creating Bird Accuracy Plan...")
+    bird_plan = create_bird_plan(birds)
+
+    print("Bird Accuracy Plan:")
+    print(
+        json.dumps(
+            {"birds": bird_plan},
+            indent=2,
+        )
+    )
+    print()
+
     correction = None
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
         print(f"Generating artwork attempt {attempt}/{MAX_ATTEMPTS}...")
 
-        curator_prompt = build_prompt(
+        prompt = create_image_prompt(
             birds=birds,
             brief=brief,
+            bird_plan=bird_plan,
             correction=correction,
-            edition=edition,
-            observation_window=observation_window
-        )
-
-  
-
-        prompt = create_image_prompt(
-            birds,
-            brief
         )
 
         print("Final image prompt:")
@@ -1105,13 +1593,40 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
         print("Verifying artwork...")
 
         try:
-            verification = verify_image(birds)
+            verification = verify_image(
+                birds,
+                bird_plan,
+            )
         except Exception as error:
             print(f"Verification failed, keeping generated artwork: {error}")
             return {"birds": birds, "brief": brief, "output": str(OUTPUT)}
 
-        if verification.get("passed") is True:
-            critique = critique_artwork(birds, brief, OUTPUT)
+        print("Verification results:")
+        print(
+            json.dumps(
+                verification,
+                indent=2,
+            )
+        )
+
+        major_failure = verification_has_major_failure(
+            verification
+        )
+
+        if not major_failure:
+            if verification.get("passed") is True:
+                print("✓ Bird verification passed.")
+            else:
+                print(
+                    "✓ Only minor bird inaccuracies detected. "
+                    "Accepting artwork without another paid generation."
+                )
+
+            critique = critique_artwork(
+                birds,
+                brief,
+                OUTPUT,
+            )
 
             print()
             print("Art Director critique")
@@ -1119,7 +1634,11 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
             for key, value in critique.items():
                 print(f"{key}: {value}")
 
-            save_creative_history(selected_movement, brief, critique)
+            save_creative_history(
+                selected_movement,
+                brief,
+                critique,
+            )
 
             publish_artwork(
                 source_image=OUTPUT,
@@ -1131,8 +1650,13 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                     "movement_options": movements,
                     "selected_movement": selected_movement,
                     "selection_reason": selection_reason,
-                    
+                    "bird_plan": bird_plan,
                     "image_prompt": prompt,
+                    "verification": verification,
+                    "accepted_with_minor_issues": (
+                        verification.get("passed") is not True
+                    ),
+                    "attempts_used": attempt,
                     "critique": critique,
                 },
             )
@@ -1141,13 +1665,22 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                 "birds": birds,
                 "brief": brief,
                 "critique": critique,
-                "output": str(OUTPUT)
+                "verification": verification,
+                "output": str(OUTPUT),
             }
 
-        issues = verification.get("issues", [])
-        correction = "\n".join(f"- {issue}" for issue in issues)
+        correction = build_verification_correction(
+            verification
+        )
 
-        print("Verification issues:")
+        print()
+        print(
+            "⚠ Major bird-list problem detected. "
+            "A corrective generation is justified."
+        )
+
+        print()
+        print("Correction instructions for retry:")
         print(correction)
 
     print("⚠ Maximum attempts reached. Publishing latest artwork.")
@@ -1163,8 +1696,11 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
             "selected_movement": selected_movement,
             "selection_reason": selection_reason,
             
+            "bird_plan": bird_plan,
             "image_prompt": prompt,
+            "verification": verification,
             "verification_failed": True,
+            "attempts_used": MAX_ATTEMPTS,
         },
     )
 
