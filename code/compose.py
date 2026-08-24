@@ -19,11 +19,39 @@ client = OpenAI(
 )
 
 
+EXCLUDED_BIRD_TERMS = (
+    "gull",
+    "pigeon",
+    "crow",
+)
+
+
+def filter_birds(birds):
+    kept = []
+    excluded = []
+
+    for bird in birds:
+        name = str(bird).strip()
+        lowered = name.casefold()
+
+        if any(term in lowered for term in EXCLUDED_BIRD_TERMS):
+            excluded.append(name)
+        else:
+            kept.append(name)
+
+    if excluded:
+        print("Excluded from artwork:", ", ".join(excluded))
+
+    return kept
+
+
 def load_birds_for_source(source):
     if source == "yesterday":
-        return get_yesterday_birds()
+        birds = get_yesterday_birds()
+    else:
+        birds = get_birds()
 
-    return get_birds()
+    return filter_birds(birds)
 
 
 def clean_json_text(text):
@@ -76,7 +104,7 @@ def load_creative_history(limit=10):
 
 def extract_creative_dna(brief):
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the BirdCanvas Curator.
 
@@ -140,7 +168,7 @@ def create_movement_options(birds, season, edition="daily"):
     history = load_creative_history()
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the Exhibition Programme Director for BirdCanvas.
 
@@ -226,7 +254,7 @@ Return ONLY valid JSON:
 
 def select_movement(movements, birds):
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the Art Director for BirdCanvas.
 
@@ -268,7 +296,7 @@ def create_creative_brief(birds, movement=None, edition="daily", observation_win
     season = current_season()
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the Creative Director for BirdCanvas.
 
@@ -719,7 +747,7 @@ Someone seeing the artwork without context should never assume it was generated 
 
 def compose_structured_image_prompt(birds, brief):
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are BirdCanvas Prompt Composer.
 
@@ -790,7 +818,7 @@ def create_bird_plan(birds):
     )
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the BirdCanvas Ornithology Director.
 
@@ -1019,7 +1047,7 @@ Every species in the Bird Accuracy Plan below remains mandatory.
 """
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=f"""
 You are the Image Prompt Writer for BirdCanvas.
 
@@ -1184,7 +1212,7 @@ def critique_artwork(expected_birds, brief, image_path):
     image_url = image_to_data_url(image_path)
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=[
             {
                 "role":"user",
@@ -1246,7 +1274,7 @@ def verify_image(expected_birds, bird_plan):
     )
 
     response = client.responses.create(
-        model="gpt-5.5",
+        model="gpt-5.6-sol",
         input=[
             {
                 "role": "user",
@@ -1523,7 +1551,8 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
     print("compose() started")
     print("Loading birds...")
     birds = list(birds) if birds is not None else load_birds_for_source(source)
-    print(f"Loaded {len(birds)} birds")
+    birds = filter_birds(birds)
+    print(f"Loaded {len(birds)} birds after filtering")
 
     if not birds:
         print(f"No birds recorded in {source}.")
