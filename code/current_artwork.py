@@ -7,6 +7,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from gallery_library import build_library
+from generation_settings import load_settings, scheduled_boundary
 from paths import OUTPUT_DIR
 
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
@@ -87,6 +88,7 @@ def current_manifest_artwork() -> dict[str, Any] | None:
         "image_url": f"/current/{image_name}",
         "display_revision": _image_revision(image_path),
         "observation_date": manifest.get("observation_date", ""),
+        "observation_ended_at": manifest.get("observation_ended_at", ""),
         "created_at": manifest.get("created_at", ""),
         "species": [
             str(item)
@@ -149,7 +151,8 @@ def assurance_status(
     now: datetime | None = None,
 ) -> dict[str, Any]:
     local_now = now or datetime.now(LOCAL_TIMEZONE)
-    expected_observation_date = local_now.date() - timedelta(days=1)
+    due = scheduled_boundary(local_now, load_settings()['frequency'])
+    expected_observation_date = due.date()
 
     observation_date = (
         _parse_date(artwork.get("observation_date"))
@@ -163,10 +166,14 @@ def assurance_status(
     )
 
     expected_ready_at = datetime.combine(
-        local_now.date(),
+        due.date(),
         EXPECTED_READY_TIME,
         tzinfo=LOCAL_TIMEZONE,
     )
+    window_end = _parse_datetime(artwork.get("observation_ended_at")) if isinstance(artwork, dict) else None
+    if window_end is None:
+        # Older artworks represent the preceding day's observations.
+        window_end = datetime.combine(observation_date + timedelta(days=1), time.min, tzinfo=LOCAL_TIMEZONE) if observation_date else None
 
     if artwork is None:
         status = "missing"
@@ -176,12 +183,12 @@ def assurance_status(
         message = "The latest valid archived BirdCanvas artwork is being used."
     elif (
         local_now >= expected_ready_at
-        and observation_date is not None
-        and observation_date < expected_observation_date
+        and window_end is not None
+        and window_end < due
     ):
         status = "late"
         message = (
-            "A new daily BirdCanvas artwork has not arrived yet. "
+            "The next BirdCanvas artwork has not arrived yet. "
             "The most recent valid artwork remains on display."
         )
     else:

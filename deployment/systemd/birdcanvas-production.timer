@@ -1,0 +1,10 @@
+[Unit]
+Description=Check BirdCanvas schedule and retry Frame every 15 minutes
+
+[Timer]
+OnCalendar=*-*-* *:00/15:00
+Persistent=true
+Unit=birdcanvas-production.service
+
+[Install]
+WantedBy=timers.target

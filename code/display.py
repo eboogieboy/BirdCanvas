@@ -271,10 +271,10 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   <div class="card hero" id="hero"><div class="hero-empty">Loading gallery…</div></div>
   <div class="card mode-row section"><div><div class="pill" id="mode-pill"><span class="dot"></span>Automatic</div><div class="subtle" id="hero-subtle">Loading…</div></div><button id="end-override" class="btn secondary hidden">End now</button></div>
   <div id="assurance-card" class="card form-card section">
-    <strong id="assurance-title">Checking daily artwork…</strong>
+    <strong id="assurance-title">Checking BirdCanvas artwork…</strong>
     <p id="assurance-message" class="subtle">GalleryOS is checking the current BirdCanvas artwork.</p>
   </div>
-  <div class="section"><h2>Quick actions</h2><div class="quick-grid"><button class="quick" data-go="add"><strong>＋ Add artwork</strong><span>Upload from your phone</span></button><button class="quick" data-go="birdnet"><strong>BirdNET Import</strong><span>Upload detections and generate artwork</span></button><button class="quick" data-go="schedule"><strong>Calendar</strong><span>Plan a temporary display</span></button><button class="quick" data-go="library"><strong>Library</strong><span id="library-count">Browse artwork</span></button><button class="quick" data-filter="favourites"><strong>★ Favourites</strong><span id="fav-count">Your saved pieces</span></button><button class="quick" data-go="journal"><strong>BirdCanvas journal</strong><span>Browse the garden through time</span></button><button class="quick" data-go="settings"><strong>Display settings</strong><span>Hours, blackout and rotation</span></button><button class="quick" data-go="system"><strong>System status</strong><span>Health, backup and diagnostics</span></button></div></div>
+  <div class="section"><h2>Quick actions</h2><div class="quick-grid"><button class="quick" data-go="add"><strong>＋ Add artwork</strong><span>Upload from your phone</span></button><button class="quick" data-go="birdnet"><strong>BirdNET Import</strong><span>Upload detections and generate artwork</span></button><button class="quick" data-go="schedule"><strong>Calendar</strong><span>Plan a temporary display</span></button><button class="quick" data-go="library"><strong>Library</strong><span id="library-count">Browse artwork</span></button><button class="quick" data-filter="favourites"><strong>★ Favourites</strong><span id="fav-count">Your saved pieces</span></button><button class="quick" data-go="journal"><strong>BirdCanvas journal</strong><span>Browse the garden through time</span></button><button class="quick" data-go="generation"><strong>BirdCanvas generation</strong><span>Frequency and excluded birds</span></button><button class="quick" data-go="settings"><strong>Display settings</strong><span>Hours, blackout and rotation</span></button><button class="quick" data-go="system"><strong>System status</strong><span>Health, backup and diagnostics</span></button></div></div>
   <div class="card form-card section"><strong>Next change</strong><div class="subtle" id="next-change">Loading…</div></div>
 </section>
 <section id="add" class="panel"><h2>Add artwork</h2><form id="upload-form" class="card form-card"><div id="upload-preview" class="upload-preview"><div><strong>No image selected</strong><br><span>JPG, PNG or WebP · up to 20 MB</span></div></div><div class="field section"><label>Image</label><input id="upload-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required></div><div class="field"><label>Title</label><input id="upload-title" maxlength="120" placeholder="Custom artwork"></div><div class="field"><label>What should happen?</label><select id="upload-action"><option value="now">Display now</option><option value="schedule">Schedule it</option><option value="save">Save to library</option></select></div><div id="upload-now"><div class="field"><label>Display for</label><select id="upload-duration"><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="180">3 hours</option><option value="360">6 hours</option><option value="720">12 hours</option><option value="1440">24 hours</option></select></div></div><div id="upload-schedule" class="hidden"><div class="field"><label>Starts</label><input id="upload-start" type="datetime-local"></div><div class="field"><label>Ends</label><input id="upload-end" type="datetime-local"></div></div><button id="upload-button" class="btn" type="submit">Upload and display</button><div id="upload-status" class="status"></div></form></section>
@@ -306,6 +306,20 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 <section id="library" class="panel"><h2>Library</h2><div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search title or bird species"></div><div class="chips" id="chips"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="birdcanvas">BirdCanvas</button><button class="chip" data-filter="custom">Custom</button><button class="chip" data-filter="favourites">Favourites</button><button class="chip" data-filter="hidden">Hidden</button></div></div><div class="library-summary"><span id="result-count">0 artworks</span><span id="collection-summary"></span></div><div id="art-grid" class="art-grid"></div></section>
 
 
+<section id="generation" class="panel">
+  <h2>BirdCanvas generation</h2>
+  <div class="card form-card">
+    <div class="field"><label for="generation-frequency">Artwork frequency</label>
+      <select id="generation-frequency"><option value="daily">Daily · 04:00</option><option value="twice_weekly">Twice weekly · Monday and Thursday, 04:00</option><option value="weekly">Weekly · Monday, 04:00</option></select></div>
+    <div class="field"><label for="excluded-birds">Excluded birds</label>
+      <textarea id="excluded-birds" rows="5" placeholder="One name per line, e.g. gull" style="width:100%;padding:13px;border:1px solid var(--line);border-radius:13px;font:inherit"></textarea>
+      <p class="subtle">A name matches any species containing that text. BirdNET keeps recording them; only artwork omits them.</p></div>
+    <button id="save-generation" class="btn">Save generation settings</button>
+    <button id="generation-now" class="btn secondary" type="button">Generate now</button>
+    <div id="generation-message" class="status"></div>
+  </div>
+  <div class="card form-card section"><strong>Current collection</strong><p id="generation-status" class="subtle">Checking BirdNET…</p></div>
+</section>
 <section id="system" class="panel">
   <h2>System status</h2>
   <div id="health-card" class="card form-card"><p>Checking GalleryOS…</p></div>
@@ -440,8 +454,8 @@ function renderHero(s){
 
   const assurance=s.assurance||{};
   const assuranceTitle={
-    current:'Daily artwork current',
-    late:'Daily artwork delayed',
+    current:'BirdCanvas artwork current',
+    late:'BirdCanvas artwork delayed',
     fallback:'Using BirdCanvas fallback',
     missing:'BirdCanvas artwork unavailable'
   }[assurance.status]||'Current artwork assurance';
@@ -453,17 +467,17 @@ function renderHero(s){
       :'GalleryOS is protecting the current BirdCanvas artwork.'
   );
 }
-function renderNext(schedules){const future=schedules.filter(x=>new Date(x.starts_at)>new Date()).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));$('#next-change').textContent=displayData?.mode==='temporary_override'?`Return to automatic mode ${fmt(displayData.override.ends_at)}`:displayData?.mode==='scheduled'?`Current schedule ends ${fmt(displayData.schedule.ends_at)}`:future.length?`${future[0].artwork.title} · ${fmt(future[0].starts_at)}`:'When the next daily BirdCanvas artwork is published'}
+function renderNext(schedules){const future=schedules.filter(x=>new Date(x.starts_at)>new Date()).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));$('#next-change').textContent=displayData?.mode==='temporary_override'?`Return to automatic mode ${fmt(displayData.override.ends_at)}`:displayData?.mode==='scheduled'?`Current schedule ends ${fmt(displayData.schedule.ends_at)}`:future.length?`${future[0].artwork.title} · ${fmt(future[0].starts_at)}`:'When the next BirdCanvas artwork is published'}
 function setFilter(filter){currentFilter=filter;$$('.chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===filter));renderLibrary()}
 function filteredArtworks(){const q=$('#search').value.trim().toLowerCase();return libraryData.artworks.filter(a=>{const matchesFilter=currentFilter==='all'?!a.hidden:currentFilter==='favourites'?a.favourite&&!a.hidden:currentFilter==='hidden'?a.hidden:a.collection===currentFilter&&!a.hidden;const hay=[a.title,a.collection,...(a.species||[])].join(' ').toLowerCase();return matchesFilter&&(!q||hay.includes(q))})}
 function monthLabel(value){const d=new Date(`${value||''}T12:00:00`);return Number.isNaN(d.getTime())?'Undated':d.toLocaleDateString(undefined,{month:'long',year:'numeric'})}
-function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const birds=(a.species||[]);entry.innerHTML=`<img src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${birds.length?`${birds.length} species · ${escapeHtml(birds.slice(0,4).join(', '))}${birds.length>4?'…':''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
+function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const birds=(a.species||[]);entry.innerHTML=`<img src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${birds.length?`${birds.length} species${a.observation_ended_at?` · ${a.detections_total} detections`:''} · ${escapeHtml(birds.slice(0,4).join(', '))}${birds.length>4?'…':''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
 function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img src="${a.image_url}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
 function openDetail(a){
   selectedArtwork=a;
   $('#detail-img').src=controlImageUrl(a);
   $('#detail-title').textContent=a.title;
-  const detailDate=a.observation_date?formatDate(a.observation_date):fmt(a.created_at);
+  const detailDate=a.observation_started_at?`${formatDate(a.observation_started_at)}–${formatDate(a.observation_ended_at)} · ${a.detections_total} detections`:a.observation_date?formatDate(a.observation_date):fmt(a.created_at);
   $('#detail-meta').textContent=detailDate;
   const exhibition=a.exhibition||{};
   const brief=a.creative_brief||{};
@@ -614,6 +628,37 @@ $('#schedule-button').onclick=async()=>{try{await post('/api/schedules',{artwork
 function healthLabel(status){if(status==='ok')return 'Healthy';if(status==='warning')return 'Attention';return 'Problem';}
 function renderHealth(report){const checks=report.checks||{};const rows=Object.entries(checks).map(([name,value])=>`<div class="schedule-row"><div><strong>${escapeHtml(name.replace('_',' '))}</strong><p>${escapeHtml(healthLabel(value.status))}</p></div><span>${escapeHtml(value.message||'')}</span></div>`).join('');$('#health-card').innerHTML=`<strong>GalleryOS ${escapeHtml(report.version||'')}</strong><p class="subtle">Checked ${escapeHtml(formatDate(report.checked_at))}</p>${rows}`;}
 async function refreshHealth(){try{renderHealth(await api('/api/health'));}catch(error){$('#health-card').innerHTML=`<p>${escapeHtml(error.message)}</p>`;}}
+let generationSettingsLoaded=false;
+async function refreshGeneration(){
+  try{
+    const s=await api('/api/generation');
+    if(!generationSettingsLoaded){
+      $('#generation-frequency').value=s.settings.frequency;
+      $('#excluded-birds').value=s.settings.excluded_birds.join('\n');
+      generationSettingsLoaded=true;
+    }
+    const lines=[`Collecting since ${fmt(s.collecting_since)}`,`Next artwork: ${fmt(s.next_generation)}`,
+      s.birdnet_status==='ok'?`${s.species_detected} species · ${s.detections_total} detections`: `BirdNET unavailable: ${s.birdnet_error}`,
+      s.pending_delivery?`${s.pending_delivery} artwork(s) awaiting Frame delivery`:'Frame delivery queue clear'];
+    if(s.last_result)lines.push(s.last_result);
+    if(s.last_error)lines.push(`Last generation error: ${s.last_error}`);
+    $('#generation-status').textContent=lines.join(' · ');
+  }catch(e){$('#generation-status').textContent=e.message}
+}
+$('#save-generation').onclick=async()=>{
+  const msg=$('#generation-message');
+  try{
+    const terms=$('#excluded-birds').value.split(/\r?\n|,/).map(x=>x.trim()).filter(Boolean);
+    await post('/api/generation/settings',{frequency:$('#generation-frequency').value,excluded_birds:terms});
+    msg.textContent='Saved. BirdNET continues listening and the next artwork uses these settings.';
+    await refreshGeneration();
+  }catch(e){msg.textContent=e.message}
+};
+$('#generation-now').onclick=async()=>{
+  const msg=$('#generation-message');
+  try{await post('/api/generation/now');msg.textContent='Generation requested. It may take several minutes.';setTimeout(refreshGeneration,10000)}
+  catch(e){msg.textContent=e.message}
+};
 $('#create-backup').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating backup…';const result=await post('/api/backup',{});status.innerHTML=`Backup ready. <a href="${result.download_url}">Download backup</a>`;}catch(error){status.textContent=error.message;}};
 $('#download-diagnostics').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating diagnostics…';const result=await post('/api/diagnostics',{});window.location.href=result.download_url;status.textContent='Diagnostics download ready.';}catch(error){status.textContent=error.message;}};
 
@@ -645,7 +690,7 @@ $('#display-settings-form').onsubmit=async event=>{
   }
 };
 
-const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));refresh();setInterval(refresh,15000);
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));refresh();refreshGeneration();setInterval(refresh,15000);setInterval(refreshGeneration,60000);
 </script>
 </body></html>'''
 

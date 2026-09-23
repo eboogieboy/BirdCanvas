@@ -41,6 +41,13 @@ def publish_artwork(
     title: str | None = None,
     observation_window: str = "",
     generation: dict | None = None,
+    observation_started_at: str = "",
+    observation_ended_at: str = "",
+    detections_total: int = 0,
+    species_detected: list[str] | None = None,
+    species_used: list[str] | None = None,
+    species_excluded: list[str] | None = None,
+    generation_frequency: str = "",
 ) -> dict:
     if not source_image.exists():
         raise FileNotFoundError(f"Artwork image not found: {source_image}")
@@ -77,6 +84,13 @@ def publish_artwork(
         "title": title or default_title,
         "observation_date": date_text,
         "observation_window": observation_window,
+        "observation_started_at": observation_started_at,
+        "observation_ended_at": observation_ended_at,
+        "detections_total": detections_total,
+        "species_detected": species_detected or [],
+        "species_used": species_used or birds,
+        "species_excluded": species_excluded or [],
+        "generation_frequency": generation_frequency,
         "edition": edition_slug,
         "created_at": created_at,
         "image": "artwork.png",
