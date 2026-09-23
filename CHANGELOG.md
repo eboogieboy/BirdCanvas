@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.0 — BirdNET-Go Production Pipeline
+
+- Added Daily, Monday/Thursday and Weekly collection schedules and a phone control for excluded birds.
+- Read BirdNET-Go detections for exact UK-time collection windows; saved species and detection provenance in each artwork.
+- Published once per window and saved Frame deliveries for retry without regenerating.
+- Limited the TV to ten recorded BirdCanvas uploads while preserving the full Gallery archive.
+- Updated headless services, GalleryOS health checks and Python 3.13 multipart upload handling.
+- Added production path tests and deployment instructions.
+
 ## 0.11.0 — Exhibition Experience
 
 - Replaced the artwork bottom sheet with a full-screen exhibition viewer.

@@ -4,37 +4,32 @@ import os
 from datetime import date
 from pathlib import Path
 
-from openai import OpenAI
+from functools import lru_cache
 
 from storage import get_birds, get_yesterday_birds
-from artwork_store import publish_artwork
+from generation_settings import excluded_birds
 from paths import OUTPUT_DIR, DATA_DIR
 OUTPUT = OUTPUT_DIR / "final_scene.png"
 CANDIDATE_DIR = OUTPUT_DIR / "candidates"
 MAX_ATTEMPTS = 2
 IMAGE_SIZE = "1024x1536"
 
-client = OpenAI(
-    api_key=os.environ["OPENAI_API_KEY"]
-)
+@lru_cache(maxsize=1)
+def _client():
+    from openai import OpenAI
+    return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
-EXCLUDED_BIRD_TERMS = (
-    "gull",
-    "pigeon",
-    "crow",
-)
-
-
-def filter_birds(birds):
+def filter_birds(birds, terms=None):
     kept = []
     excluded = []
+    terms = excluded_birds() if terms is None else terms
 
     for bird in birds:
         name = str(bird).strip()
         lowered = name.casefold()
 
-        if any(term in lowered for term in EXCLUDED_BIRD_TERMS):
+        if any(term in lowered for term in terms):
             excluded.append(name)
         else:
             kept.append(name)
@@ -103,7 +98,7 @@ def load_creative_history(limit=10):
 
 
 def extract_creative_dna(brief):
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the BirdCanvas Curator.
@@ -167,7 +162,7 @@ def create_movement_options(birds, season, edition="daily"):
 
     history = load_creative_history()
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the Exhibition Programme Director for BirdCanvas.
@@ -253,7 +248,7 @@ Return ONLY valid JSON:
 
 
 def select_movement(movements, birds):
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the Art Director for BirdCanvas.
@@ -295,7 +290,7 @@ def create_creative_brief(birds, movement=None, edition="daily", observation_win
     bird_list = "\n".join(f"- {bird}" for bird in birds)
     season = current_season()
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the Creative Director for BirdCanvas.
@@ -746,7 +741,7 @@ Someone seeing the artwork without context should never assume it was generated 
 
 
 def compose_structured_image_prompt(birds, brief):
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are BirdCanvas Prompt Composer.
@@ -817,7 +812,7 @@ def create_bird_plan(birds):
         for index, bird in enumerate(birds, start=1)
     )
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the BirdCanvas Ornithology Director.
@@ -1046,7 +1041,7 @@ of a bird that was already correct.
 Every species in the Bird Accuracy Plan below remains mandatory.
 """
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=f"""
 You are the Image Prompt Writer for BirdCanvas.
@@ -1182,7 +1177,7 @@ Before rendering, internally count the birds and confirm that every listed
 species appears once and only once.
 """
 
-    result = client.images.generate(
+    result = _client().images.generate(
         model="gpt-image-1",
         prompt=final_prompt,
         size=IMAGE_SIZE,
@@ -1211,7 +1206,7 @@ def image_to_data_url(path):
 def critique_artwork(expected_birds, brief, image_path):
     image_url = image_to_data_url(image_path)
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=[
             {
@@ -1273,7 +1268,7 @@ def verify_image(expected_birds, bird_plan):
         indent=2,
     )
 
-    response = client.responses.create(
+    response = _client().responses.create(
         model="gpt-5.6-sol",
         input=[
             {
@@ -1546,12 +1541,12 @@ def build_verification_correction(
 
 
 
-def compose(source="today", birds=None, edition="daily", observation_window=""):
+def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None):
 
     print("compose() started")
     print("Loading birds...")
     birds = list(birds) if birds is not None else load_birds_for_source(source)
-    birds = filter_birds(birds)
+    birds = filter_birds(birds, excluded_terms)
     print(f"Loaded {len(birds)} birds after filtering")
 
     if not birds:
@@ -1628,7 +1623,7 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
             )
         except Exception as error:
             print(f"Verification failed, keeping generated artwork: {error}")
-            return {"birds": birds, "brief": brief, "output": str(OUTPUT)}
+            return {"birds": birds, "brief": brief, "output": str(OUTPUT), "generation": {"verification_error": str(error), "attempts_used": attempt}}
 
         print("Verification results:")
         print(
@@ -1669,13 +1664,13 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                 critique,
             )
 
-            publish_artwork(
-                source_image=OUTPUT,
-                observation_date=str(date.today()),
-                birds=birds,
-                brief=brief,
-                edition=edition,
-                generation={
+            return {
+                "birds": birds,
+                "brief": brief,
+                "critique": critique,
+                "verification": verification,
+                "output": str(OUTPUT),
+                "generation": {
                     "movement_options": movements,
                     "selected_movement": selected_movement,
                     "selection_reason": selection_reason,
@@ -1688,14 +1683,6 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
                     "attempts_used": attempt,
                     "critique": critique,
                 },
-            )
-
-            return {
-                "birds": birds,
-                "brief": brief,
-                "critique": critique,
-                "verification": verification,
-                "output": str(OUTPUT),
             }
 
         correction = build_verification_correction(
@@ -1714,33 +1701,24 @@ def compose(source="today", birds=None, edition="daily", observation_window=""):
 
     print("⚠ Maximum attempts reached. Publishing latest artwork.")
 
-    publish_artwork(
-        source_image=OUTPUT,
-        observation_date=str(date.today()),
-        birds=birds,
-        brief=brief,
-        edition=edition,
-        generation={
-            "movement_options": movements,
-            "selected_movement": selected_movement,
-            "selection_reason": selection_reason,
-            
-            "bird_plan": bird_plan,
-            "image_prompt": prompt,
-            "verification": verification,
-            "verification_failed": True,
-            "attempts_used": MAX_ATTEMPTS,
-        },
-    )
-
-    print(f"✓ Artwork published to {OUTPUT}")
+    print(f"✓ Artwork prepared at {OUTPUT}")
 
     return {
         "birds": birds,
         "brief": brief,
-        "output": str(OUTPUT)
+        "output": str(OUTPUT),
+        "generation": {"movement_options": movements, "selected_movement": selected_movement, "selection_reason": selection_reason, "bird_plan": bird_plan, "image_prompt": prompt, "verification": verification, "verification_failed": True, "attempts_used": MAX_ATTEMPTS},
     }
 
 
 if __name__ == "__main__":
-    compose()
+    from artwork_store import publish_artwork
+    result = compose()
+    if result:
+        publish_artwork(
+            source_image=Path(result["output"]),
+            observation_date=date.today().isoformat(),
+            birds=result["birds"],
+            brief=result["brief"],
+            generation=result.get("generation"),
+        )

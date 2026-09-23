@@ -107,20 +107,20 @@ sed \
     > /etc/systemd/system/birdcanvas-compose@.service
 
 # ---------------------------------------------------------
-# Only the 04:00 previous-day generation timer
-# ---------------------------------------------------------
+# Cadence-aware production scheduler (the webpage controls the frequency).
+sed \
+    -e "s|__USER__|$TARGET_USER|g" \
+    -e "s|__GROUP__|$TARGET_GROUP|g" \
+    -e "s|__PROJECT_DIR__|$PROJECT_DIR|g" \
+    "$PROJECT_DIR/deployment/systemd/birdcanvas-production.service.template" \
+    > /etc/systemd/system/birdcanvas-production.service
+install -m 0644 "$PROJECT_DIR/deployment/systemd/birdcanvas-production.timer" \
+    /etc/systemd/system/birdcanvas-production.timer
 
-install -m 0644 \
-    "$PROJECT_DIR/deployment/systemd/birdcanvas-morning.timer" \
-    /etc/systemd/system/birdcanvas-morning.timer
-
-# Remove/disable obsolete multi-edition timers if they exist
-systemctl disable --now birdcanvas-midday.timer 2>/dev/null || true
-systemctl disable --now birdcanvas-evening.timer 2>/dev/null || true
-
-rm -f \
-    /etc/systemd/system/birdcanvas-midday.timer \
-    /etc/systemd/system/birdcanvas-evening.timer
+for timer in birdcanvas-morning.timer birdcanvas-midday.timer birdcanvas-evening.timer; do
+    systemctl disable --now "$timer" 2>/dev/null || true
+    rm -f "/etc/systemd/system/$timer"
+done
 
 # ---------------------------------------------------------
 # Permissions
@@ -147,7 +147,7 @@ systemctl enable --now avahi-daemon
 systemctl daemon-reload
 
 systemctl enable --now canvasos.service
-systemctl enable --now birdcanvas-morning.timer
+systemctl enable --now birdcanvas-production.timer
 
 echo
 echo "Checking GalleryOS..."
@@ -175,8 +175,7 @@ echo
 echo "Phone control:"
 echo "  http://${HOSTNAME_VALUE}.local:8000/control/"
 echo
-echo "Daily artwork:"
-echo "  04:00 Europe/London"
+echo "Artwork frequency: configurable from the phone, at 04:00 Europe/London"
 echo
 echo "Samsung Frame:"
 echo "  Controlled through BirdCanvas when enabled in .env"

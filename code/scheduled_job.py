@@ -84,6 +84,7 @@ def main() -> int:
         brief=result["brief"],
         edition=args.slot,
         observation_window=window,
+        generation=result.get("generation"),
     )
     build_display_page()
 

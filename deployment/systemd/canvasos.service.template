@@ -10,6 +10,7 @@ Group=__GROUP__
 WorkingDirectory=__PROJECT_DIR__
 Environment=PYTHONUNBUFFERED=1
 Environment=TZ=Europe/London
+EnvironmentFile=-__PROJECT_DIR__/.env
 ExecStart=__PROJECT_DIR__/.venv/bin/python __PROJECT_DIR__/code/server.py
 Restart=always
 RestartSec=3

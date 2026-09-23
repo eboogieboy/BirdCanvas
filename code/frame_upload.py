@@ -162,7 +162,7 @@ def _run_samsungtv(*arguments: str) -> str:
     return result.stdout.strip()
 
 
-def upload_to_frame(source_image: Path) -> dict | None:
+def upload_to_frame(source_image: Path, content_id: str | None = None, on_uploaded=None) -> dict | None:
     """
     Upload one BirdCanvas artwork to the Samsung Frame and display it.
 
@@ -172,34 +172,32 @@ def upload_to_frame(source_image: Path) -> dict | None:
     if not frame_enabled():
         return None
 
-    ready_image = prepare_frame_jpg(source_image)
+    ready_image = prepare_frame_jpg(source_image) if not content_id else None
 
     print(
         f"Preparing Samsung Frame artwork: "
-        f"{ready_image} ({FRAME_SIZE[0]}x{FRAME_SIZE[1]})"
+        f"{ready_image or source_image} ({FRAME_SIZE[0]}x{FRAME_SIZE[1]})"
     )
 
-    upload_output = _run_samsungtv(
-        "art-upload",
-        "--matte",
-        "none",
-        "--portrait-matte",
-        "none",
-        str(ready_image),
-    )
-
-    match = re.search(
-        r"\b(MY_[A-Za-z0-9_]+)\b",
-        upload_output,
-    )
-
-    if not match:
-        raise RuntimeError(
-            "Samsung upload completed but no content ID "
-            f"was returned. Output: {upload_output}"
+    if not content_id:
+        upload_output = _run_samsungtv(
+            "art-upload",
+            "--matte",
+            "none",
+            "--portrait-matte",
+            "none",
+            str(ready_image),
         )
 
-    content_id = match.group(1)
+        match = re.search(r"\b(MY_[A-Za-z0-9_]+)\b", upload_output)
+
+        if not match:
+            raise RuntimeError("Samsung upload completed but no content ID "
+                               f"was returned. Output: {upload_output}")
+
+        content_id = match.group(1)
+        if on_uploaded:
+            on_uploaded(content_id)
 
     print(
         f"Samsung Frame upload complete: {content_id}"
@@ -216,7 +214,7 @@ def upload_to_frame(source_image: Path) -> dict | None:
 
     return {
         "content_id": content_id,
-        "image": str(ready_image),
+        "image": str(ready_image or source_image),
         "host": os.getenv(
             "BIRDCANVAS_FRAME_HOST",
             "",

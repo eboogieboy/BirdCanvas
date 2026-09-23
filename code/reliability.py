@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import zipfile
 from datetime import datetime
@@ -81,6 +82,7 @@ def load_last_good() -> dict[str, Any] | None:
 
 
 def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any]:
+    from production_pipeline import status as generation_status
     artwork = (current_status or {}).get("artwork") if current_status else None
     artwork_health = {"status": "warning", "message": "No current artwork."}
     if isinstance(artwork, dict):
@@ -99,6 +101,16 @@ def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any
         "display_settings": _json_file_health(DATA_DIR / "display_settings.json"),
         "disk": _disk_health(),
     }
+    production = generation_status()
+    checks['birdnet'] = {"status": production['birdnet_status'],
+                         "message": production.get('birdnet_error') or
+                         f"{production.get('species_detected', 0)} species in collection; last detection {production.get('last_detection') or 'none yet'}"}
+    checks['openai'] = {"status": "ok" if os.getenv('OPENAI_API_KEY') else "warning",
+                        "message": "Configured" if os.getenv('OPENAI_API_KEY') else "API key missing"}
+    checks['generation'] = {"status": "warning" if production.get('last_error') else "ok",
+                            "message": production.get('last_error') or f"Next: {production['next_generation']}"}
+    checks['frame'] = {"status": "warning" if production['pending_delivery'] else "ok",
+                       "message": f"{production['pending_delivery']} pending; last delivered {production.get('last_delivery') or 'never'}"}
     overall = "error" if any(c.get("status") == "error" for c in checks.values()) else ("warning" if any(c.get("status") == "warning" for c in checks.values()) else "ok")
     return {"status": overall, "version": read_version(), "checked_at": now_iso(), "checks": checks}
 

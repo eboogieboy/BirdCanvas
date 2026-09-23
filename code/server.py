@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-import cgi
+import io
 import http.server
 import json
 import socketserver
+import subprocess
+import sys
+from email.parser import BytesParser
+from email.policy import default as email_policy
 from http import HTTPStatus
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -24,6 +29,9 @@ from display_settings import load_display_settings, save_display_settings
 from reliability import create_backup, create_diagnostics, health_report
 from import_birdnet import import_zip
 from compose import compose
+from artwork_store import publish_artwork
+from generation_settings import load_settings, save_settings
+from production_pipeline import status as generation_status
 from display import build_display_page
 PORT = 8000
 
@@ -53,6 +61,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/display/settings":
             self.send_json(load_display_settings())
+            return
+        if route == "/api/generation":
+            self.send_json(generation_status())
             return
         if route == "/api/health":
             self.send_json(health_report(resolve_display()))
@@ -87,6 +98,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if route == "/api/display/settings":
                 payload = self.read_json_body()
                 self.send_json({"ok": True, "settings": save_display_settings(payload)})
+                return
+            if route == "/api/generation/settings":
+                self.send_json({"ok": True, "settings": save_settings(self.read_json_body())})
+                return
+            if route == "/api/generation/now":
+                subprocess.Popen([sys.executable, str(PROJECT_ROOT / "code/production_job.py"), "--now"],
+                                 cwd=PROJECT_ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                self.send_json({"ok": True, "message": "Generation requested. Check system status for completion."})
                 return
             if route == "/api/override":
                 payload = self.read_json_body()
@@ -180,55 +199,44 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if not content_type.startswith("multipart/form-data"):
             raise ValueError("Upload must use multipart form data.")
 
-        form = cgi.FieldStorage(
-            fp=self.rfile,
-            headers=self.headers,
-            environ={"REQUEST_METHOD": "POST", "CONTENT_TYPE": content_type, "CONTENT_LENGTH": str(content_length)},
-        )
-        image_field = form["image"] if "image" in form else None
-        if image_field is None or not getattr(image_field, "file", None):
+        form = self.read_multipart(content_length, content_type)
+        image_field = form.get("image")
+        if image_field is None:
             raise ValueError("Choose an image to upload.")
 
         manifest = save_custom_artwork(
-            file_stream=image_field.file,
-            filename=image_field.filename or "upload",
-            content_type=image_field.type or "",
-            title=form.getfirst("title", "Custom artwork"),
+            file_stream=io.BytesIO(image_field.get_payload(decode=True)),
+            filename=image_field.get_filename() or "upload",
+            content_type=image_field.get_content_type(),
+            title=self.form_text(form, "title", "Custom artwork"),
         )
         display = None
-        if form.getfirst("show_now", "false").lower() == "true":
-            display = set_temporary_override(manifest["id"], int(form.getfirst("duration_minutes", "0")))
+        if self.form_text(form, "show_now", "false").lower() == "true":
+            display = set_temporary_override(manifest["id"], int(self.form_text(form, "duration_minutes", "0")))
         self.send_json({"ok": True, "artwork": manifest, "display": display}, HTTPStatus.CREATED)
     def handle_birdnet_upload(self) -> None:
         content_length = int(self.headers.get("Content-Length", "0"))
         if content_length <= 0:
             raise ValueError("No upload was received.")
+        if content_length > 20 * 1024 * 1024:
+            raise ValueError("BirdNET ZIP must be smaller than 20 MB.")
 
         content_type = self.headers.get("Content-Type", "")
         if not content_type.startswith("multipart/form-data"):
             raise ValueError("Upload must use multipart form data.")
 
-        form = cgi.FieldStorage(
-            fp=self.rfile,
-            headers=self.headers,
-            environ={
-                "REQUEST_METHOD": "POST",
-                "CONTENT_TYPE": content_type,
-                "CONTENT_LENGTH": str(content_length),
-            },
-        )
-
-        zip_field = form["zip_file"] if "zip_file" in form else None
-        if zip_field is None or not getattr(zip_field, "file", None):
+        form = self.read_multipart(content_length, content_type)
+        zip_field = form.get("zip_file")
+        if zip_field is None:
             raise ValueError("Choose a BirdNET ZIP file.")
 
         uploads = PROJECT_ROOT / "data/uploads"
         uploads.mkdir(parents=True, exist_ok=True)
 
-        zip_path = uploads / (zip_field.filename or "birdnet.zip")
+        zip_path = uploads / Path(zip_field.get_filename() or "birdnet.zip").name
 
         with zip_path.open("wb") as output:
-            output.write(zip_field.file.read())
+            output.write(zip_field.get_payload(decode=True))
 
         result = import_zip(
             zip_path=zip_path,
@@ -246,7 +254,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             HTTPStatus.CREATED,
         )
     def handle_birdnet_generate(self) -> None:
-        compose()
+        result = compose()
+        if not result:
+            raise ValueError("No birds available for artwork.")
+        publish_artwork(Path(result['output']), datetime.now().date().isoformat(),
+                        result['birds'], result['brief'], edition='manual',
+                        generation=result.get('generation'))
         build_display_page()
 
         self.send_json(
@@ -255,6 +268,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 "message": "Today's BirdCanvas artwork has been generated.",
             }
         )    
+
+    def read_multipart(self, content_length: int, content_type: str) -> dict:
+        if content_length <= 0 or content_length > MAX_UPLOAD_BYTES + 1024 * 1024:
+            raise ValueError("Invalid upload size")
+        raw = self.rfile.read(content_length)
+        message = BytesParser(policy=email_policy).parsebytes(
+            b"MIME-Version: 1.0\r\nContent-Type: " + content_type.encode('ascii') + b"\r\n\r\n" + raw)
+        if not message.is_multipart():
+            raise ValueError("Invalid multipart upload")
+        return {part.get_param('name', header='content-disposition'): part
+                for part in message.iter_parts() if part.get_param('name', header='content-disposition')}
+
+    @staticmethod
+    def form_text(form: dict, name: str, fallback: str) -> str:
+        field = form.get(name)
+        return field.get_content() if field else fallback
 
     def read_json_body(self) -> dict:
         length = int(self.headers.get("Content-Length", "0"))
