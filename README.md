@@ -4,6 +4,8 @@ BirdCanvas creates artwork from BirdNET-Go garden-bird observations. On the phon
 
 Development can run independently in GitHub Codespaces. Production uses one headless Pi for BirdNET-Go, GalleryOS and Samsung Frame delivery. See [Pi setup and deployment](deployment/PRODUCTION.md). Real hardware pairing and microphone detection must be verified on the Pi.
 
+Use `deployment/install-headless.sh` for that Pi. The older `deployment/install.sh`, kiosk scripts and morning/midday/evening timers are retained only as a legacy fallback; running that installer would enable the old artwork schedule. The ZIP import and manual detection commands are also retained for testing. Do not remove `data/`, `imports/`, `output/current/` or `output/archive/`: they contain observations or artwork rather than disposable code.
+
 ## Start GalleryOS
 
 From the project root:
