@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+from urllib.parse import unquote
 
 from PIL import Image
 
@@ -47,7 +48,7 @@ class BirdImageTests(unittest.TestCase):
             with self.subTest(name=name):
                 result = illustration_for(name)
                 self.assertIsNotNone(result)
-                self.assertIn(filename if "%" in filename else filename.replace(" ", "%20"), result["image_url"])
+                self.assertIn(unquote(filename), unquote(result["image_url"]))
                 self.assertEqual(result["license"], "Public domain")
 
     def test_scientific_name_can_resolve_an_illustration(self):
