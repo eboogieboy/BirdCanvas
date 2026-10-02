@@ -56,22 +56,49 @@ fi
 log "Candidate commit: $REMOTE_COMMIT"
 
 # Fail before touching the live checkout if the candidate is not viable.
-python3 -m compileall -q "$SOURCE_DIR/code"
+# The clean Git checkout under /var/lib is intentionally root-owned. Candidate
+# checks that generate files therefore run in a disposable writable sandbox
+# owned by the BirdCanvas service user, never in the immutable checkout itself.
+PREFLIGHT_DIR="$(mktemp -d "$STATE_DIR/preflight.XXXXXX")"
 
-log "Running candidate preflight before touching live code"
-if [[ -d "$SOURCE_DIR/tests" ]]; then
+cleanup_preflight() {
+    if [[ -n "${PREFLIGHT_DIR:-}" && -d "$PREFLIGHT_DIR" ]]; then
+        rm -rf "$PREFLIGHT_DIR"
+    fi
+}
+trap cleanup_preflight EXIT
+
+chown "$BIRDCANVAS_DEPLOY_USER:$BIRDCANVAS_DEPLOY_GROUP" "$PREFLIGHT_DIR"
+rsync -a --delete --exclude='.git/' \
+    --chown="$BIRDCANVAS_DEPLOY_USER:$BIRDCANVAS_DEPLOY_GROUP" \
+    "$SOURCE_DIR/" "$PREFLIGHT_DIR/"
+chmod -R u+rwX "$PREFLIGHT_DIR"
+
+log "Running candidate preflight in writable sandbox before touching live code"
+
+if ! runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc \
+    "cd '$PREFLIGHT_DIR' && '$PROJECT_DIR/.venv/bin/python' -m compileall -q code"; then
+    log "Candidate compile preflight failed; live installation unchanged"
+    exit 1
+fi
+
+if [[ -d "$PREFLIGHT_DIR/tests" ]]; then
     if ! runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc \
-        "cd '$SOURCE_DIR' && PYTHONPATH=code '$PROJECT_DIR/.venv/bin/python' -m unittest discover -s tests -v"; then
-        log "Candidate preflight failed; live installation unchanged"
+        "cd '$PREFLIGHT_DIR' && PYTHONPATH=code '$PROJECT_DIR/.venv/bin/python' -m unittest discover -s tests -v"; then
+        log "Candidate test preflight failed; live installation unchanged"
         exit 1
     fi
 fi
 
 if ! runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc \
-    "cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py"; then
-    log "Candidate page generation failed; live installation unchanged"
+    "cd '$PREFLIGHT_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py"; then
+    log "Candidate page-generation preflight failed; live installation unchanged"
     exit 1
 fi
+
+cleanup_preflight
+PREFLIGHT_DIR=""
+trap - EXIT
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
 ROLLBACK="$STATE_DIR/rollback-$STAMP"
