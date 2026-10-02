@@ -13,6 +13,32 @@ from paths import DATA_DIR
 LOCAL = ZoneInfo("Europe/London")
 CATALOG_PATH = DATA_DIR / "bird_catalog.json"
 
+# A useful day-one field-guide library. These are deliberately catalogue
+# entries, not detections: "heard" remains false until BirdNET actually
+# records the species.
+STARTER_BIRDS = [
+    ("Blackbird", "Turdus merula"),
+    ("Blue Tit", "Cyanistes caeruleus"),
+    ("Carrion Crow", "Corvus corone"),
+    ("Chaffinch", "Fringilla coelebs"),
+    ("Coal Tit", "Periparus ater"),
+    ("Collared Dove", "Streptopelia decaocto"),
+    ("Dunnock", "Prunella modularis"),
+    ("Goldfinch", "Carduelis carduelis"),
+    ("Great Tit", "Parus major"),
+    ("Greenfinch", "Chloris chloris"),
+    ("Herring Gull", "Larus argentatus"),
+    ("House Sparrow", "Passer domesticus"),
+    ("Jackdaw", "Coloeus monedula"),
+    ("Long-tailed Tit", "Aegithalos caudatus"),
+    ("Magpie", "Pica pica"),
+    ("Robin", "Erithacus rubecula"),
+    ("Song Thrush", "Turdus philomelos"),
+    ("Starling", "Sturnus vulgaris"),
+    ("Woodpigeon", "Columba palumbus"),
+    ("Wren", "Troglodytes troglodytes"),
+]
+
 
 def _load(path: Path = CATALOG_PATH) -> dict:
     try:
@@ -81,13 +107,33 @@ def record_birds(birds: list[dict], *, path: Path = CATALOG_PATH) -> None:
 
 
 def catalogue(*, path: Path = CATALOG_PATH) -> dict:
-    """Return every observed species with its local tile-health status."""
+    """Return starter + observed species with local tile-health status."""
     stored = _load(path)
-    birds = []
+    observed = {
+        key: item
+        for key, item in stored["birds"].items()
+        if isinstance(item, dict)
+    }
 
-    for item in stored["birds"].values():
-        if not isinstance(item, dict):
-            continue
+    combined: dict[str, dict] = {}
+    starter_keys = set()
+
+    for name, scientific in STARTER_BIRDS:
+        key = _key(name, scientific)
+        starter_keys.add(key)
+        combined[key] = {
+            "name": name,
+            "scientific_name": scientific,
+            "first_seen": "",
+            "last_seen": "",
+        }
+
+    # Real observations always win over the starter placeholder and new
+    # species are added automatically as BirdNET encounters them.
+    combined.update(observed)
+
+    birds = []
+    for key, item in combined.items():
         name = str(item.get("name", "")).strip()
         scientific = str(item.get("scientific_name", "")).strip()
         if not name:
@@ -99,12 +145,15 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
             "scientific": scientific,
             "v": tile["path"].name,
         })
+        heard = key in observed and bool(item.get("first_seen") or item.get("last_seen"))
         birds.append(
             {
                 "name": name,
                 "scientific_name": scientific,
-                "first_seen": item.get("first_seen"),
-                "last_seen": item.get("last_seen"),
+                "first_seen": item.get("first_seen") or None,
+                "last_seen": item.get("last_seen") or None,
+                "starter": key in starter_keys,
+                "heard": heard,
                 "image_url": f"/api/mirror/bird-image?{query}",
                 "image_status": tile["status"],
                 "image_ready": tile["status"] == "ready",
@@ -117,8 +166,11 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
 
     birds.sort(key=lambda bird: bird["name"].casefold())
     missing = sum(1 for bird in birds if not bird["image_ready"])
+    heard = sum(1 for bird in birds if bird["heard"])
     return {
         "species_count": len(birds),
+        "starter_count": len(STARTER_BIRDS),
+        "heard_count": heard,
         "ready_count": len(birds) - missing,
         "missing_count": missing,
         "birds": birds,

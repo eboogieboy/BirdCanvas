@@ -74,14 +74,45 @@ class BirdCatalogueTests(unittest.TestCase):
                     "problem": "" if name == "Blackbird" else "No curated illustration yet.",
                 }
 
-            with patch.object(bird_catalog, "mirror_tile_info", side_effect=tile_info):
+            with patch.object(bird_catalog, "STARTER_BIRDS", []), \
+                 patch.object(bird_catalog, "mirror_tile_info", side_effect=tile_info):
                 result = bird_catalog.catalogue(path=path)
 
         self.assertEqual(result["species_count"], 2)
+        self.assertEqual(result["starter_count"], 0)
+        self.assertEqual(result["heard_count"], 2)
         self.assertEqual(result["ready_count"], 1)
         self.assertEqual(result["missing_count"], 1)
         self.assertEqual([bird["name"] for bird in result["birds"]], ["Blackbird", "Mystery Bird"])
         self.assertFalse(result["birds"][1]["image_ready"])
+
+    def test_catalogue_starts_with_twenty_common_birds_without_faking_detections(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "bird_catalog.json"
+
+            def tile_info(name, scientific):
+                slug = name.lower().replace(" ", "-")
+                return {
+                    "path": Path(folder) / f"{slug}.jpg",
+                    "status": "ready",
+                    "has_mapping": True,
+                    "artist": "Historical plate",
+                    "source_url": "",
+                    "problem": "",
+                }
+
+            with patch.object(bird_catalog, "mirror_tile_info", side_effect=tile_info):
+                result = bird_catalog.catalogue(path=path)
+
+        self.assertEqual(result["starter_count"], 20)
+        self.assertEqual(result["species_count"], 20)
+        self.assertEqual(result["heard_count"], 0)
+        self.assertEqual(result["missing_count"], 0)
+        names = [bird["name"] for bird in result["birds"]]
+        self.assertIn("Blackbird", names)
+        self.assertIn("Robin", names)
+        self.assertIn("Herring Gull", names)
+        self.assertTrue(all(not bird["heard"] for bird in result["birds"]))
 
 
 if __name__ == "__main__":

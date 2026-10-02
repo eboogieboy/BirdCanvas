@@ -55,8 +55,23 @@ fi
 
 log "Candidate commit: $REMOTE_COMMIT"
 
-# Fail before touching the live checkout if the new Python code is not syntactically valid.
+# Fail before touching the live checkout if the candidate is not viable.
 python3 -m compileall -q "$SOURCE_DIR/code"
+
+log "Running candidate preflight before touching live code"
+if [[ -d "$SOURCE_DIR/tests" ]]; then
+    if ! runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc \
+        "cd '$SOURCE_DIR' && PYTHONPATH=code '$PROJECT_DIR/.venv/bin/python' -m unittest discover -s tests -v"; then
+        log "Candidate preflight failed; live installation unchanged"
+        exit 1
+    fi
+fi
+
+if ! runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc \
+    "cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py"; then
+    log "Candidate page generation failed; live installation unchanged"
+    exit 1
+fi
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
 ROLLBACK="$STATE_DIR/rollback-$STAMP"

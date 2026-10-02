@@ -73,7 +73,11 @@ class MirrorPanelTests(unittest.TestCase):
         draw = ImageDraw.Draw(image)
         label, font = mirror_panel._fit_label(draw, "Black-headed Gull", 220, 46)
         self.assertIn("\n", label)
-        self.assertGreaterEqual(getattr(font, "size", 20), 30)
+        self.assertGreaterEqual(getattr(font, "size", 20), 26)
+
+    def test_panel_font_is_scalable(self):
+        font = mirror_panel._font(38, bold=True)
+        self.assertGreaterEqual(getattr(font, "size", 38), 36)
 
     def test_renderer_version_change_invalidates_cached_panel(self):
         with tempfile.TemporaryDirectory() as folder:

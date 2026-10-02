@@ -268,7 +268,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 </head>
 <body>
 <main class="app">
-<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.19.1</div></header>
+<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.20.0</div></header>
 <section id="home" class="panel active">
   <div class="home-overview">
     <div class="card hero" id="hero"><div class="hero-empty">Loading portrait artwork…</div></div>
@@ -297,7 +297,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   <div id="bird-grid" class="bird-grid"><div class="empty">Listening for birds…</div></div>
   <p class="subtle">Field-guide illustrations are curated public-domain plates. Birds without a plate yet remain in the written list and get a simple fallback tile.</p>
   <div class="section">
-    <div class="field-guide-head"><div><h2>Field-guide library</h2><p class="subtle">Every species BirdCanvas has recorded, with its Mirror thumbnail status.</p></div><div id="bird-catalog-summary" class="field-guide-summary">Loading…</div></div>
+    <div class="field-guide-head"><div><h2>Field-guide library</h2><p class="subtle">A starter set of common birds, plus every new species BirdCanvas records.</p></div><div id="bird-catalog-summary" class="field-guide-summary">Loading…</div></div>
     <div class="field-guide-filters"><button class="field-guide-filter active" type="button" data-bird-catalog-filter="all">All</button><button class="field-guide-filter" type="button" data-bird-catalog-filter="missing">Missing images</button></div>
     <div id="bird-catalog-grid" class="field-guide-grid"><div class="empty" style="grid-column:1/-1">Building field-guide library…</div></div>
   </div>
@@ -516,7 +516,7 @@ function renderBirdCatalogue(){
   const grid=$('#bird-catalog-grid');
   const all=Array.isArray(birdCatalogData.birds)?birdCatalogData.birds:[];
   const birds=birdCatalogFilter==='missing'?all.filter(b=>!b.image_ready):all;
-  $('#bird-catalog-summary').textContent=`${birdCatalogData.ready_count||0} ready · ${birdCatalogData.missing_count||0} missing`;
+  $('#bird-catalog-summary').textContent=`${birdCatalogData.species_count||0} species · ${birdCatalogData.heard_count||0} heard · ${birdCatalogData.missing_count||0} missing`;
   qa('[data-bird-catalog-filter]').forEach(button=>button.classList.toggle('active',button.dataset.birdCatalogFilter===birdCatalogFilter));
   grid.replaceChildren();
   if(!birds.length){
@@ -529,7 +529,8 @@ function renderBirdCatalogue(){
     const state=bird.image_ready?'Ready':'Missing image';
     const problem=!bird.image_ready&&bird.problem?`<div class="field-guide-problem">${escapeHtml(bird.problem)}</div>`:'';
     const credit=bird.artist?`<div class="field-guide-credit">${escapeHtml(bird.artist)}</div>`:'';
-    tile.innerHTML=`<img src="${escapeHtml(bird.image_url)}" alt="${escapeHtml(bird.name)} field-guide tile" loading="lazy"><div class="field-guide-copy"><div class="field-guide-name">${escapeHtml(bird.name)}</div><span class="field-guide-state ${bird.image_ready?'':'missing'}">${state}</span>${credit}${problem}</div>`;
+    const heard=bird.heard?'Heard by BirdNET':'Starter species · not heard yet';
+    tile.innerHTML=`<img src="${escapeHtml(bird.image_url)}" alt="${escapeHtml(bird.name)} field-guide tile" loading="lazy"><div class="field-guide-copy"><div class="field-guide-name">${escapeHtml(bird.name)}</div><div class="field-guide-credit">${heard}</div><span class="field-guide-state ${bird.image_ready?'':'missing'}">${state}</span>${credit}${problem}</div>`;
     grid.append(tile);
   }
 }

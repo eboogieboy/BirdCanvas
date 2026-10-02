@@ -32,6 +32,15 @@ class DeploymentHardeningTests(unittest.TestCase):
             text.index('refresh_installed_helper "$PROJECT_DIR/deployment/auto-deploy.sh"'),
         )
 
+    def test_auto_deploy_preflights_candidate_before_touching_live_code(self):
+        text = (ROOT / "deployment" / "auto-deploy.sh").read_text()
+        preflight = text.index("Running candidate preflight before touching live code")
+        rollback = text.index('ROLLBACK="$STATE_DIR/rollback-')
+        first_live_rsync = text.index('rsync -a --delete --chown=')
+        self.assertLess(preflight, rollback)
+        self.assertLess(preflight, first_live_rsync)
+        self.assertIn("Candidate preflight failed; live installation unchanged", text)
+
     def test_backup_retention_checks_remote_folder_first(self):
         text = (ROOT / "deployment" / "backup-to-rclone.sh").read_text()
         self.assertIn('if rclone_as_user lsf "$REMOTE/daily"', text)
