@@ -161,14 +161,14 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
         try:
             request = urllib.request.Request(
                 source_url,
-                headers={"User-Agent": "BirdCanvas/0.17 (+local Magic Mirror tile cache)"},
+                headers={"User-Agent": "BirdCanvas/0.18 (+local Magic Mirror tile cache)"},
             )
             with urllib.request.urlopen(request, timeout=10) as response:
                 payload = response.read(12 * 1024 * 1024)
             with Image.open(io.BytesIO(payload)) as opened:
                 source = ImageOps.exif_transpose(opened).convert("RGB")
                 contained = ImageOps.contain(source, (560, 560), method=Image.Resampling.LANCZOS)
-                canvas = Image.new("RGB", (600, 600), "white")
+                canvas = Image.new("RGB", (600, 600), (246, 244, 237))
                 x = (600 - contained.width) // 2
                 y = (600 - contained.height) // 2
                 canvas.paste(contained, (x, y))
@@ -178,7 +178,7 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
             pass
 
     # A local fallback means the Mirror never has to deal with broken external URLs.
-    canvas = Image.new("RGB", (600, 600), (242, 240, 233))
+    canvas = Image.new("RGB", (600, 600), (246, 244, 237))
     draw = ImageDraw.Draw(canvas)
     initial = (str(common_name).strip()[:1] or "?").upper()
     try:
