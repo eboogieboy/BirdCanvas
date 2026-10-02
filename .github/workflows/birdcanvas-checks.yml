@@ -36,13 +36,29 @@ jobs:
           PYTHONPATH: code
         run: python -m unittest discover -s tests -v
 
-      - name: Simulate deployment preflight permissions
-        env:
-          PYTHONPATH: code
+      - name: Simulate production preflight sandbox
         run: |
-          trap 'chmod -R u+w data' EXIT
-          chmod -R a-w data
-          python -m unittest discover -s tests -v
+          set -euo pipefail
+          SOURCE_DIR="$(mktemp -d)"
+          WORK_ROOT="$(mktemp -d)"
+
+          sudo rsync -a --exclude='.git/' ./ "$SOURCE_DIR/"
+          sudo chown -R root:root "$SOURCE_DIR"
+          sudo chmod -R a-w "$SOURCE_DIR"
+
+          PREFLIGHT_DIR="$(sudo mktemp -d "$WORK_ROOT/preflight.XXXXXX")"
+          sudo chown "$(id -u):$(id -g)" "$PREFLIGHT_DIR"
+          sudo rsync -a --delete --exclude='.git/' \
+            --chown="$(id -u):$(id -g)" \
+            "$SOURCE_DIR/" "$PREFLIGHT_DIR/"
+
+          cd "$PREFLIGHT_DIR"
+          python -m compileall -q code
+          PYTHONPATH=code python -m unittest discover -s tests -v
+          python code/display.py
+
+          cd "$GITHUB_WORKSPACE"
+          test -z "$(git status --porcelain)"
 
       - name: Build generated pages
         run: python code/display.py
