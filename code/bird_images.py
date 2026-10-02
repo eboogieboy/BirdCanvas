@@ -308,7 +308,6 @@ def _override_paths(common_name: str, scientific_name: str = ""):
     )
     digest = hashlib.sha1(identity.encode("utf-8")).hexdigest()[:10]
     override_dir = DATA_DIR / "bird-image-overrides"
-    override_dir.mkdir(parents=True, exist_ok=True)
     stem = f"{_safe_slug(common_name)}-{digest}"
     return (
         override_dir / f"{stem}.jpg",
@@ -414,6 +413,7 @@ def save_tile_override(
     canvas.paste(contained, (x, y))
 
     destination, metadata = _override_paths(name, scientific)
+    destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(".tmp")
     canvas.save(temporary, "JPEG", quality=92, optimize=True)
     temporary.replace(destination)
