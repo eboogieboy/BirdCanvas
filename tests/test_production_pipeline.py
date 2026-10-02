@@ -53,20 +53,41 @@ class ProductionTests(unittest.TestCase):
     def test_birdnet_pagination_exact_window_confidence_and_unique_species(self):
         start = datetime(2026, 9, 21, 4, tzinfo=TZ)
         end = datetime(2026, 9, 24, 4, tzinfo=TZ)
-        rows = [
-            {'timestamp': '2026-09-21T03:59:59+01:00', 'commonName': 'Robin', 'confidence': .9},
-            {'timestamp': '2026-09-21T04:00:00+01:00', 'commonName': 'Robin', 'confidence': .9},
-            {'timestamp': '2026-09-23T11:00:00+01:00', 'commonName': 'Robin', 'confidence': .9},
-            {'timestamp': '2026-09-23T12:00:00+01:00', 'commonName': 'Blue Tit', 'confidence': .2},
-            {'timestamp': '2026-09-24T04:00:00+01:00', 'commonName': 'Blackbird', 'confidence': .9},
-        ]
+        rows_by_day = {
+            '2026-09-21': [
+                {'timestamp': '2026-09-21T03:59:59+01:00', 'commonName': 'Robin', 'confidence': .9},
+                {'timestamp': '2026-09-21T04:00:00+01:00', 'commonName': 'Robin', 'confidence': .9},
+            ],
+            '2026-09-22': [],
+            '2026-09-23': [
+                {'timestamp': '2026-09-23T11:00:00+01:00', 'commonName': 'Robin', 'confidence': .9},
+                {'timestamp': '2026-09-23T12:00:00+01:00', 'commonName': 'Blue Tit', 'confidence': .2},
+            ],
+            '2026-09-24': [
+                {'timestamp': '2026-09-24T04:00:00+01:00', 'commonName': 'Blackbird', 'confidence': .9},
+            ],
+        }
+        requested_days = []
+
         def fetch(_, params):
+            # BirdNET-Go has shown incomplete results for multi-day date ranges,
+            # so BirdCanvas must query one station-local calendar day at a time.
+            self.assertEqual(params['start_date'], params['end_date'])
+            requested_days.append(params['start_date'])
+            rows = rows_by_day[params['start_date']]
             offset = params['offset']
-            return {'data': rows[offset:offset+2], 'total': len(rows)}
+            limit = params['limit']
+            return {'data': rows[offset:offset+limit], 'total': len(rows)}
+
         with patch.object(birdnet_go, '_get', side_effect=fetch), patch.dict('os.environ', {'BIRDCANVAS_MIN_CONFIDENCE': '0.5'}):
             result = birdnet_go.detections(start, end)
+
         self.assertEqual(result['species'], ['Robin'])
         self.assertEqual(result['detections_total'], 2)
+        self.assertEqual(
+            requested_days,
+            ['2026-09-21', '2026-09-22', '2026-09-23', '2026-09-24'],
+        )
 
     def test_one_publication_and_retry_same_artwork_after_frame_failure(self):
         with tempfile.TemporaryDirectory() as folder:
