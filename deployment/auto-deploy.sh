@@ -72,6 +72,7 @@ chown "$BIRDCANVAS_DEPLOY_USER:$BIRDCANVAS_DEPLOY_GROUP" "$PREFLIGHT_DIR"
 rsync -a --delete --exclude='.git/' \
     --chown="$BIRDCANVAS_DEPLOY_USER:$BIRDCANVAS_DEPLOY_GROUP" \
     "$SOURCE_DIR/" "$PREFLIGHT_DIR/"
+chmod -R u+rwX "$PREFLIGHT_DIR"
 
 log "Running candidate preflight in writable sandbox before touching live code"
 
