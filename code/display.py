@@ -268,7 +268,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 </head>
 <body>
 <main class="app">
-<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.20.0</div></header>
+<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.21.0</div></header>
 <section id="home" class="panel active">
   <div class="home-overview">
     <div class="card hero" id="hero"><div class="hero-empty">Loading portrait artwork…</div></div>
