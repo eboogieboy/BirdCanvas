@@ -47,6 +47,7 @@ class DeploymentHardeningTests(unittest.TestCase):
         text = (ROOT / "deployment" / "auto-deploy.sh").read_text()
         self.assertIn('PREFLIGHT_DIR="$(mktemp -d "$STATE_DIR/preflight.XXXXXX")"', text)
         self.assertIn('"$SOURCE_DIR/" "$PREFLIGHT_DIR/"', text)
+        self.assertIn('chmod -R u+rwX "$PREFLIGHT_DIR"', text)
         self.assertIn("cd '$PREFLIGHT_DIR'", text)
         self.assertNotIn("cd '$SOURCE_DIR' && PYTHONPATH=code", text)
         self.assertNotIn("cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py", text)
@@ -58,6 +59,7 @@ class DeploymentHardeningTests(unittest.TestCase):
         self.assertIn("Simulate production preflight sandbox", text)
         self.assertIn("sudo chown -R root:root", text)
         self.assertIn('PREFLIGHT_DIR="$(sudo mktemp -d', text)
+        self.assertIn('sudo chmod -R u+rwX "$PREFLIGHT_DIR"', text)
         self.assertIn("python code/display.py", text)
         self.assertIn('test -z "$(git status --porcelain)"', text)
 
