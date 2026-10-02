@@ -33,6 +33,8 @@ from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
+from bird_images import mirror_tile_path
+from mirror_birds import mirror_birds
 from display import build_display_page
 PORT = 8000
 
@@ -84,6 +86,40 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
             except OSError as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+            return
+        if route == "/api/mirror/birds":
+            raw_limit = (parse_qs(parsed.query).get("limit") or ["12"])[0]
+            try:
+                payload = mirror_birds(limit=int(raw_limit))
+            except (ValueError, OSError) as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+                return
+            host = self.headers.get("Host", "birdcanvas.local:8000")
+            for bird in payload.get("birds", []):
+                image_url = str(bird.get("image_url", ""))
+                if image_url.startswith("/"):
+                    bird["image_url"] = f"http://{host}{image_url}"
+            self.send_json(payload)
+            return
+        if route == "/api/mirror/bird-image":
+            query = parse_qs(parsed.query)
+            name = (query.get("name") or [""])[0].strip()
+            scientific = (query.get("scientific") or [""])[0].strip()
+            if not name:
+                self.send_error(HTTPStatus.BAD_REQUEST, "Bird name is required")
+                return
+            try:
+                path = mirror_tile_path(name, scientific)
+                body = path.read_bytes()
+            except (ValueError, OSError) as error:
+                self.send_error(HTTPStatus.BAD_GATEWAY, str(error))
+                return
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.end_headers()
+            self.wfile.write(body)
             return
         if route == "/api/health":
             self.send_json(health_report(resolve_display()))
