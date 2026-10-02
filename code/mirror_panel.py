@@ -68,11 +68,13 @@ def _signature(
     width: int,
     height: int,
     columns: int,
+    slots: int,
 ) -> str:
     payload = {
         "width": width,
         "height": height,
         "columns": columns,
+        "slots": slots,
         "birds": [
             {
                 "name": str(bird.get("name", "")),
@@ -113,6 +115,7 @@ def _render(
     width: int,
     height: int,
     columns: int,
+    slots: int,
 ) -> Image.Image:
     panel = Image.new("RGB", (width, height), BACKGROUND)
     if not birds:
@@ -120,7 +123,7 @@ def _render(
         return panel
 
     draw = ImageDraw.Draw(panel)
-    rows = max(1, math.ceil(len(birds) / columns))
+    rows = max(1, math.ceil(slots / columns))
     cell_width = width / columns
     cell_height = height / rows
 
@@ -186,6 +189,7 @@ def build_mirror_panel(
     width = _bounded(width, default=DEFAULT_WIDTH, low=600, high=2400)
     height = _bounded(height, default=DEFAULT_HEIGHT, low=450, high=1800)
     columns = _bounded(columns, default=DEFAULT_COLUMNS, low=2, high=6)
+    limit = _bounded(limit, default=DEFAULT_TILE_LIMIT, low=1, high=24)
 
     _, _, birds = selected_birds(now=now, limit=limit)
     birds = [bird for bird in birds if str(bird.get("name", "")).strip()]
@@ -208,6 +212,7 @@ def build_mirror_panel(
         width=width,
         height=height,
         columns=columns,
+        slots=limit,
     )
     previous = _read_meta(meta_path)
     if panel_path.is_file() and previous.get("signature") == signature:
@@ -219,6 +224,7 @@ def build_mirror_panel(
         width=width,
         height=height,
         columns=columns,
+        slots=limit,
     )
     panel.save(panel_path, "JPEG", quality=92, subsampling=0, optimize=True)
 
@@ -230,6 +236,7 @@ def build_mirror_panel(
                 "width": width,
                 "height": height,
                 "columns": columns,
+                "slots": limit,
                 "birds": [str(bird.get("name", "")) for bird in birds],
             },
             indent=2,
