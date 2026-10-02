@@ -43,6 +43,13 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("Portrait display", html)
         self.assertIn("BirdCanvas Gallery", html)
 
+    def test_gallery_detail_has_send_to_tv_action(self):
+        html = display.CONTROL_HTML
+        self.assertIn('id="send-tv-button"', html)
+        self.assertIn("Send to TV", html)
+        self.assertIn("/api/artwork/send-to-frame", html)
+        self.assertIn("Display in GalleryOS", html)
+
 
 if __name__ == "__main__":
     unittest.main()
