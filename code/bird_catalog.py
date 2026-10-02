@@ -94,7 +94,11 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
             continue
 
         tile = mirror_tile_info(name, scientific)
-        query = urlencode({"name": name, "scientific": scientific})
+        query = urlencode({
+            "name": name,
+            "scientific": scientific,
+            "v": tile["path"].name,
+        })
         birds.append(
             {
                 "name": name,
