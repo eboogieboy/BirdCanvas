@@ -51,8 +51,9 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-mkdir -p "$LOCAL_DIR" "$STAGE/birdcanvas" "$STAGE/system/etc" "$STAGE/metadata"
-chmod 0700 "$LOCAL_DIR"
+TARGET_GROUP="$(id -gn "$TARGET_USER")"
+install -d -m 0750 -o root -g "$TARGET_GROUP" "$LOCAL_DIR"
+mkdir -p "$STAGE/birdcanvas" "$STAGE/system/etc" "$STAGE/metadata"
 
 if [[ ! -d "$PROJECT_DIR" ]]; then
   echo "BirdCanvas project not found: $PROJECT_DIR"
@@ -165,7 +166,7 @@ PY
 log "Creating compressed archive"
 tar -C "$STAGE" -czf "$ARCHIVE" .
 sha256sum "$ARCHIVE" > "$CHECKSUM"
-chown "$TARGET_USER:$(id -gn "$TARGET_USER")" "$ARCHIVE" "$CHECKSUM"
+chown "$TARGET_USER:$TARGET_GROUP" "$ARCHIVE" "$CHECKSUM"
 chmod 0600 "$ARCHIVE" "$CHECKSUM"
 
 rclone_as_user() {
