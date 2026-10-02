@@ -389,7 +389,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 
 </main>
 <nav class="bottom-nav"><button class="nav active" data-go="home"><strong>⌂</strong>Home</button><button class="nav" data-go="birds"><strong>♩</strong>Birds</button><button class="nav" data-go="add"><strong>＋</strong>Add</button><button class="nav" data-go="schedule"><strong>◷</strong>Schedule</button><button class="nav" data-go="library"><strong>▦</strong>Library</button></nav>
-<div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Exhibition</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><div id="detail-plaque" class="gallery-plaque"><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-plaque-collection" class="plaque-collection"></p><div class="plaque-facts"><span id="detail-plaque-medium"></span><span id="detail-plaque-origin"></span></div></div><div id="detail-species" class="species"></div><div id="detail-exhibition" class="exhibition-panel hidden"><div class="exhibition-section"><p class="exhibition-kicker">Curator's Notes</p><p id="detail-narrative"></p></div><div id="detail-bird-groups" class="exhibition-section bird-groups"></div><div class="exhibition-section"><p class="exhibition-kicker">Collection</p><h3 id="detail-collection"></h3><p id="detail-mood"></p></div><div class="exhibition-section"><p class="exhibition-kicker">Composition</p><p id="detail-composition"></p></div></div><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn">Display now</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div></div></div>
+<div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Exhibition</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><div id="detail-plaque" class="gallery-plaque"><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-plaque-collection" class="plaque-collection"></p><div class="plaque-facts"><span id="detail-plaque-medium"></span><span id="detail-plaque-origin"></span></div></div><div id="detail-species" class="species"></div><div id="detail-exhibition" class="exhibition-panel hidden"><div class="exhibition-section"><p class="exhibition-kicker">Curator's Notes</p><p id="detail-narrative"></p></div><div id="detail-bird-groups" class="exhibition-section bird-groups"></div><div class="exhibition-section"><p class="exhibition-kicker">Collection</p><h3 id="detail-collection"></h3><p id="detail-mood"></p></div><div class="exhibition-section"><p class="exhibition-kicker">Composition</p><p id="detail-composition"></p></div></div><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="send-tv-button" class="btn">Send to TV</button><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn secondary">Display in GalleryOS</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div><div id="send-tv-status" class="status"></div></div></div>
 <script>
 const $=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let libraryData={artworks:[]},displayData=null,currentFilter='all',selectedArtwork=null,birdView='current',birdDate=null,birdLoading=false;
 async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}async function post(url,p={}){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}
@@ -565,9 +565,26 @@ function openDetail(a){
   const presentation=a.presentation||{};
   $('#detail-mount').value=presentation.mode||'auto';
   $('#mount-reason').textContent=presentation.decision_reason||'Automatic chooses the most suitable neutral mount from the artwork edges.';
+  $('#send-tv-status').textContent='';
   $('#detail-modal').classList.remove('hidden');
 }
 function closeDetail(){$('#detail-modal').classList.add('hidden');selectedArtwork=null}$('#detail-close').onclick=closeDetail;$('#detail-modal').onclick=e=>{if(e.target.id==='detail-modal')closeDetail()};
+$('#send-tv-button').onclick=async()=>{
+  if(!selectedArtwork)return;
+  const button=$('#send-tv-button'),status=$('#send-tv-status'),artworkId=selectedArtwork.id;
+  button.disabled=true;
+  button.textContent='Sending…';
+  status.textContent='Preparing artwork for the Samsung Frame…';
+  try{
+    const result=await post('/api/artwork/send-to-frame',{artwork_id:artworkId});
+    status.textContent=result.reused?'Displayed on TV using its existing Frame copy.':'Uploaded and displayed on TV.';
+  }catch(error){
+    status.textContent=error.message;
+  }finally{
+    button.disabled=false;
+    button.textContent='Send to TV';
+  }
+};
 $('#display-button').onclick=async()=>{await post('/api/override',{artwork_id:selectedArtwork.id,duration_minutes:60});closeDetail();openPanel('home');await refresh()};
 $('#schedule-detail-button').onclick=()=>{$('#schedule-artwork').value=selectedArtwork.id;closeDetail();openPanel('schedule')};
 $('#favourite-button').onclick=async()=>{await post('/api/artwork/update',{artwork_id:selectedArtwork.id,favourite:!selectedArtwork.favourite});await refresh();openDetail(libraryData.artworks.find(a=>a.id===selectedArtwork.id))};
