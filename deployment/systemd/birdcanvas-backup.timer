@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly BirdCanvas off-device backup
+
+[Timer]
+OnCalendar=*-*-* 02:20:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=birdcanvas-backup.service
+
+[Install]
+WantedBy=timers.target
