@@ -15,39 +15,268 @@ COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{fi
 # These are public-domain historical plates from Henrik Grönvold / F.O. Morris
 # and related British bird works hosted on Wikimedia Commons.
 ILLUSTRATIONS = {
+    # Thrushes, chats and familiar garden birds.
     "eurasian blackbird": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
     "common blackbird": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
     "blackbird": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
+    "turdus merula": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
+    "song thrush": ("Song Thrush Grönvold.jpg", "Henrik Grönvold"),
+    "turdus philomelos": ("Song Thrush Grönvold.jpg", "Henrik Grönvold"),
+    "mistle thrush": ("Missel Thrush Grönvold.jpg", "Henrik Grönvold"),
+    "missel thrush": ("Missel Thrush Grönvold.jpg", "Henrik Grönvold"),
+    "turdus viscivorus": ("Missel Thrush Grönvold.jpg", "Henrik Grönvold"),
+    "redwing": ("Redwing Grönvold.jpg", "Henrik Grönvold"),
+    "turdus iliacus": ("Redwing Grönvold.jpg", "Henrik Grönvold"),
+    "fieldfare": ("Fieldfare Grönvold.jpg", "Henrik Grönvold"),
+    "turdus pilaris": ("Fieldfare Grönvold.jpg", "Henrik Grönvold"),
+    "ring ouzel": ("Ring Ouzel Grönvold.jpg", "Henrik Grönvold"),
+    "turdus torquatus": ("Ring Ouzel Grönvold.jpg", "Henrik Grönvold"),
+    "european robin": ("Redbreast Grönvold.jpg", "Henrik Grönvold"),
+    "robin": ("Redbreast Grönvold.jpg", "Henrik Grönvold"),
+    "erithacus rubecula": ("Redbreast Grönvold.jpg", "Henrik Grönvold"),
+    "common redstart": ("Redstart Grönvold.jpg", "Henrik Grönvold"),
+    "redstart": ("Redstart Grönvold.jpg", "Henrik Grönvold"),
+    "phoenicurus phoenicurus": ("Redstart Grönvold.jpg", "Henrik Grönvold"),
+    "black redstart": ("Black Redstart Grönvold.jpg", "Henrik Grönvold"),
+    "phoenicurus ochruros": ("Black Redstart Grönvold.jpg", "Henrik Grönvold"),
+    "european stonechat": ("Stonechat Grönvold.jpg", "Henrik Grönvold"),
+    "common stonechat": ("Stonechat Grönvold.jpg", "Henrik Grönvold"),
+    "stonechat": ("Stonechat Grönvold.jpg", "Henrik Grönvold"),
+    "saxicola rubicola": ("Stonechat Grönvold.jpg", "Henrik Grönvold"),
+    "northern wheatear": ("Wheatear Grönvold.jpg", "Henrik Grönvold"),
+    "wheatear": ("Wheatear Grönvold.jpg", "Henrik Grönvold"),
+    "oenanthe oenanthe": ("Wheatear Grönvold.jpg", "Henrik Grönvold"),
+
+    # Tits and other small woodland/garden species.
     "eurasian blue tit": ("Blue Tit Grönvold.jpg", "Henrik Grönvold"),
     "blue tit": ("Blue Tit Grönvold.jpg", "Henrik Grönvold"),
+    "cyanistes caeruleus": ("Blue Tit Grönvold.jpg", "Henrik Grönvold"),
     "great tit": ("Great Tit Grönvold.jpg", "Henrik Grönvold"),
+    "parus major": ("Great Tit Grönvold.jpg", "Henrik Grönvold"),
     "coal tit": ("Coal Tit Frohawk.jpg", "Frederick William Frohawk"),
-    "dunnock": ("Hedge Sparrow Grönvold.jpg", "Henrik Grönvold"),
-    "hedge accentor": ("Hedge Sparrow Grönvold.jpg", "Henrik Grönvold"),
-    "european robin": (
-        "A history of British birds - by the Rev. F. O. Morris (1862) (14772306483).jpg",
-        "F. O. Morris",
-    ),
-    "robin": (
-        "A history of British birds - by the Rev. F. O. Morris (1862) (14772306483).jpg",
-        "F. O. Morris",
-    ),
+    "periparus ater": ("Coal Tit Frohawk.jpg", "Frederick William Frohawk"),
+    "marsh tit": ("Marsh Tit Grönvold.jpg", "Henrik Grönvold"),
+    "poecile palustris": ("Marsh Tit Grönvold.jpg", "Henrik Grönvold"),
+    "long-tailed tit": ("Long-tailed Titmouse Grönvold.jpg", "Henrik Grönvold"),
+    "long-tailed titmouse": ("Long-tailed Titmouse Grönvold.jpg", "Henrik Grönvold"),
+    "aegithalos caudatus": ("Long-tailed Titmouse Grönvold.jpg", "Henrik Grönvold"),
+    "eurasian nuthatch": ("Nuthatch Grönvold.jpg", "Henrik Grönvold"),
+    "nuthatch": ("Nuthatch Grönvold.jpg", "Henrik Grönvold"),
+    "sitta europaea": ("Nuthatch Grönvold.jpg", "Henrik Grönvold"),
+    "eurasian treecreeper": ("Tree Creeper Grönvold.jpg", "Henrik Grönvold"),
+    "treecreeper": ("Tree Creeper Grönvold.jpg", "Henrik Grönvold"),
+    "certhia familiaris": ("Tree Creeper Grönvold.jpg", "Henrik Grönvold"),
     "eurasian wren": ("Wren Grönvold.jpg", "Henrik Grönvold"),
     "wren": ("Wren Grönvold.jpg", "Henrik Grönvold"),
+    "troglodytes troglodytes": ("Wren Grönvold.jpg", "Henrik Grönvold"),
+    "dunnock": ("Hedge Sparrow Grönvold.jpg", "Henrik Grönvold"),
+    "hedge accentor": ("Hedge Sparrow Grönvold.jpg", "Henrik Grönvold"),
+    "prunella modularis": ("Hedge Sparrow Grönvold.jpg", "Henrik Grönvold"),
     "goldcrest": ("Gold-creasted Wren Grönvold.jpg", "Henrik Grönvold"),
+    "regulus regulus": ("Gold-creasted Wren Grönvold.jpg", "Henrik Grönvold"),
+    "firecrest": ("Fire-crested Wren Grönvold.jpg", "Henrik Grönvold"),
+    "regulus ignicapilla": ("Fire-crested Wren Grönvold.jpg", "Henrik Grönvold"),
+
+    # Warblers.
     "common chiffchaff": ("Chiff Chaff Grönvold.jpg", "Henrik Grönvold"),
     "chiffchaff": ("Chiff Chaff Grönvold.jpg", "Henrik Grönvold"),
+    "phylloscopus collybita": ("Chiff Chaff Grönvold.jpg", "Henrik Grönvold"),
+    "willow warbler": ("Willow Warbler Grönvold.jpg", "Henrik Grönvold"),
+    "phylloscopus trochilus": ("Willow Warbler Grönvold.jpg", "Henrik Grönvold"),
     "eurasian blackcap": ("Blackcap Grönvold.jpg", "Henrik Grönvold"),
     "blackcap": ("Blackcap Grönvold.jpg", "Henrik Grönvold"),
-    "willow warbler": ("Willow Warbler Grönvold.jpg", "Henrik Grönvold"),
+    "sylvia atricapilla": ("Blackcap Grönvold.jpg", "Henrik Grönvold"),
+    "garden warbler": ("Garden Warbler Grönvold.jpg", "Henrik Grönvold"),
+    "sylvia borin": ("Garden Warbler Grönvold.jpg", "Henrik Grönvold"),
+    "common whitethroat": ("Whitethroat Grönvold.jpg", "Henrik Grönvold"),
+    "whitethroat": ("Whitethroat Grönvold.jpg", "Henrik Grönvold"),
+    "curruca communis": ("Whitethroat Grönvold.jpg", "Henrik Grönvold"),
+    "lesser whitethroat": ("Lesser Whitethroat Grönvold.jpg", "Henrik Grönvold"),
+    "curruca curruca": ("Lesser Whitethroat Grönvold.jpg", "Henrik Grönvold"),
+    "sedge warbler": ("Sedge Warbler Grönvold.jpg", "Henrik Grönvold"),
+    "acrocephalus schoenobaenus": ("Sedge Warbler Grönvold.jpg", "Henrik Grönvold"),
+
+    # Wagtails, pipits and waterside birds.
     "grey wagtail": ("Grey Wagtail Grönvold.jpg", "Henrik Grönvold"),
+    "motacilla cinerea": ("Grey Wagtail Grönvold.jpg", "Henrik Grönvold"),
     "yellow wagtail": ("Yellow Wagtail Grönvold.jpg", "Henrik Grönvold"),
-    "fieldfare": ("Fieldfare Grönvold.jpg", "Henrik Grönvold"),
+    "motacilla flava": ("Yellow Wagtail Grönvold.jpg", "Henrik Grönvold"),
+    "pied wagtail": ("Pied Wagtail Grönvold.jpg", "Henrik Grönvold"),
+    "white wagtail": ("White Wagtail Grönvold.jpg", "Henrik Grönvold"),
+    "motacilla alba": ("Pied Wagtail Grönvold.jpg", "Henrik Grönvold"),
+    "european rock pipit": ("Rock Pipit Grönvold.jpg", "Henrik Grönvold"),
+    "rock pipit": ("Rock Pipit Grönvold.jpg", "Henrik Grönvold"),
+    "anthus petrosus": ("Rock Pipit Grönvold.jpg", "Henrik Grönvold"),
+    "tree pipit": ("Tree Pipit Grönvold.jpg", "Henrik Grönvold"),
+    "anthus trivialis": ("Tree Pipit Grönvold.jpg", "Henrik Grönvold"),
+    "white-throated dipper": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
+    "dipper": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
+    "cinclus cinclus": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
+
+    # Sparrows, starlings and finches.
+    "house sparrow": (
+        "10 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11042921903) (cropped).jpg",
+        "Joseph Wolf",
+    ),
+    "passer domesticus": (
+        "10 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11042921903) (cropped).jpg",
+        "Joseph Wolf",
+    ),
+    "tree sparrow": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00070.jpg",
+        "von Wright brothers",
+    ),
+    "passer montanus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00070.jpg",
+        "von Wright brothers",
+    ),
+    "common starling": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "starling": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "sturnus vulgaris": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "european goldfinch": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "goldfinch": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "carduelis carduelis": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "european greenfinch": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "greenfinch": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "chloris chloris": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "common chaffinch": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "chaffinch": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "fringilla coelebs": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "eurasian bullfinch": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+    "bullfinch": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+    "pyrrhula pyrrhula": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+
+    # Pigeons, doves and corvids.
+    "common woodpigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "woodpigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "wood pigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "columba palumbus": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "collared dove": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "eurasian collared dove": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "streptopelia decaocto": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "eurasian magpie": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "magpie": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "pica pica": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "western jackdaw": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "jackdaw": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "coloeus monedula": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "corvus monedula": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "carrion crow": ("Britain's birds and their nests (1910) (14568695650).jpg", "Historical British bird plate"),
+    "corvus corone": ("Britain's birds and their nests (1910) (14568695650).jpg", "Historical British bird plate"),
+
+    # Gulls and coastal visitors.
+    "black-headed gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00047.jpg",
+        "von Wright brothers",
+    ),
+    "chroicocephalus ridibundus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00047.jpg",
+        "von Wright brothers",
+    ),
+    "european herring gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+    "herring gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+    "larus argentatus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+
+    # Woodpeckers and aerial summer visitors.
+    "european green woodpecker": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "green woodpecker": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "picus viridis": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "great spotted woodpecker": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00015.jpg",
+        "von Wright brothers",
+    ),
+    "dendrocopos major": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00015.jpg",
+        "von Wright brothers",
+    ),
+    "common swift": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "swift": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "apus apus": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "barn swallow": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
+    "swallow": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
+    "hirundo rustica": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
 }
 
 
 def illustration_for(common_name: str, scientific_name: str = "") -> dict | None:
-    entry = ILLUSTRATIONS.get(str(common_name).strip().casefold())
+    common_key = str(common_name).strip().casefold()
+    scientific_key = str(scientific_name).strip().casefold()
+    entry = ILLUSTRATIONS.get(common_key) or ILLUSTRATIONS.get(scientific_key)
     if entry is None:
         return None
     filename, artist = entry
@@ -90,14 +319,14 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
         try:
             request = urllib.request.Request(
                 source_url,
-                headers={"User-Agent": "BirdCanvas/0.17 (+local Magic Mirror tile cache)"},
+                headers={"User-Agent": "BirdCanvas/0.18 (+local Magic Mirror tile cache)"},
             )
             with urllib.request.urlopen(request, timeout=10) as response:
                 payload = response.read(12 * 1024 * 1024)
             with Image.open(io.BytesIO(payload)) as opened:
                 source = ImageOps.exif_transpose(opened).convert("RGB")
                 contained = ImageOps.contain(source, (560, 560), method=Image.Resampling.LANCZOS)
-                canvas = Image.new("RGB", (600, 600), "white")
+                canvas = Image.new("RGB", (600, 600), (246, 244, 237))
                 x = (600 - contained.width) // 2
                 y = (600 - contained.height) // 2
                 canvas.paste(contained, (x, y))
@@ -107,7 +336,7 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
             pass
 
     # A local fallback means the Mirror never has to deal with broken external URLs.
-    canvas = Image.new("RGB", (600, 600), (242, 240, 233))
+    canvas = Image.new("RGB", (600, 600), (246, 244, 237))
     draw = ImageDraw.Draw(canvas)
     initial = (str(common_name).strip()[:1] or "?").upper()
     try:

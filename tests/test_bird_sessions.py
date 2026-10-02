@@ -54,13 +54,37 @@ class BirdSessionTests(unittest.TestCase):
         self.assertEqual(result["species_count"], 2)
         self.assertEqual(result["detections_total"], 3)
         self.assertEqual(result["birds"][0]["name"], "Black-headed Gull")
-        blackbird = next(b for b in result["birds"] if b["name"] == "Eurasian Blackbird")
+        blackbird = next(b for b in result["birds"] if b["name"] == "Blackbird")
         gull = next(b for b in result["birds"] if b["name"] == "Black-headed Gull")
         self.assertEqual(blackbird["detections"], 2)
         self.assertEqual(blackbird["max_confidence"], 0.86)
         self.assertFalse(blackbird["excluded_from_artwork"])
         self.assertTrue(gull["excluded_from_artwork"])
         self.assertIsNotNone(blackbird["illustration"])
+
+    def test_eurasian_prefix_is_removed_from_display_names(self):
+        rows = [
+            {
+                "timestamp": "2026-10-02T09:00:00+01:00",
+                "commonName": "Eurasian Wren",
+                "scientificName": "Troglodytes troglodytes",
+                "confidence": 0.88,
+            }
+        ]
+        production = {
+            "collecting_since": "2026-10-02T04:00:00+01:00",
+            "next_generation": "2026-10-03T04:00:00+01:00",
+            "settings": {"frequency": "daily"},
+        }
+        now = datetime(2026, 10, 2, 10, tzinfo=TZ)
+
+        with patch.object(bird_sessions, "production_status", return_value=production), \
+             patch.object(bird_sessions, "detection_rows", return_value=rows), \
+             patch.object(bird_sessions, "load_settings", return_value={"excluded_birds": []}):
+            result = bird_sessions.current_session(now)
+
+        self.assertEqual(result["birds"][0]["name"], "Wren")
+        self.assertNotIn("Eurasian", result["birds"][0]["name"])
 
     def test_day_session_rejects_future_dates(self):
         now = datetime(2026, 10, 2, 10, tzinfo=TZ)
