@@ -1,4 +1,8 @@
+import os
+import shutil
 import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -52,14 +56,42 @@ class DeploymentHardeningTests(unittest.TestCase):
         self.assertNotIn("cd '$SOURCE_DIR' && PYTHONPATH=code", text)
         self.assertNotIn("cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py", text)
 
-    def test_live_regression_suite_does_not_depend_on_repository_only_files(self):
-        for path in sorted((ROOT / "tests").glob("test_*.py")):
-            text = path.read_text(encoding="utf-8")
-            self.assertNotIn(
-                'ROOT / ".github"',
-                text,
-                f"{path.name} depends on repository-only .github files, "
-                "which are not part of the live deployment payload.",
+    def test_live_regression_suite_runs_from_deployed_payload_shape(self):
+        if os.environ.get("BIRDCANVAS_PAYLOAD_CHILD") == "1":
+            self.skipTest("nested deployed-payload verification")
+
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder)
+            for item in ("code", "deployment", "tests", "requirements.txt", "VERSION"):
+                source = ROOT / item
+                destination = target / item
+                if source.is_dir():
+                    shutil.copytree(source, destination)
+                else:
+                    shutil.copy2(source, destination)
+
+            env = os.environ.copy()
+            env["PYTHONPATH"] = "code"
+            env["BIRDCANVAS_PAYLOAD_CHILD"] = "1"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "unittest",
+                    "discover",
+                    "-s",
+                    "tests",
+                    "-v",
+                ],
+                cwd=target,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                result.returncode,
+                0,
+                result.stdout + "\n" + result.stderr,
             )
 
     def test_backup_retention_checks_remote_folder_first(self):
