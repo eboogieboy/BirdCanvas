@@ -95,8 +95,6 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/birds/catalog":
             try:
-                session = current_session()
-                record_birds(session.get("birds", []))
                 self.send_json(catalogue())
             except (ValueError, OSError) as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
