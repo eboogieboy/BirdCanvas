@@ -20,7 +20,7 @@ PANEL_META = PANEL_DIR / "panel.json"
 DEFAULT_WIDTH = 1200
 DEFAULT_HEIGHT = 900
 DEFAULT_COLUMNS = 4
-PANEL_RENDER_VERSION = 3
+PANEL_RENDER_VERSION = 4
 
 BACKGROUND = (10, 10, 10)
 LABEL = (242, 242, 242)
@@ -219,7 +219,7 @@ def _render(
             draw,
             name,
             max_width=int(card_width - 2),
-            start_size=max(42, int(card_width * 0.19)),
+            start_size=max(38, int(card_width * 0.17)),
         )
         bounds = draw.multiline_textbbox((0, 0), label, font=font, spacing=2, align="center")
         text_width = bounds[2] - bounds[0]
