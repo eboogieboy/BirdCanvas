@@ -46,6 +46,28 @@ def _directory_size(path: Path) -> int:
     return total
 
 
+def artwork_image_path(artwork_id: str) -> Path:
+    """Return the archived presentation image for a library artwork."""
+    cleaned_id = str(artwork_id).strip()
+    if not cleaned_id:
+        raise ValueError("Artwork ID is required.")
+
+    manifest_path = _find_manifest_path(cleaned_id)
+    if manifest_path is None:
+        raise ValueError("Artwork was not found.")
+
+    manifest = _read_json(manifest_path)
+    if manifest is None:
+        raise ValueError("The artwork manifest is damaged.")
+
+    image_name = str(manifest.get("image", "")).strip()
+    if not image_name or Path(image_name).name != image_name:
+        raise ValueError("The artwork image reference is invalid.")
+
+    image_path = manifest_path.parent / image_name
+    if not image_path.is_file():
+        raise ValueError("The artwork image could not be found.")
+    return image_path
 
 
 def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], species: list[str]) -> dict[str, Any]:
