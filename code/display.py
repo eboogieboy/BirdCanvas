@@ -402,7 +402,7 @@ async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.js
 function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
 function formatDate(v){if(!v)return '';const d=new Date(`${String(v).slice(0,10)}T12:00:00`);return Number.isNaN(d.getTime())?v:d.toLocaleDateString([], {day:'numeric',month:'long',year:'numeric'})}
-function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshBirdCatalogue()}}
+function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds')refreshBirds()}
 qa('[data-go]').forEach(b=>b.onclick=()=>openPanel(b.dataset.go));qa('[data-filter]').forEach(b=>b.onclick=()=>{currentFilter=b.dataset.filter;openPanel('library');setFilter(currentFilter)});
 function controlImageUrl(artwork){
   if(!artwork||!artwork.image_url)return '';
@@ -505,6 +505,7 @@ async function refreshBirds(){
     const url=birdView==='current'?'/api/birds/current':`/api/birds/day?date=${encodeURIComponent(birdDate||localDateString())}`;
     const data=await api(url);
     renderBirdSession(data);
+    await refreshBirdCatalogue();
   }catch(error){
     $('#bird-grid').innerHTML=`<div class="empty">${escapeHtml(error.message)}</div>`;
     $('#bird-refresh').textContent='Unable to refresh';
