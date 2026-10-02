@@ -35,6 +35,7 @@ from production_pipeline import status as generation_status, send_artwork_to_fra
 from bird_sessions import current_session, day_session
 from bird_images import mirror_tile_path
 from mirror_birds import mirror_birds
+from mirror_panel import build_mirror_panel
 from display import build_display_page
 PORT = 8000
 
@@ -118,6 +119,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "image/jpeg")
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "public, max-age=86400")
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if route == "/api/mirror/panel.jpg":
+            query = parse_qs(parsed.query)
+            try:
+                path = build_mirror_panel(
+                    limit=int((query.get("limit") or ["12"])[0]),
+                    width=int((query.get("width") or ["1200"])[0]),
+                    height=int((query.get("height") or ["900"])[0]),
+                    columns=int((query.get("columns") or ["4"])[0]),
+                )
+                body = path.read_bytes()
+            except (ValueError, OSError) as error:
+                self.send_error(HTTPStatus.BAD_GATEWAY, str(error))
+                return
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-cache")
             self.end_headers()
             self.wfile.write(body)
             return
