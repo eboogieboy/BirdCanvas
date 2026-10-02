@@ -41,6 +41,14 @@ class DeploymentHardeningTests(unittest.TestCase):
         self.assertLess(preflight, first_live_rsync)
         self.assertIn("Candidate preflight failed; live installation unchanged", text)
 
+    def test_ci_simulates_read_only_deployment_preflight(self):
+        text = (
+            ROOT / ".github" / "workflows" / "birdcanvas-checks.yml"
+        ).read_text()
+        self.assertIn("Simulate deployment preflight permissions", text)
+        self.assertIn("chmod -R a-w data", text)
+        self.assertIn("python -m unittest discover -s tests -v", text)
+
     def test_backup_retention_checks_remote_folder_first(self):
         text = (ROOT / "deployment" / "backup-to-rclone.sh").read_text()
         self.assertIn('if rclone_as_user lsf "$REMOTE/daily"', text)

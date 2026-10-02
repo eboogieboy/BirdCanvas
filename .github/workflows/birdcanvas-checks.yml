@@ -36,6 +36,14 @@ jobs:
           PYTHONPATH: code
         run: python -m unittest discover -s tests -v
 
+      - name: Simulate deployment preflight permissions
+        env:
+          PYTHONPATH: code
+        run: |
+          trap 'chmod -R u+w data' EXIT
+          chmod -R a-w data
+          python -m unittest discover -s tests -v
+
       - name: Build generated pages
         run: python code/display.py
 
