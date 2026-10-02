@@ -11,7 +11,7 @@ from email.policy import default as email_policy
 from http import HTTPStatus
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from custom_artwork import MAX_UPLOAD_BYTES, save_custom_artwork
 from display_controller import (
@@ -32,6 +32,7 @@ from compose import compose
 from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status
+from bird_sessions import current_session, day_session
 from display import build_display_page
 PORT = 8000
 
@@ -49,7 +50,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(OUTPUT_FOLDER), **kwargs)
 
     def do_GET(self) -> None:
-        route = urlparse(self.path).path
+        parsed = urlparse(self.path)
+        route = parsed.path
         if route == "/api/display":
             self.send_json(resolve_display())
             return
@@ -64,6 +66,24 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/generation":
             self.send_json(generation_status())
+            return
+        if route == "/api/birds/current":
+            try:
+                self.send_json(current_session())
+            except (ValueError, OSError) as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+            return
+        if route == "/api/birds/day":
+            value = (parse_qs(parsed.query).get("date") or [""])[0]
+            if not value:
+                self.send_json({"error": "A date is required."}, HTTPStatus.BAD_REQUEST)
+                return
+            try:
+                self.send_json(day_session(value))
+            except ValueError as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
+            except OSError as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
             return
         if route == "/api/health":
             self.send_json(health_report(resolve_display()))
