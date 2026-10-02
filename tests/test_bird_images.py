@@ -93,5 +93,66 @@ class BirdImageTests(unittest.TestCase):
             self.assertTrue(info["path"].is_file())
 
 
+    def test_custom_override_takes_precedence_and_can_be_restored(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            payload = io.BytesIO()
+            Image.new("RGB", (900, 500), "white").save(payload, "PNG")
+
+            with patch("paths.DATA_DIR", root / "data"), \
+                 patch("paths.OUTPUT_DIR", root / "output"):
+                info = bird_images.save_tile_override(
+                    "Collared Dove",
+                    "Streptopelia decaocto",
+                    payload.getvalue(),
+                    filename="preferred-dove.png",
+                )
+                path = bird_images.mirror_tile_path(
+                    "Collared Dove",
+                    "Streptopelia decaocto",
+                )
+
+                self.assertTrue(info["overridden"])
+                self.assertEqual(info["artist"], "Custom replacement")
+                self.assertEqual(path, info["path"])
+                self.assertTrue(path.is_file())
+                with Image.open(path) as image:
+                    self.assertEqual(image.size, (600, 600))
+                    self.assertEqual(image.format, "JPEG")
+
+                restored = bird_images.restore_tile_override(
+                    "Collared Dove",
+                    "Streptopelia decaocto",
+                )
+                self.assertTrue(restored)
+                self.assertFalse(path.exists())
+
+                with patch.object(
+                    bird_images,
+                    "illustration_for",
+                    return_value=None,
+                ):
+                    default_info = bird_images.mirror_tile_info(
+                        "Collared Dove",
+                        "Streptopelia decaocto",
+                    )
+
+                self.assertFalse(default_info["overridden"])
+
+    def test_custom_override_rejects_non_image_payload(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("paths.DATA_DIR", Path(folder) / "data"):
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "could not be read",
+                ):
+                    bird_images.save_tile_override(
+                        "Collared Dove",
+                        "Streptopelia decaocto",
+                        b"not an image",
+                        filename="bad.txt",
+                    )
+
+
 if __name__ == "__main__":
     unittest.main()

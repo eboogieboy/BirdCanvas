@@ -34,7 +34,12 @@ from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
 from bird_catalog import catalogue, record_birds
-from bird_images import mirror_tile_path
+from bird_images import (
+    BIRD_OVERRIDE_MAX_BYTES,
+    mirror_tile_path,
+    restore_tile_override,
+    save_tile_override,
+)
 from mirror_birds import mirror_birds
 from mirror_panel import build_mirror_panel
 from display import build_display_page
@@ -202,6 +207,18 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if route == "/api/override/cancel":
                 self.send_json(cancel_override())
                 return
+            if route == "/api/birds/illustration":
+                self.handle_bird_illustration_upload()
+                return
+            if route == "/api/birds/illustration/restore":
+                payload = self.read_json_body()
+                name = str(payload.get("name", "")).strip()
+                scientific = str(payload.get("scientific", "")).strip()
+                if not name:
+                    raise ValueError("Bird name is required.")
+                restored = restore_tile_override(name, scientific)
+                self.send_json({"ok": True, "restored": restored})
+                return
             if route == "/api/upload":
                 self.handle_upload()
                 return
@@ -280,6 +297,50 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
 
         self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
+
+    def handle_bird_illustration_upload(self) -> None:
+        content_length = int(self.headers.get("Content-Length", "0"))
+        if content_length <= 0:
+            raise ValueError("No replacement image was received.")
+        if content_length > BIRD_OVERRIDE_MAX_BYTES + 1024 * 1024:
+            self.send_json(
+                {"error": "Replacement image must be 10 MB or smaller."},
+                HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+            )
+            return
+
+        content_type = self.headers.get("Content-Type", "")
+        if not content_type.startswith("multipart/form-data"):
+            raise ValueError("Upload must use multipart form data.")
+
+        form = self.read_multipart(content_length, content_type)
+        image_field = form.get("image")
+        if image_field is None:
+            raise ValueError("Choose an image to upload.")
+
+        name = self.form_text(form, "name", "").strip()
+        scientific = self.form_text(form, "scientific", "").strip()
+        if not name:
+            raise ValueError("Bird name is required.")
+
+        info = save_tile_override(
+            name,
+            scientific,
+            image_field.get_payload(decode=True),
+            filename=image_field.get_filename() or "",
+        )
+        self.send_json(
+            {
+                "ok": True,
+                "bird": {
+                    "name": name,
+                    "scientific_name": scientific,
+                    "overridden": True,
+                    "artist": info.get("artist", ""),
+                },
+            },
+            HTTPStatus.CREATED,
+        )
 
     def handle_upload(self) -> None:
         content_length = int(self.headers.get("Content-Length", "0"))
