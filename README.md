@@ -2,7 +2,7 @@
 
 BirdCanvas creates artwork from BirdNET-Go garden-bird observations. On the phone control page you can choose daily, twice weekly or weekly generation and edit the excluded-bird list. GalleryOS provides the artwork library, journal, display controller, scheduling, uploads, presentation settings and diagnostics.
 
-Development can run independently in GitHub Codespaces. Production uses one headless Pi for BirdNET-Go, GalleryOS and Samsung Frame delivery. See [Pi setup and deployment](deployment/PRODUCTION.md). Real hardware pairing and microphone detection must be verified on the Pi.
+Development can run independently in GitHub Codespaces. Production uses one headless Pi for BirdNET-Go, GalleryOS and Samsung Frame delivery. See [Pi setup and deployment](deployment/PRODUCTION.md) and [backup / disaster recovery](deployment/BACKUP.md). Real hardware pairing and microphone detection must be verified on the Pi.
 
 Use `deployment/install-headless.sh` for that Pi. The older `deployment/install.sh`, kiosk scripts and morning/midday/evening timers are retained only as a legacy fallback; running that installer would enable the old artwork schedule. The ZIP import and manual detection commands are also retained for testing. Do not remove `data/`, `imports/`, `output/current/` or `output/archive/`: they contain observations or artwork rather than disposable code.
 
@@ -82,4 +82,4 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.12.0` — BirdNET-Go production pipeline.
+Version `0.15.0` — portrait GalleryOS, live bird sessions and off-device disaster recovery.
