@@ -1,0 +1,8 @@
+[Unit]
+Description=Back up BirdCanvas and BirdNET-Go to off-device storage
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/birdcanvas-backup
