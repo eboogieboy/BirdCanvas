@@ -112,6 +112,164 @@ ILLUSTRATIONS = {
     "white-throated dipper": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
     "dipper": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
     "cinclus cinclus": ("Dipper Grönvold.jpg", "Henrik Grönvold"),
+
+    # Sparrows, starlings and finches.
+    "house sparrow": (
+        "10 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11042921903) (cropped).jpg",
+        "Joseph Wolf",
+    ),
+    "passer domesticus": (
+        "10 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11042921903) (cropped).jpg",
+        "Joseph Wolf",
+    ),
+    "tree sparrow": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00070.jpg",
+        "von Wright brothers",
+    ),
+    "passer montanus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00070.jpg",
+        "von Wright brothers",
+    ),
+    "common starling": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "starling": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "sturnus vulgaris": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00005.jpg",
+        "von Wright brothers",
+    ),
+    "european goldfinch": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "goldfinch": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "carduelis carduelis": (
+        "100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg",
+        "Historical British bird plate",
+    ),
+    "european greenfinch": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "greenfinch": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "chloris chloris": ("Nederlandsche vogelen (KB) - Chloris chloris (072b).jpg", "Nederlandsche vogelen"),
+    "common chaffinch": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "chaffinch": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "fringilla coelebs": ("Chaffinch (PSF).jpg", "Historical bird plate"),
+    "eurasian bullfinch": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+    "bullfinch": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+    "pyrrhula pyrrhula": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00229.jpg",
+        "von Wright brothers",
+    ),
+
+    # Pigeons, doves and corvids.
+    "common woodpigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "woodpigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "wood pigeon": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "columba palumbus": ("A natural history of British birds (6092234605).jpg", "Historical British bird plate"),
+    "collared dove": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "eurasian collared dove": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "streptopelia decaocto": ("Columba decaocto Frivaldski.jpg", "Imre Frivaldszky"),
+    "eurasian magpie": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "magpie": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "pica pica": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564915648).jpg",
+        "F. O. Morris",
+    ),
+    "western jackdaw": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "jackdaw": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "coloeus monedula": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "corvus monedula": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14771431613).jpg",
+        "F. O. Morris",
+    ),
+    "carrion crow": ("Britain's birds and their nests (1910) (14568695650).jpg", "Historical British bird plate"),
+    "corvus corone": ("Britain's birds and their nests (1910) (14568695650).jpg", "Historical British bird plate"),
+
+    # Gulls and coastal visitors.
+    "black-headed gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00047.jpg",
+        "von Wright brothers",
+    ),
+    "chroicocephalus ridibundus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00047.jpg",
+        "von Wright brothers",
+    ),
+    "european herring gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+    "herring gull": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+    "larus argentatus": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00122.jpg",
+        "von Wright brothers",
+    ),
+
+    # Woodpeckers and aerial summer visitors.
+    "european green woodpecker": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "green woodpecker": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "picus viridis": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14565126947).jpg",
+        "F. O. Morris",
+    ),
+    "great spotted woodpecker": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00015.jpg",
+        "von Wright brothers",
+    ),
+    "dendrocopos major": (
+        "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00015.jpg",
+        "von Wright brothers",
+    ),
+    "common swift": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "swift": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "apus apus": ("A swift (Cypselus apus). Coloured engraving by Whimper. Wellcome V0022226ER.jpg", "Whimper"),
+    "barn swallow": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
+    "swallow": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
+    "hirundo rustica": (
+        "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
+        "Historical British bird plate",
+    ),
 }
 
 
