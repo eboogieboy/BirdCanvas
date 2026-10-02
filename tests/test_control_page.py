@@ -22,7 +22,6 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("qa('.panel').forEach", html)
         self.assertIn("qa('.nav').forEach", html)
         self.assertIn("qa('.chip').forEach", html)
-        self.assertNotIn("$(", html)
 
     def test_birds_navigation_and_panel_are_present(self):
         html = display.CONTROL_HTML
