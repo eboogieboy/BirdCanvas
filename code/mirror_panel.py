@@ -124,21 +124,33 @@ def _render(
 
     draw = ImageDraw.Draw(panel)
     rows = max(1, math.ceil(slots / columns))
-    cell_width = width / columns
-    cell_height = height / rows
+
+    # Use a compact fixed grid rather than stretching each slot across the
+    # whole panel. This keeps neighbouring bird plates visually grouped while
+    # preserving the 4 x 3 structure when all 12 slots are occupied.
+    row_height = height / rows
+    card_width = min(width / columns, max(220, width * 0.225))
+    horizontal_gap = max(8, int(width * 0.008))
+    grid_width = columns * card_width + (columns - 1) * horizontal_gap
+    grid_left = max(0, (width - grid_width) / 2)
+
+    label_gap = max(6, int(row_height * 0.02))
+    label_height = max(40, int(row_height * 0.14))
+    vertical_pad = max(4, int(row_height * 0.02))
+    image_side = int(
+        max(
+            1,
+            min(
+                card_width - 8,
+                row_height - label_height - label_gap - vertical_pad * 2,
+            ),
+        )
+    )
 
     for index, (bird, tile_path) in enumerate(zip(birds, tile_paths)):
         row, column = divmod(index, columns)
-        left = int(column * cell_width)
-        top = int(row * cell_height)
-        right = int((column + 1) * cell_width)
-        bottom = int((row + 1) * cell_height)
-
-        pad = max(10, int(min(cell_width, cell_height) * 0.045))
-        label_height = max(38, int(cell_height * 0.18))
-        image_space_width = max(1, right - left - pad * 2)
-        image_space_height = max(1, bottom - top - label_height - pad * 2)
-        image_side = max(1, min(image_space_width, image_space_height))
+        left = grid_left + column * (card_width + horizontal_gap)
+        top = row * row_height
 
         with Image.open(tile_path) as opened:
             tile = ImageOps.fit(
@@ -147,8 +159,8 @@ def _render(
                 method=Image.Resampling.LANCZOS,
             )
 
-        image_left = left + (right - left - image_side) // 2
-        image_top = top + pad
+        image_left = int(left + (card_width - image_side) / 2)
+        image_top = int(top + vertical_pad)
         draw.rounded_rectangle(
             (
                 image_left - 2,
@@ -162,12 +174,17 @@ def _render(
         panel.paste(tile, (image_left, image_top))
 
         name = str(bird.get("name", "")).strip()
-        text_top = image_top + image_side + max(8, pad // 2)
-        font = _fit_font(draw, name, max_width=right - left - pad * 2, start_size=max(22, int(cell_width * 0.085)))
+        text_top = image_top + image_side + label_gap
+        font = _fit_font(
+            draw,
+            name,
+            max_width=int(card_width - 4),
+            start_size=max(30, int(card_width * 0.12)),
+        )
         bounds = draw.textbbox((0, 0), name, font=font)
         text_width = bounds[2] - bounds[0]
         draw.text(
-            (left + (right - left - text_width) / 2, text_top),
+            (left + (card_width - text_width) / 2, text_top),
             name,
             fill=LABEL,
             font=font,
