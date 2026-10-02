@@ -10,6 +10,8 @@ from __future__ import annotations
 from urllib.parse import quote
 
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=700"
+BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
+OVERRIDE_ARTIST = "Custom replacement"
 
 # Common names are normalised to casefold before lookup.
 # These are public-domain historical plates from Henrik Grönvold / F.O. Morris
@@ -295,6 +297,42 @@ def _safe_slug(value: str) -> str:
     return cleaned or "bird"
 
 
+def _override_paths(common_name: str, scientific_name: str = ""):
+    import hashlib
+
+    from paths import DATA_DIR
+
+    identity = (
+        str(scientific_name).strip().casefold()
+        or str(common_name).strip().casefold()
+    )
+    digest = hashlib.sha1(identity.encode("utf-8")).hexdigest()[:10]
+    override_dir = DATA_DIR / "bird-image-overrides"
+    override_dir.mkdir(parents=True, exist_ok=True)
+    stem = f"{_safe_slug(common_name)}-{digest}"
+    return (
+        override_dir / f"{stem}.jpg",
+        override_dir / f"{stem}.json",
+    )
+
+
+def _override_info(common_name: str, scientific_name: str = "") -> dict | None:
+    destination, metadata = _override_paths(common_name, scientific_name)
+    if not destination.is_file():
+        return None
+
+    status = _read_tile_metadata(metadata)
+    return {
+        "path": destination,
+        "status": "ready",
+        "has_mapping": True,
+        "problem": "",
+        "artist": str(status.get("artist") or OVERRIDE_ARTIST),
+        "source_url": "",
+        "overridden": True,
+    }
+
+
 def _tile_cache(common_name: str, scientific_name: str = ""):
     import hashlib
 
@@ -332,6 +370,78 @@ def _read_tile_metadata(path) -> dict:
     return value if isinstance(value, dict) else {}
 
 
+def save_tile_override(
+    common_name: str,
+    scientific_name: str,
+    payload: bytes,
+    *,
+    filename: str = "",
+) -> dict:
+    """Validate and save a user-selected field-guide replacement as a square JPEG."""
+    import io
+
+    from PIL import Image, ImageOps
+
+    name = str(common_name).strip()
+    scientific = str(scientific_name).strip()
+    if not name:
+        raise ValueError("Bird name is required.")
+    if not payload:
+        raise ValueError("Choose an image to upload.")
+    if len(payload) > BIRD_OVERRIDE_MAX_BYTES:
+        raise ValueError("Replacement image must be 10 MB or smaller.")
+
+    try:
+        with Image.open(io.BytesIO(payload)) as opened:
+            image_format = str(opened.format or "").upper()
+            if image_format not in {"JPEG", "PNG", "WEBP"}:
+                raise ValueError("Replacement must be a JPG, PNG or WebP image.")
+
+            source = ImageOps.exif_transpose(opened).convert("RGB")
+            contained = ImageOps.contain(
+                source,
+                (560, 560),
+                method=Image.Resampling.LANCZOS,
+            )
+    except ValueError:
+        raise
+    except Exception as error:
+        raise ValueError("Replacement image could not be read.") from error
+
+    canvas = Image.new("RGB", (600, 600), (246, 244, 237))
+    x = (600 - contained.width) // 2
+    y = (600 - contained.height) // 2
+    canvas.paste(contained, (x, y))
+
+    destination, metadata = _override_paths(name, scientific)
+    temporary = destination.with_suffix(".tmp")
+    canvas.save(temporary, "JPEG", quality=92, optimize=True)
+    temporary.replace(destination)
+
+    _write_tile_metadata(
+        metadata,
+        {
+            "status": "ready",
+            "has_mapping": True,
+            "problem": "",
+            "artist": OVERRIDE_ARTIST,
+            "source_url": "",
+            "overridden": True,
+            "original_filename": str(filename).strip(),
+        },
+    )
+    return mirror_tile_info(name, scientific)
+
+
+def restore_tile_override(common_name: str, scientific_name: str = "") -> bool:
+    """Remove a user-selected replacement and return to the curated default."""
+    destination, metadata = _override_paths(common_name, scientific_name)
+    existed = destination.is_file() or metadata.is_file()
+    destination.unlink(missing_ok=True)
+    metadata.unlink(missing_ok=True)
+    return existed
+
+
 def _fallback_tile(destination, common_name: str) -> None:
     from PIL import Image, ImageDraw, ImageFont
 
@@ -358,6 +468,10 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
     import urllib.request
 
     from PIL import Image, ImageOps
+
+    override_path, _ = _override_paths(common_name, scientific_name)
+    if override_path.is_file():
+        return override_path
 
     illustration, destination, metadata = _tile_cache(common_name, scientific_name)
     if destination.is_file():
@@ -431,6 +545,10 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
 
 def mirror_tile_info(common_name: str, scientific_name: str = "") -> dict:
     """Return the cached tile path plus whether the field-guide image is healthy."""
+    override = _override_info(common_name, scientific_name)
+    if override:
+        return override
+
     illustration, destination, metadata = _tile_cache(common_name, scientific_name)
     mirror_tile_path(common_name, scientific_name)
     status = _read_tile_metadata(metadata)
@@ -441,5 +559,6 @@ def mirror_tile_info(common_name: str, scientific_name: str = "") -> dict:
         "problem": str(status.get("problem", "")),
         "artist": str(status.get("artist") or (illustration or {}).get("artist", "")),
         "source_url": str(status.get("source_url") or (illustration or {}).get("source_url", "")),
+        "overridden": False,
     }
 
