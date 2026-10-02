@@ -15,6 +15,7 @@ from compose import compose, filter_birds
 from display import build_display_page
 from frame_upload import frame_enabled, upload_to_frame, _run_samsungtv
 from generation_settings import load_settings, next_boundary, scheduled_boundary
+from gallery_library import artwork_image_path
 from paths import DATA_DIR
 
 LOCAL = ZoneInfo("Europe/London")
@@ -32,7 +33,7 @@ def _iso(value):
 
 def load_state():
     if not STATE_FILE.exists():
-        return {"last_end": None, "deliveries": [], "uploads": []}
+        return {"last_end": None, "deliveries": [], "uploads": [], "frame_content": {}}
     value = json.loads(STATE_FILE.read_text(encoding='utf-8'))
     if not isinstance(value, dict):
         raise ValueError("Invalid generation state")
@@ -76,6 +77,33 @@ def status(now=None, include_birds=True):
     return result
 
 
+def _remember_frame_content(state, artwork_id, content_id):
+    state.setdefault('frame_content', {})[artwork_id] = content_id
+    uploads = state.setdefault('uploads', [])
+    if content_id not in uploads:
+        uploads.append(content_id)
+
+
+def _cleanup_frame_uploads(state):
+    # Delete only uploads recorded by BirdCanvas, never other personal TV art.
+    while len(state.get('uploads', [])) > 10:
+        old = state['uploads'][0]
+        try:
+            _run_samsungtv('art-delete', old)
+        except Exception as error:
+            state['cleanup_error'] = str(error)
+            save_state(state)
+            break
+
+        state['uploads'].pop(0)
+        mapping = state.get('frame_content', {})
+        if isinstance(mapping, dict):
+            for artwork_id, content_id in list(mapping.items()):
+                if content_id == old:
+                    mapping.pop(artwork_id, None)
+        save_state(state)
+
+
 def retry_deliveries(state):
     if not frame_enabled():
         return
@@ -90,11 +118,12 @@ def retry_deliveries(state):
         try:
             def remember(content_id):
                 delivery['content_id'] = content_id
-                if content_id not in state['uploads']:
-                    state['uploads'].append(content_id)
+                _remember_frame_content(state, delivery['id'], content_id)
                 save_state(state)  # Survive a display failure without paying for another upload.
+
             result = upload_to_frame(image, content_id=delivery.get('content_id'), on_uploaded=remember)
             delivery['content_id'] = result['content_id']
+            _remember_frame_content(state, delivery['id'], result['content_id'])
             delivery['delivered_at'] = _iso(_now())
             delivery.pop('error', None)
             state['last_delivery'] = delivery['delivered_at']
@@ -103,17 +132,67 @@ def retry_deliveries(state):
             delivery['error'] = str(error)
             save_state(state)
             break  # Avoid repeating a costly failure for every queued image.
-    # Delete only uploads recorded by BirdCanvas, never other personal TV art.
-    while len(state.get('uploads', [])) > 10:
-        old = state['uploads'][0]
-        try:
-            _run_samsungtv('art-delete', old)
-        except Exception as error:
-            state['cleanup_error'] = str(error)
+    _cleanup_frame_uploads(state)
+
+
+def send_artwork_to_frame(artwork_id):
+    """Display an existing GalleryOS artwork on the Samsung Frame."""
+    cleaned_id = str(artwork_id).strip()
+    if not cleaned_id:
+        raise ValueError("Artwork ID is required.")
+    if not frame_enabled():
+        raise RuntimeError("Samsung Frame integration is currently disabled.")
+
+    with exclusive():
+        image = artwork_image_path(cleaned_id)
+        state = load_state()
+        uploads = state.setdefault('uploads', [])
+        mapping = state.setdefault('frame_content', {})
+
+        content_id = mapping.get(cleaned_id)
+        if content_id not in uploads:
+            content_id = None
+
+        # Backward compatibility for generated artwork uploaded before frame_content
+        # was introduced.
+        if not content_id:
+            for delivery in state.get('deliveries', []):
+                candidate = delivery.get('content_id')
+                if delivery.get('id') == cleaned_id and candidate in uploads:
+                    content_id = candidate
+                    break
+
+        reused = bool(content_id)
+
+        def remember(new_content_id):
+            _remember_frame_content(state, cleaned_id, new_content_id)
             save_state(state)
-            break
-        state['uploads'].pop(0)
+
+        result = upload_to_frame(
+            image,
+            content_id=content_id,
+            on_uploaded=remember,
+        )
+        if result is None:
+            raise RuntimeError("Samsung Frame integration is currently disabled.")
+
+        _remember_frame_content(state, cleaned_id, result['content_id'])
+        delivered_at = _iso(_now())
+        state['last_delivery'] = delivered_at
+        state['last_manual_delivery'] = {
+            "artwork_id": cleaned_id,
+            "content_id": result['content_id'],
+            "delivered_at": delivered_at,
+        }
         save_state(state)
+        _cleanup_frame_uploads(state)
+
+        return {
+            "artwork_id": cleaned_id,
+            "content_id": result['content_id'],
+            "delivered_at": delivered_at,
+            "reused": reused,
+        }
 
 
 def run(manual=False, now=None):
