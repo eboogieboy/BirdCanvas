@@ -19,6 +19,7 @@ PANEL_META = PANEL_DIR / "panel.json"
 DEFAULT_WIDTH = 1200
 DEFAULT_HEIGHT = 900
 DEFAULT_COLUMNS = 4
+PANEL_RENDER_VERSION = 2
 
 BACKGROUND = (10, 10, 10)
 LABEL = (242, 242, 242)
@@ -75,6 +76,7 @@ def _signature(
         "height": height,
         "columns": columns,
         "slots": slots,
+        "render_version": PANEL_RENDER_VERSION,
         "birds": [
             {
                 "name": str(bird.get("name", "")),
