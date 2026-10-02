@@ -12,16 +12,17 @@ class ControlPageTests(unittest.TestCase):
     def test_query_selector_helpers_are_distinct(self):
         html = display.CONTROL_HTML
         self.assertIn(
-            "const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];",
+            "const $=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];",
             html,
         )
         self.assertNotIn(
             "const $=s=>document.querySelector(s),$=s=>[...document.querySelectorAll(s)];",
             html,
         )
-        self.assertIn("$$('.panel').forEach", html)
-        self.assertIn("$$('.nav').forEach", html)
-        self.assertIn("$$('.chip').forEach", html)
+        self.assertIn("qa('.panel').forEach", html)
+        self.assertIn("qa('.nav').forEach", html)
+        self.assertIn("qa('.chip').forEach", html)
+        self.assertNotIn("$(", html)
 
     def test_birds_navigation_and_panel_are_present(self):
         html = display.CONTROL_HTML
