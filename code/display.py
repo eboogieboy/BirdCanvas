@@ -267,7 +267,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 </head>
 <body>
 <main class="app">
-<header class="topbar"><div class="brand">Gallery</div><div class="version">v0.8.1</div></header>
+<header class="topbar"><div class="brand">Gallery</div><div class="version">v0.13.1</div></header>
 <section id="home" class="panel active">
   <div class="card hero" id="hero"><div class="hero-empty">Loading gallery…</div></div>
   <div class="card mode-row section"><div><div class="pill" id="mode-pill"><span class="dot"></span>Automatic</div><div class="subtle" id="hero-subtle">Loading…</div></div><button id="end-override" class="btn secondary hidden">End now</button></div>
