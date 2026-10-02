@@ -29,9 +29,9 @@ The upload is verified by comparing the local and remote MD5 hashes.
 ## Install
 
 ```bash
-sudo deployment/install-backup.sh
+sudo bash deployment/install-backup.sh
 sudo -u dan -H rclone config
-sudo deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'
+sudo bash deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'
 ```
 
 The final command enables the nightly timer and immediately runs and verifies the first remote backup.
@@ -45,7 +45,7 @@ The final command enables the nightly timer and immediately runs and verifies th
 5. Restore it:
 
 ```bash
-sudo deployment/restore-from-backup.sh /path/to/birdcanvas-backup-YYYYMMDD-HHMMSS.tar.gz
+sudo bash deployment/restore-from-backup.sh /path/to/birdcanvas-backup-YYYYMMDD-HHMMSS.tar.gz
 ```
 
 6. Recreate the BirdCanvas `.env`, including the OpenAI key.
