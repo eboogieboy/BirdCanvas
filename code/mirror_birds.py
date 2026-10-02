@@ -9,7 +9,6 @@ from datetime import datetime
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
-from bird_images import mirror_tile_path
 from bird_sessions import current_session
 
 LOCAL = ZoneInfo("Europe/London")
@@ -49,13 +48,7 @@ def mirror_birds(now: datetime | None = None, limit: int = DEFAULT_TILE_LIMIT) -
         scientific = str(bird.get("scientific_name", "")).strip()
         if not name:
             continue
-        tile_path = mirror_tile_path(name, scientific)
-        stat = tile_path.stat()
-        query = urlencode({
-            "name": name,
-            "scientific": scientific,
-            "v": f"{tile_path.name}-{stat.st_mtime_ns}-{stat.st_size}",
-        })
+        query = urlencode({"name": name, "scientific": scientific})
         birds.append(
             {
                 "name": name,
