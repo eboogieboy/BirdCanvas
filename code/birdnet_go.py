@@ -69,13 +69,8 @@ def _daily_rows(day) -> list[dict]:
     return rows
 
 
-def detections(start: datetime, end: datetime) -> dict:
-    """Read [start, end), querying BirdNET-Go one calendar day at a time.
-
-    BirdNET-Go's v2 detections endpoint can return incomplete results when a
-    multi-day start_date/end_date range is supplied. Daily requests are merged
-    here and the exact collection window is then enforced locally.
-    """
+def detection_rows(start: datetime, end: datetime) -> list[dict]:
+    """Return accepted BirdNET-Go rows for the exact [start, end) window."""
     if start.tzinfo is None or end.tzinfo is None or end <= start:
         raise ValueError("A valid timezone-aware collection window is required")
 
@@ -84,10 +79,7 @@ def detections(start: datetime, end: datetime) -> dict:
     if not 0 <= minimum <= 1:
         raise ValueError("BIRDCANVAS_MIN_CONFIDENCE must be between 0 and 1")
 
-    species: dict[str, str] = {}
-    count = 0
-    latest = None
-
+    accepted: list[dict] = []
     day = start.date()
     final_day = end.date()
     while day <= final_day:
@@ -101,18 +93,29 @@ def detections(start: datetime, end: datetime) -> dict:
                 "rejected",
             ):
                 continue
-
-            name = str(row.get("commonName") or row.get("scientificName") or "").strip()
-            if name:
-                species.setdefault(name.casefold(), name)
-                count += 1
-                if latest is None or when > latest:
-                    latest = when
-
+            accepted.append(row)
         day += timedelta(days=1)
+
+    accepted.sort(key=_timestamp)
+    return accepted
+
+
+def detections(start: datetime, end: datetime) -> dict:
+    """Read [start, end), querying BirdNET-Go one calendar day at a time."""
+    rows = detection_rows(start, end)
+    species: dict[str, str] = {}
+    latest = None
+
+    for row in rows:
+        when = _timestamp(row)
+        name = str(row.get("commonName") or row.get("scientificName") or "").strip()
+        if name:
+            species.setdefault(name.casefold(), name)
+            if latest is None or when > latest:
+                latest = when
 
     return {
         "species": list(species.values()),
-        "detections_total": count,
+        "detections_total": len(rows),
         "last_detection": latest.isoformat() if latest else None,
     }
