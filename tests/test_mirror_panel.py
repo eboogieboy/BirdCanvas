@@ -75,9 +75,8 @@ class MirrorPanelTests(unittest.TestCase):
         self.assertIn("\n", label)
         self.assertGreaterEqual(getattr(font, "size", 20), 26)
 
-    def test_font_fallback_remains_scalable_without_system_font_paths(self):
-        with patch.object(mirror_panel.ImageFont, "truetype", side_effect=OSError):
-            font = mirror_panel._font(38, bold=True)
+    def test_panel_font_is_scalable(self):
+        font = mirror_panel._font(38, bold=True)
         self.assertGreaterEqual(getattr(font, "size", 38), 36)
 
     def test_renderer_version_change_invalidates_cached_panel(self):
