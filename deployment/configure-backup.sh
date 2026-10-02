@@ -6,14 +6,14 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 if [[ $# -ne 1 || "$1" != *:* ]]; then
-  echo "Usage: sudo deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'"
+  echo "Usage: sudo bash deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'"
   exit 1
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 CONFIG=/etc/default/birdcanvas-backup
-[[ -f "$CONFIG" ]] || { echo "Run sudo deployment/install-backup.sh first."; exit 1; }
+[[ -f "$CONFIG" ]] || { echo "Run sudo bash deployment/install-backup.sh first."; exit 1; }
 
 # shellcheck disable=SC1090
 source "$CONFIG"
@@ -30,21 +30,23 @@ fi
 
 python3 - "$CONFIG" "$REMOTE" <<'PY'
 from pathlib import Path
+import shlex
 import sys
-path=Path(sys.argv[1])
-remote=sys.argv[2]
-lines=path.read_text().splitlines()
-out=[]
-found=False
+
+path = Path(sys.argv[1])
+remote = shlex.quote(sys.argv[2])
+lines = path.read_text().splitlines()
+out = []
+found = False
 for line in lines:
     if line.startswith("BIRDCANVAS_RCLONE_REMOTE="):
-        out.append("BIRDCANVAS_RCLONE_REMOTE="+remote)
-        found=True
+        out.append("BIRDCANVAS_RCLONE_REMOTE=" + remote)
+        found = True
     else:
         out.append(line)
 if not found:
-    out.append("BIRDCANVAS_RCLONE_REMOTE="+remote)
-path.write_text("\n".join(out)+"\n")
+    out.append("BIRDCANVAS_RCLONE_REMOTE=" + remote)
+path.write_text("\n".join(out) + "\n")
 PY
 chmod 0600 "$CONFIG"
 
