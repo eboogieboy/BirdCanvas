@@ -36,6 +36,13 @@ class ControlPageTests(unittest.TestCase):
         self.assertNotIn("$('#birdnet-form')", html)
         self.assertNotIn("$('#generate-artwork-button')", html)
 
+    def test_gallery_uses_portrait_frame_proportions(self):
+        html = display.CONTROL_HTML
+        self.assertIn("aspect-ratio:9/16", html)
+        self.assertIn("class=\"home-overview\"", html)
+        self.assertIn("Portrait display", html)
+        self.assertIn("BirdCanvas Gallery", html)
+
 
 if __name__ == "__main__":
     unittest.main()
