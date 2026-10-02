@@ -64,20 +64,27 @@ def _label_candidates(text: str) -> list[str]:
 
 
 def _fit_label(draw: ImageDraw.ImageDraw, text: str, max_width: int, start_size: int):
-    """Keep labels large, using two lines before shrinking the type."""
+    """Keep labels large; stay on one line when possible, otherwise use two."""
     size = max(20, start_size)
+    candidates = _label_candidates(text)
     while size >= 20:
         font = _font(size, bold=True)
-        best = None
-        best_width = None
-        for candidate in _label_candidates(text):
+
+        single = candidates[0]
+        bounds = draw.textbbox((0, 0), single, font=font)
+        if bounds[2] - bounds[0] <= max_width:
+            return single, font
+
+        wrapped = []
+        for candidate in candidates[1:]:
             bounds = draw.multiline_textbbox((0, 0), candidate, font=font, spacing=2, align="center")
             width = bounds[2] - bounds[0]
-            if width <= max_width and (best_width is None or width < best_width):
-                best = candidate
-                best_width = width
-        if best is not None:
-            return best, font
+            if width <= max_width:
+                wrapped.append((width, candidate))
+        if wrapped:
+            wrapped.sort(key=lambda item: item[0])
+            return wrapped[0][1], font
+
         size -= 2
     return str(text), _font(20, bold=True)
 
