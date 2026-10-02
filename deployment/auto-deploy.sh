@@ -127,6 +127,11 @@ done
 
 curl --silent --fail --max-time 3     http://127.0.0.1:8000/api/health >/dev/null
 
+# Keep the live checkout's branch metadata aligned with the deployed commit without
+# overwriting runtime data that BirdCanvas legitimately changes in the working tree.
+runuser -u "$BIRDCANVAS_DEPLOY_USER" --     git -C "$PROJECT_DIR" fetch origin "$BIRDCANVAS_DEPLOY_BRANCH"
+runuser -u "$BIRDCANVAS_DEPLOY_USER" --     git -C "$PROJECT_DIR" reset --mixed "$REMOTE_COMMIT"
+
 printf '%s\n' "$REMOTE_COMMIT" > "$LAST_SUCCESS"
 rm -rf "$ROLLBACK"
 trap - ERR
