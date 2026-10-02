@@ -80,8 +80,9 @@ def status(now=None, include_birds=True):
 def _remember_frame_content(state, artwork_id, content_id):
     state.setdefault('frame_content', {})[artwork_id] = content_id
     uploads = state.setdefault('uploads', [])
-    if content_id not in uploads:
-        uploads.append(content_id)
+    if content_id in uploads:
+        uploads.remove(content_id)
+    uploads.append(content_id)
 
 
 def _cleanup_frame_uploads(state):
