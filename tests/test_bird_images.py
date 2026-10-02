@@ -154,5 +154,26 @@ class BirdImageTests(unittest.TestCase):
                     )
 
 
+    def test_override_lookup_does_not_write_to_runtime_data(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            data_dir = root / "data"
+            output_dir = root / "output"
+            data_dir.mkdir()
+            data_dir.chmod(0o555)
+            try:
+                with patch("paths.DATA_DIR", data_dir), \
+                     patch("paths.OUTPUT_DIR", output_dir):
+                    info = bird_images.mirror_tile_info(
+                        "Mystery Bird",
+                        "Example missing",
+                    )
+            finally:
+                data_dir.chmod(0o755)
+
+            self.assertFalse((data_dir / "bird-image-overrides").exists())
+            self.assertEqual(info["status"], "missing")
+
+
 if __name__ == "__main__":
     unittest.main()
