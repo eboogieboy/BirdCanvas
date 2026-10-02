@@ -29,6 +29,13 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn('id="birds" class="panel"', html)
         self.assertIn("/api/birds/current", html)
 
+    def test_bird_master_thumbnail_library_is_present(self):
+        html = display.CONTROL_HTML
+        self.assertIn('id="bird-catalog-grid"', html)
+        self.assertIn("Field-guide library", html)
+        self.assertIn("Missing images", html)
+        self.assertIn("/api/birds/catalog", html)
+
     def test_legacy_birdnet_import_is_not_shown_on_control_page(self):
         html = display.CONTROL_HTML
         self.assertNotIn('data-go="birdnet"', html)

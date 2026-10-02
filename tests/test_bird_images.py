@@ -1,4 +1,5 @@
 import io
+import json
 import sys
 import tempfile
 import unittest
@@ -77,6 +78,19 @@ class BirdImageTests(unittest.TestCase):
                 self.assertEqual(image.size, (600, 600))
                 self.assertEqual(image.format, "JPEG")
             self.assertEqual(opener.call_count, 1)
+            metadata = json.loads(first.with_suffix(".json").read_text())
+            self.assertEqual(metadata["status"], "ready")
+            self.assertTrue(metadata["has_mapping"])
+
+    def test_missing_mapping_creates_auditable_fallback(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("paths.OUTPUT_DIR", Path(folder)):
+                info = bird_images.mirror_tile_info("Mystery Bird", "Example missing")
+
+            self.assertEqual(info["status"], "missing")
+            self.assertFalse(info["has_mapping"])
+            self.assertIn("No curated illustration", info["problem"])
+            self.assertTrue(info["path"].is_file())
 
 
 if __name__ == "__main__":

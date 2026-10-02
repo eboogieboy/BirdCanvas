@@ -38,6 +38,7 @@ class MirrorPanelTests(unittest.TestCase):
             )
 
             with patch.object(mirror_panel, "selected_birds", return_value=selected), \
+                 patch.object(mirror_panel, "record_birds") as record, \
                  patch.object(mirror_panel, "mirror_tile_path", side_effect=lambda name, scientific="": tiles[name]):
                 path = mirror_panel.build_mirror_panel(
                     width=1200,
@@ -56,6 +57,23 @@ class MirrorPanelTests(unittest.TestCase):
             self.assertEqual(meta["columns"], 4)
             self.assertEqual(meta["slots"], 12)
             self.assertEqual(meta["birds"], ["Blackbird", "Robin", "Wren"])
+            record.assert_called_once_with(birds)
+
+    def test_short_bird_name_stays_on_one_line(self):
+        image = Image.new("RGB", (600, 300), "black")
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(image)
+        label, font = mirror_panel._fit_label(draw, "Blue Tit", 220, 46)
+        self.assertEqual(label, "Blue Tit")
+        self.assertGreaterEqual(getattr(font, "size", 20), 40)
+
+    def test_long_bird_name_can_wrap_before_shrinking(self):
+        image = Image.new("RGB", (600, 300), "black")
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(image)
+        label, font = mirror_panel._fit_label(draw, "Black-headed Gull", 220, 46)
+        self.assertIn("\n", label)
+        self.assertGreaterEqual(getattr(font, "size", 20), 30)
 
     def test_renderer_version_change_invalidates_cached_panel(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -69,6 +87,7 @@ class MirrorPanelTests(unittest.TestCase):
             )
 
             with patch.object(mirror_panel, "selected_birds", return_value=selected), \
+                 patch.object(mirror_panel, "record_birds"), \
                  patch.object(mirror_panel, "mirror_tile_path", return_value=tile):
                 mirror_panel.build_mirror_panel(output_dir=root / "panel")
                 with patch.object(mirror_panel, "PANEL_RENDER_VERSION", mirror_panel.PANEL_RENDER_VERSION + 1), \
@@ -89,6 +108,7 @@ class MirrorPanelTests(unittest.TestCase):
             )
 
             with patch.object(mirror_panel, "selected_birds", return_value=selected), \
+                 patch.object(mirror_panel, "record_birds"), \
                  patch.object(mirror_panel, "mirror_tile_path", return_value=tile):
                 first = mirror_panel.build_mirror_panel(output_dir=root / "panel")
                 with patch.object(mirror_panel, "_render", side_effect=AssertionError("panel was rebuilt")):

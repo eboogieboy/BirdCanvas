@@ -295,47 +295,46 @@ def _safe_slug(value: str) -> str:
     return cleaned or "bird"
 
 
-def mirror_tile_path(common_name: str, scientific_name: str = ""):
-    """Return a locally cached square illustration suitable for Magic Mirror tiles."""
+def _tile_cache(common_name: str, scientific_name: str = ""):
     import hashlib
-    import io
-    import urllib.request
-    from pathlib import Path
 
-    from PIL import Image, ImageDraw, ImageFont, ImageOps
     from paths import OUTPUT_DIR
 
     tile_dir = OUTPUT_DIR / "bird-tiles"
     tile_dir.mkdir(parents=True, exist_ok=True)
-
     illustration = illustration_for(common_name, scientific_name)
     source_url = illustration["image_url"] if illustration else ""
     revision = hashlib.sha1(source_url.encode("utf-8")).hexdigest()[:10] if source_url else "fallback"
     destination = tile_dir / f"{_safe_slug(common_name)}-{revision}.jpg"
-    if destination.is_file():
-        return destination
+    metadata = destination.with_suffix(".json")
+    return illustration, destination, metadata
 
-    if illustration:
-        try:
-            request = urllib.request.Request(
-                source_url,
-                headers={"User-Agent": "BirdCanvas/0.18 (+local Magic Mirror tile cache)"},
-            )
-            with urllib.request.urlopen(request, timeout=10) as response:
-                payload = response.read(12 * 1024 * 1024)
-            with Image.open(io.BytesIO(payload)) as opened:
-                source = ImageOps.exif_transpose(opened).convert("RGB")
-                contained = ImageOps.contain(source, (560, 560), method=Image.Resampling.LANCZOS)
-                canvas = Image.new("RGB", (600, 600), (246, 244, 237))
-                x = (600 - contained.width) // 2
-                y = (600 - contained.height) // 2
-                canvas.paste(contained, (x, y))
-                canvas.save(destination, "JPEG", quality=90, optimize=True)
-            return destination
-        except Exception:
-            pass
 
-    # A local fallback means the Mirror never has to deal with broken external URLs.
+def _write_tile_metadata(path, payload: dict) -> None:
+    import json
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    value = {
+        "updated_at": datetime.now(ZoneInfo("Europe/London")).isoformat(timespec="seconds"),
+        **payload,
+    }
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def _read_tile_metadata(path) -> dict:
+    import json
+
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _fallback_tile(destination, common_name: str) -> None:
+    from PIL import Image, ImageDraw, ImageFont
+
     canvas = Image.new("RGB", (600, 600), (246, 244, 237))
     draw = ImageDraw.Draw(canvas)
     initial = (str(common_name).strip()[:1] or "?").upper()
@@ -351,4 +350,96 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
         font=font,
     )
     canvas.save(destination, "JPEG", quality=88, optimize=True)
+
+
+def mirror_tile_path(common_name: str, scientific_name: str = ""):
+    """Return a locally cached square illustration suitable for Magic Mirror tiles."""
+    import io
+    import urllib.request
+
+    from PIL import Image, ImageOps
+
+    illustration, destination, metadata = _tile_cache(common_name, scientific_name)
+    if destination.is_file():
+        if not metadata.is_file():
+            _write_tile_metadata(
+                metadata,
+                {
+                    "status": "ready" if illustration else "missing",
+                    "has_mapping": bool(illustration),
+                    "problem": "" if illustration else "No curated illustration yet.",
+                    "artist": (illustration or {}).get("artist", ""),
+                    "source_url": (illustration or {}).get("source_url", ""),
+                },
+            )
+        return destination
+
+    if illustration:
+        try:
+            request = urllib.request.Request(
+                illustration["image_url"],
+                headers={"User-Agent": "BirdCanvas/0.19 (+local Magic Mirror tile cache)"},
+            )
+            with urllib.request.urlopen(request, timeout=10) as response:
+                payload = response.read(12 * 1024 * 1024)
+            with Image.open(io.BytesIO(payload)) as opened:
+                source = ImageOps.exif_transpose(opened).convert("RGB")
+                contained = ImageOps.contain(source, (560, 560), method=Image.Resampling.LANCZOS)
+                canvas = Image.new("RGB", (600, 600), (246, 244, 237))
+                x = (600 - contained.width) // 2
+                y = (600 - contained.height) // 2
+                canvas.paste(contained, (x, y))
+                canvas.save(destination, "JPEG", quality=90, optimize=True)
+            _write_tile_metadata(
+                metadata,
+                {
+                    "status": "ready",
+                    "has_mapping": True,
+                    "problem": "",
+                    "artist": illustration.get("artist", ""),
+                    "source_url": illustration.get("source_url", ""),
+                },
+            )
+            return destination
+        except Exception as error:
+            _fallback_tile(destination, common_name)
+            _write_tile_metadata(
+                metadata,
+                {
+                    "status": "missing",
+                    "has_mapping": True,
+                    "problem": f"Curated image could not be fetched: {type(error).__name__}",
+                    "artist": illustration.get("artist", ""),
+                    "source_url": illustration.get("source_url", ""),
+                },
+            )
+            return destination
+
+    _fallback_tile(destination, common_name)
+    _write_tile_metadata(
+        metadata,
+        {
+            "status": "missing",
+            "has_mapping": False,
+            "problem": "No curated illustration yet.",
+            "artist": "",
+            "source_url": "",
+        },
+    )
     return destination
+
+
+def mirror_tile_info(common_name: str, scientific_name: str = "") -> dict:
+    """Return the cached tile path plus whether the field-guide image is healthy."""
+    illustration, destination, metadata = _tile_cache(common_name, scientific_name)
+    mirror_tile_path(common_name, scientific_name)
+    status = _read_tile_metadata(metadata)
+    return {
+        "path": destination,
+        "status": status.get("status", "ready" if illustration else "missing"),
+        "has_mapping": bool(status.get("has_mapping", bool(illustration))),
+        "problem": str(status.get("problem", "")),
+        "artist": str(status.get("artist") or (illustration or {}).get("artist", "")),
+        "source_url": str(status.get("source_url") or (illustration or {}).get("source_url", "")),
+    }
+
