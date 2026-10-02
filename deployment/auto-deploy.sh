@@ -127,6 +127,34 @@ done
 
 curl --silent --fail --max-time 3     http://127.0.0.1:8000/api/health >/dev/null
 
+# Refresh installed helper scripts only after the candidate has passed its tests and
+# the live service has passed its health check. This means future changes to the
+# deployment/backup runners no longer need a separate manual copy step.
+refresh_installed_helper() {
+    local source="$1"
+    local target="$2"
+    local tmp
+
+    [[ -f "$source" ]] || return 0
+    if [[ -f "$target" ]] && cmp -s "$source" "$target"; then
+        return 0
+    fi
+
+    tmp="$(mktemp "${target}.XXXXXX")"
+    if install -m 0755 "$source" "$tmp"; then
+        mv -f "$tmp" "$target"
+        log "Updated installed helper: $target"
+    else
+        rm -f "$tmp"
+        return 1
+    fi
+}
+
+refresh_installed_helper "$PROJECT_DIR/deployment/auto-deploy.sh" /usr/local/sbin/birdcanvas-auto-deploy
+if [[ -e /usr/local/sbin/birdcanvas-backup ]]; then
+    refresh_installed_helper "$PROJECT_DIR/deployment/backup-to-rclone.sh" /usr/local/sbin/birdcanvas-backup
+fi
+
 # Keep the live checkout's branch metadata aligned with the deployed commit without
 # overwriting runtime data that BirdCanvas legitimately changes in the working tree.
 runuser -u "$BIRDCANVAS_DEPLOY_USER" --     git -C "$PROJECT_DIR" fetch origin "$BIRDCANVAS_DEPLOY_BRANCH"

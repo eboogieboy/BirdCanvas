@@ -192,10 +192,14 @@ if [[ "$(date +%u)" == "7" ]]; then
 fi
 
 log "Applying retention"
-rclone_as_user delete "$REMOTE/daily" --min-age "${BIRDCANVAS_DAILY_RETENTION_DAYS}d" --include 'birdcanvas-backup-*.tar.gz*' || true
-rclone_as_user rmdirs "$REMOTE/daily" --leave-root || true
-rclone_as_user delete "$REMOTE/weekly" --min-age "${BIRDCANVAS_WEEKLY_RETENTION_DAYS}d" --include 'birdcanvas-backup-*.tar.gz*' || true
-rclone_as_user rmdirs "$REMOTE/weekly" --leave-root || true
+if rclone_as_user lsf "$REMOTE/daily" >/dev/null 2>&1; then
+  rclone_as_user delete "$REMOTE/daily" --min-age "${BIRDCANVAS_DAILY_RETENTION_DAYS}d" --include 'birdcanvas-backup-*.tar.gz*' || true
+  rclone_as_user rmdirs "$REMOTE/daily" --leave-root || true
+fi
+if rclone_as_user lsf "$REMOTE/weekly" >/dev/null 2>&1; then
+  rclone_as_user delete "$REMOTE/weekly" --min-age "${BIRDCANVAS_WEEKLY_RETENTION_DAYS}d" --include 'birdcanvas-backup-*.tar.gz*' || true
+  rclone_as_user rmdirs "$REMOTE/weekly" --leave-root || true
+fi
 find "$LOCAL_DIR" -type f -name 'birdcanvas-backup-*.tar.gz*' -mtime "+$BIRDCANVAS_LOCAL_RETENTION_DAYS" -delete
 
 log "Backup complete: $NAME"
