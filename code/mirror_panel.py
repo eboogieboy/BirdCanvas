@@ -9,6 +9,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
+from bird_catalog import record_birds
 from bird_images import mirror_tile_path
 from mirror_birds import DEFAULT_TILE_LIMIT, selected_birds
 from paths import OUTPUT_DIR
@@ -19,7 +20,7 @@ PANEL_META = PANEL_DIR / "panel.json"
 DEFAULT_WIDTH = 1200
 DEFAULT_HEIGHT = 900
 DEFAULT_COLUMNS = 4
-PANEL_RENDER_VERSION = 2
+PANEL_RENDER_VERSION = 3
 
 BACKGROUND = (10, 10, 10)
 LABEL = (242, 242, 242)
@@ -51,15 +52,34 @@ def _font(size: int, bold: bool = False):
     return ImageFont.load_default()
 
 
-def _fit_font(draw: ImageDraw.ImageDraw, text: str, max_width: int, start_size: int):
-    size = max(16, start_size)
-    while size > 16:
+def _label_candidates(text: str) -> list[str]:
+    words = str(text).split()
+    candidates = [str(text)]
+    if len(words) > 1:
+        candidates.extend(
+            " ".join(words[:index]) + "\n" + " ".join(words[index:])
+            for index in range(1, len(words))
+        )
+    return candidates
+
+
+def _fit_label(draw: ImageDraw.ImageDraw, text: str, max_width: int, start_size: int):
+    """Keep labels large, using two lines before shrinking the type."""
+    size = max(20, start_size)
+    while size >= 20:
         font = _font(size, bold=True)
-        bounds = draw.textbbox((0, 0), text, font=font)
-        if bounds[2] - bounds[0] <= max_width:
-            return font
+        best = None
+        best_width = None
+        for candidate in _label_candidates(text):
+            bounds = draw.multiline_textbbox((0, 0), candidate, font=font, spacing=2, align="center")
+            width = bounds[2] - bounds[0]
+            if width <= max_width and (best_width is None or width < best_width):
+                best = candidate
+                best_width = width
+        if best is not None:
+            return best, font
         size -= 2
-    return _font(16, bold=True)
+    return str(text), _font(20, bold=True)
 
 
 def _signature(
@@ -131,14 +151,14 @@ def _render(
     # whole panel. This keeps neighbouring bird plates visually grouped while
     # preserving the 4 x 3 structure when all 12 slots are occupied.
     row_height = height / rows
-    card_width = min(width / columns, max(220, width * 0.225))
-    horizontal_gap = max(8, int(width * 0.008))
+    card_width = min(width / columns, max(200, width * 0.19))
+    horizontal_gap = max(3, int(width * 0.003))
     grid_width = columns * card_width + (columns - 1) * horizontal_gap
     grid_left = max(0, (width - grid_width) / 2)
 
-    label_gap = max(6, int(row_height * 0.02))
-    label_height = max(40, int(row_height * 0.14))
-    vertical_pad = max(4, int(row_height * 0.02))
+    label_gap = max(4, int(row_height * 0.012))
+    label_height = max(68, int(row_height * 0.24))
+    vertical_pad = max(3, int(row_height * 0.012))
     image_side = int(
         max(
             1,
@@ -177,19 +197,21 @@ def _render(
 
         name = str(bird.get("name", "")).strip()
         text_top = image_top + image_side + label_gap
-        font = _fit_font(
+        label, font = _fit_label(
             draw,
             name,
-            max_width=int(card_width - 4),
-            start_size=max(30, int(card_width * 0.12)),
+            max_width=int(card_width - 2),
+            start_size=max(42, int(card_width * 0.19)),
         )
-        bounds = draw.textbbox((0, 0), name, font=font)
+        bounds = draw.multiline_textbbox((0, 0), label, font=font, spacing=2, align="center")
         text_width = bounds[2] - bounds[0]
-        draw.text(
+        draw.multiline_text(
             (left + (card_width - text_width) / 2, text_top),
-            name,
+            label,
             fill=LABEL,
             font=font,
+            spacing=2,
+            align="center",
         )
 
     return panel
@@ -212,6 +234,7 @@ def build_mirror_panel(
 
     _, _, birds = selected_birds(now=now, limit=limit)
     birds = [bird for bird in birds if str(bird.get("name", "")).strip()]
+    record_birds(birds)
     tile_paths = [
         mirror_tile_path(
             str(bird.get("name", "")),
