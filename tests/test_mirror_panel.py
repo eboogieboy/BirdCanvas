@@ -59,6 +59,14 @@ class MirrorPanelTests(unittest.TestCase):
             self.assertEqual(meta["birds"], ["Blackbird", "Robin", "Wren"])
             record.assert_called_once_with(birds)
 
+    def test_short_bird_name_stays_on_one_line(self):
+        image = Image.new("RGB", (600, 300), "black")
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(image)
+        label, font = mirror_panel._fit_label(draw, "Blue Tit", 220, 46)
+        self.assertEqual(label, "Blue Tit")
+        self.assertGreaterEqual(getattr(font, "size", 20), 40)
+
     def test_long_bird_name_can_wrap_before_shrinking(self):
         image = Image.new("RGB", (600, 300), "black")
         from PIL import ImageDraw
