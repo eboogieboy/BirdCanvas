@@ -23,7 +23,7 @@ Open port `8000` in Codespaces.
 - Magic Mirror rendered panel: `/api/mirror/panel.jpg` (defaults to a 1200 × 900, 4 × 3 grid)
 - Field-guide catalogue: `/api/birds/catalog` (all species BirdCanvas has recorded, with thumbnail health)
 
-BirdCanvas does the display work for the Mirror: it selects the most recently heard species, shortens BirdNET names such as “Eurasian Blackbird” to “Blackbird”, alphabetises the selected set, caches square historical field-guide illustrations locally, and renders a finished named grid JPEG. The Mirror can therefore display one image and refresh it periodically. The Garden visitors page also keeps a persistent master thumbnail library of species BirdCanvas has encountered, clearly flagging any missing or failed field-guide image so the illustration set can be improved over time.
+BirdCanvas does the display work for the Mirror: it selects the most recently heard species, shortens BirdNET names such as “Eurasian Blackbird” to “Blackbird”, alphabetises the selected set, caches square historical field-guide illustrations locally, and renders a finished named grid JPEG. The Mirror can therefore display one image and refresh it periodically. The Garden visitors page starts with 20 common UK birds and then grows automatically as BirdCanvas encounters new species. It clearly distinguishes starter species from birds actually heard by BirdNET and flags any missing or failed field-guide image so the illustration set can be improved over time.
 
 Stop the server with `Ctrl+C`.
 
@@ -87,4 +87,9 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.19.1` — portrait GalleryOS, live bird sessions, Samsung Frame gallery delivery, tighter locally rendered Magic Mirror bird panel, persistent field-guide thumbnail auditing and Pi-safe scalable labels.
+Version `0.20.0` — starter field-guide library, slightly smaller Mirror labels, pre-merge CI checks and full candidate preflight before any live deployment changes.
+
+
+## Deployment safety
+
+Pull requests now run the same regression suite, Python compilation, generated-page build and deployment-shell syntax checks in GitHub Actions before merge. The Pi auto-deployer also runs the full candidate test suite and page generation from its clean deployment checkout before it copies anything into the live installation. A bad candidate therefore fails preflight while the current live BirdCanvas instance remains untouched.
