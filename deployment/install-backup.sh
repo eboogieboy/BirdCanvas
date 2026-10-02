@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
-  echo "Run with: sudo deployment/install-backup.sh"
+  echo "Run with: sudo bash deployment/install-backup.sh"
   exit 1
 fi
 
@@ -44,4 +44,4 @@ echo
 echo "BirdCanvas backup tooling installed."
 echo "The nightly timer is NOT enabled yet."
 echo "Configure an rclone Google Drive remote as $TARGET_USER, then run:"
-echo "  sudo deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'"
+echo "  sudo bash deployment/configure-backup.sh 'REMOTE:BirdCanvas Backups'"
