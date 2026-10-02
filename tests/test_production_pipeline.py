@@ -89,6 +89,44 @@ class ProductionTests(unittest.TestCase):
             ['2026-09-21', '2026-09-22', '2026-09-23', '2026-09-24'],
         )
 
+    def test_send_gallery_artwork_uploads_once_then_reuses_frame_copy(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            image = root / 'archived-artwork.png'
+            image.write_bytes(b'image')
+            upload_calls = []
+
+            def upload(source, content_id=None, on_uploaded=None):
+                upload_calls.append((Path(source), content_id))
+                selected = content_id or 'MY_GALLERY_1'
+                if content_id is None and on_uploaded:
+                    on_uploaded(selected)
+                return {'content_id': selected}
+
+            with patch.object(pipeline, 'STATE_FILE', root / 'state.json'), \
+                 patch.object(pipeline, 'LOCK_FILE', root / 'lock'), \
+                 patch.object(pipeline, 'DATA_DIR', root), \
+                 patch.object(pipeline, 'frame_enabled', return_value=True), \
+                 patch.object(pipeline, 'artwork_image_path', return_value=image), \
+                 patch.object(pipeline, 'upload_to_frame', side_effect=upload):
+                first = pipeline.send_artwork_to_frame('older-artwork')
+                second = pipeline.send_artwork_to_frame('older-artwork')
+                state = pipeline.load_state()
+
+            self.assertFalse(first['reused'])
+            self.assertTrue(second['reused'])
+            self.assertEqual(first['content_id'], 'MY_GALLERY_1')
+            self.assertEqual(second['content_id'], 'MY_GALLERY_1')
+            self.assertEqual(upload_calls, [(image, None), (image, 'MY_GALLERY_1')])
+            self.assertEqual(state['uploads'], ['MY_GALLERY_1'])
+            self.assertEqual(state['frame_content']['older-artwork'], 'MY_GALLERY_1')
+            self.assertEqual(state['last_manual_delivery']['artwork_id'], 'older-artwork')
+
+    def test_send_gallery_artwork_requires_frame_integration(self):
+        with patch.object(pipeline, 'frame_enabled', return_value=False):
+            with self.assertRaisesRegex(RuntimeError, 'currently disabled'):
+                pipeline.send_artwork_to_frame('older-artwork')
+
     def test_one_publication_and_retry_same_artwork_after_frame_failure(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

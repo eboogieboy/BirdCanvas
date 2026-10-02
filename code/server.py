@@ -31,7 +31,7 @@ from import_birdnet import import_zip
 from compose import compose
 from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
-from production_pipeline import status as generation_status
+from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
 from display import build_display_page
 PORT = 8000
@@ -172,6 +172,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 )
                 self.send_json({"ok": True, **result})
                 return
+            if route == "/api/artwork/send-to-frame":
+                payload = self.read_json_body()
+                result = send_artwork_to_frame(str(payload.get("artwork_id", "")))
+                self.send_json({"ok": True, **result})
+                return
             if route in {"/api/artwork/delete", "/api/custom/delete"}:
                 payload = self.read_json_body()
                 artwork_id = str(payload.get("artwork_id", "")).strip()
@@ -202,7 +207,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     "library": deleted["library"],
                 })
                 return
-        except (ValueError, TypeError, OSError) as error:
+        except (ValueError, TypeError, OSError, RuntimeError) as error:
             self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
             return
 
