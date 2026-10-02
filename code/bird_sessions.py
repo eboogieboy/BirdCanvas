@@ -17,17 +17,26 @@ def _excluded(name: str, terms: list[str]) -> bool:
     return any(term.casefold() in folded for term in terms)
 
 
+def _display_name(name: str) -> str:
+    """Use concise UK-facing common names without BirdNET's Eurasian prefix."""
+    cleaned = str(name).strip()
+    if cleaned.casefold().startswith("eurasian "):
+        return cleaned[len("Eurasian "):].strip()
+    return cleaned
+
+
 def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
     rows = detection_rows(start, end)
     excluded_terms = load_settings()["excluded_birds"]
     grouped: dict[str, dict] = {}
 
     for row in rows:
-        common = str(row.get("commonName") or row.get("scientificName") or "").strip()
+        raw_common = str(row.get("commonName") or row.get("scientificName") or "").strip()
+        common = _display_name(raw_common)
         scientific = str(row.get("scientificName") or "").strip()
         if not common:
             continue
-        key = common.casefold()
+        key = scientific.casefold() or common.casefold()
         when = _timestamp(row)
         confidence = float(row.get("confidence", 0) or 0)
         item = grouped.setdefault(
