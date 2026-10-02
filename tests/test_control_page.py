@@ -36,6 +36,14 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("Missing images", html)
         self.assertIn("/api/birds/catalog", html)
 
+    def test_field_guide_images_can_be_replaced_and_restored(self):
+        html = display.CONTROL_HTML
+        self.assertIn('id="bird-override-file"', html)
+        self.assertIn("Replace", html)
+        self.assertIn("Restore default", html)
+        self.assertIn("/api/birds/illustration", html)
+        self.assertIn("/api/birds/illustration/restore", html)
+
     def test_legacy_birdnet_import_is_not_shown_on_control_page(self):
         html = display.CONTROL_HTML
         self.assertNotIn('data-go="birdnet"', html)
