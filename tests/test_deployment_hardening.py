@@ -1,4 +1,8 @@
+import os
+import shutil
 import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -52,16 +56,43 @@ class DeploymentHardeningTests(unittest.TestCase):
         self.assertNotIn("cd '$SOURCE_DIR' && PYTHONPATH=code", text)
         self.assertNotIn("cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py", text)
 
-    def test_ci_simulates_full_production_preflight_sandbox(self):
-        text = (
-            ROOT / ".github" / "workflows" / "birdcanvas-checks.yml"
-        ).read_text()
-        self.assertIn("Simulate production preflight sandbox", text)
-        self.assertIn("sudo chown -R root:root", text)
-        self.assertIn('PREFLIGHT_DIR="$(sudo mktemp -d', text)
-        self.assertIn('sudo chmod -R u+rwX "$PREFLIGHT_DIR"', text)
-        self.assertIn("python code/display.py", text)
-        self.assertIn('test -z "$(git status --porcelain)"', text)
+    def test_live_regression_suite_runs_from_deployed_payload_shape(self):
+        if os.environ.get("BIRDCANVAS_PAYLOAD_CHILD") == "1":
+            self.skipTest("nested deployed-payload verification")
+
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder)
+            for item in ("code", "deployment", "tests", "requirements.txt", "VERSION"):
+                source = ROOT / item
+                destination = target / item
+                if source.is_dir():
+                    shutil.copytree(source, destination)
+                else:
+                    shutil.copy2(source, destination)
+
+            env = os.environ.copy()
+            env["PYTHONPATH"] = "code"
+            env["BIRDCANVAS_PAYLOAD_CHILD"] = "1"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "unittest",
+                    "discover",
+                    "-s",
+                    "tests",
+                    "-v",
+                ],
+                cwd=target,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                result.returncode,
+                0,
+                result.stdout + "\n" + result.stderr,
+            )
 
     def test_backup_retention_checks_remote_folder_first(self):
         text = (ROOT / "deployment" / "backup-to-rclone.sh").read_text()
