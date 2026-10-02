@@ -39,7 +39,9 @@ class DeploymentHardeningTests(unittest.TestCase):
         first_live_rsync = text.index('rsync -a --delete --chown=')
         self.assertLess(preflight, rollback)
         self.assertLess(preflight, first_live_rsync)
-        self.assertIn("Candidate preflight failed; live installation unchanged", text)
+        self.assertIn("Candidate compile preflight failed; live installation unchanged", text)
+        self.assertIn("Candidate test preflight failed; live installation unchanged", text)
+        self.assertIn("Candidate page-generation preflight failed; live installation unchanged", text)
 
     def test_preflight_uses_writable_sandbox_not_source_checkout(self):
         text = (ROOT / "deployment" / "auto-deploy.sh").read_text()
