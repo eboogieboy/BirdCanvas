@@ -3,7 +3,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from PIL import Image
 
@@ -60,13 +60,13 @@ class BirdImageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             payload = io.BytesIO()
             Image.new("RGB", (400, 700), "white").save(payload, "JPEG")
-            response = unittest.mock.MagicMock()
+            response = MagicMock()
             response.read.return_value = payload.getvalue()
             response.__enter__.return_value = response
             response.__exit__.return_value = False
 
             with patch("paths.OUTPUT_DIR", Path(folder)), \
-                 patch.object(bird_images.urllib.request if hasattr(bird_images, "urllib") else __import__("urllib.request", fromlist=["urlopen"]), "urlopen", return_value=response) as opener:
+                 patch("urllib.request.urlopen", return_value=response) as opener:
                 first = bird_images.mirror_tile_path("Blackbird", "Turdus merula")
                 second = bird_images.mirror_tile_path("Blackbird", "Turdus merula")
 
