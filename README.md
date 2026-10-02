@@ -19,6 +19,9 @@ Open port `8000` in Codespaces.
 - Display: `/`
 - Phone control: `/control/`
 - Gallery: `/gallery/`
+- Magic Mirror bird feed: `/api/mirror/birds` (defaults to 12 tile-ready birds)
+
+The Magic Mirror feed is deliberately thin: BirdCanvas selects the most recently heard species, alphabetises the selected tiles, and serves locally cached square illustrations. The Mirror only needs to render each returned bird name and image URL.
 
 Stop the server with `Ctrl+C`.
 
@@ -82,4 +85,4 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.15.0` — portrait GalleryOS, live bird sessions and off-device disaster recovery.
+Version `0.17.0` — portrait GalleryOS, live bird sessions, Samsung Frame gallery delivery, Magic Mirror bird feed and off-device disaster recovery.
