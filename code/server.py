@@ -33,6 +33,7 @@ from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
+from bird_catalog import catalogue, record_birds
 from bird_images import mirror_tile_path
 from mirror_birds import mirror_birds
 from mirror_panel import build_mirror_panel
@@ -72,7 +73,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/birds/current":
             try:
-                self.send_json(current_session())
+                session = current_session()
+                record_birds(session.get("birds", []))
+                self.send_json(session)
             except (ValueError, OSError) as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
             return
@@ -82,10 +85,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"error": "A date is required."}, HTTPStatus.BAD_REQUEST)
                 return
             try:
-                self.send_json(day_session(value))
+                session = day_session(value)
+                record_birds(session.get("birds", []))
+                self.send_json(session)
             except ValueError as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
             except OSError as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+            return
+        if route == "/api/birds/catalog":
+            try:
+                session = current_session()
+                record_birds(session.get("birds", []))
+                self.send_json(catalogue())
+            except (ValueError, OSError) as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
             return
         if route == "/api/mirror/birds":
