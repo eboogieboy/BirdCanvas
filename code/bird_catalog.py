@@ -140,10 +140,11 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
             continue
 
         tile = mirror_tile_info(name, scientific)
+        stat = tile["path"].stat()
         query = urlencode({
             "name": name,
             "scientific": scientific,
-            "v": tile["path"].name,
+            "v": f"{tile['path'].name}-{stat.st_mtime_ns}-{stat.st_size}",
         })
         heard = key in observed and bool(item.get("first_seen") or item.get("last_seen"))
         birds.append(
@@ -161,6 +162,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
                 "artist": tile.get("artist") or "",
                 "source_url": tile.get("source_url") or "",
                 "problem": tile.get("problem") or "",
+                "overridden": bool(tile.get("overridden")),
             }
         )
 
