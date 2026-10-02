@@ -66,6 +66,7 @@ class BirdCatalogueTests(unittest.TestCase):
 
             def tile_info(name, scientific):
                 return {
+                    "path": Path(folder) / ("blackbird.jpg" if name == "Blackbird" else "mystery-bird.jpg"),
                     "status": "ready" if name == "Blackbird" else "missing",
                     "has_mapping": name == "Blackbird",
                     "artist": "Test Artist" if name == "Blackbird" else "",

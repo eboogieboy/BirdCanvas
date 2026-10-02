@@ -87,4 +87,4 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.19.0` — portrait GalleryOS, live bird sessions, Samsung Frame gallery delivery, tighter locally rendered Magic Mirror bird panel, persistent field-guide thumbnail auditing and off-device disaster recovery.
+Version `0.19.1` — portrait GalleryOS, live bird sessions, Samsung Frame gallery delivery, tighter locally rendered Magic Mirror bird panel, persistent field-guide thumbnail auditing and Pi-safe scalable labels.
