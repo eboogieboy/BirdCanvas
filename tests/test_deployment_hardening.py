@@ -52,16 +52,15 @@ class DeploymentHardeningTests(unittest.TestCase):
         self.assertNotIn("cd '$SOURCE_DIR' && PYTHONPATH=code", text)
         self.assertNotIn("cd '$SOURCE_DIR' && '$PROJECT_DIR/.venv/bin/python' code/display.py", text)
 
-    def test_ci_simulates_full_production_preflight_sandbox(self):
-        text = (
-            ROOT / ".github" / "workflows" / "birdcanvas-checks.yml"
-        ).read_text()
-        self.assertIn("Simulate production preflight sandbox", text)
-        self.assertIn("sudo chown -R root:root", text)
-        self.assertIn('PREFLIGHT_DIR="$(sudo mktemp -d', text)
-        self.assertIn('sudo chmod -R u+rwX "$PREFLIGHT_DIR"', text)
-        self.assertIn("python code/display.py", text)
-        self.assertIn('test -z "$(git status --porcelain)"', text)
+    def test_live_regression_suite_does_not_depend_on_repository_only_files(self):
+        for path in sorted((ROOT / "tests").glob("test_*.py")):
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(
+                'ROOT / ".github"',
+                text,
+                f"{path.name} depends on repository-only .github files, "
+                "which are not part of the live deployment payload.",
+            )
 
     def test_backup_retention_checks_remote_folder_first(self):
         text = (ROOT / "deployment" / "backup-to-rclone.sh").read_text()
