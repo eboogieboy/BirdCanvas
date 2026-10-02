@@ -29,6 +29,13 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn('id="birds" class="panel"', html)
         self.assertIn("/api/birds/current", html)
 
+    def test_legacy_birdnet_import_is_not_shown_on_control_page(self):
+        html = display.CONTROL_HTML
+        self.assertNotIn('data-go="birdnet"', html)
+        self.assertNotIn('id="birdnet" class="panel"', html)
+        self.assertNotIn("$('#birdnet-form')", html)
+        self.assertNotIn("$('#generate-artwork-button')", html)
+
 
 if __name__ == "__main__":
     unittest.main()
