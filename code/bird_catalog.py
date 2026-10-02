@@ -140,11 +140,16 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
             continue
 
         tile = mirror_tile_info(name, scientific)
-        stat = tile["path"].stat()
+        revision = tile["path"].name
+        try:
+            stat = tile["path"].stat()
+            revision = f"{revision}-{stat.st_mtime_ns}-{stat.st_size}"
+        except OSError:
+            pass
         query = urlencode({
             "name": name,
             "scientific": scientific,
-            "v": f"{tile['path'].name}-{stat.st_mtime_ns}-{stat.st_size}",
+            "v": revision,
         })
         heard = key in observed and bool(item.get("first_seen") or item.get("last_seen"))
         birds.append(
