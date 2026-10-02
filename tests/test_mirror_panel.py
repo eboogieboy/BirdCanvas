@@ -57,6 +57,26 @@ class MirrorPanelTests(unittest.TestCase):
             self.assertEqual(meta["slots"], 12)
             self.assertEqual(meta["birds"], ["Blackbird", "Robin", "Wren"])
 
+    def test_renderer_version_change_invalidates_cached_panel(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            tile = root / "blackbird.jpg"
+            Image.new("RGB", (600, 600), "white").save(tile, "JPEG")
+            selected = (
+                datetime(2026, 10, 3, 9, tzinfo=TZ),
+                {"start": "2026-10-03T04:00:00+01:00"},
+                [{"name": "Blackbird", "scientific_name": "Turdus merula"}],
+            )
+
+            with patch.object(mirror_panel, "selected_birds", return_value=selected), \
+                 patch.object(mirror_panel, "mirror_tile_path", return_value=tile):
+                mirror_panel.build_mirror_panel(output_dir=root / "panel")
+                with patch.object(mirror_panel, "PANEL_RENDER_VERSION", mirror_panel.PANEL_RENDER_VERSION + 1), \
+                     patch.object(mirror_panel, "_render", wraps=mirror_panel._render) as render:
+                    mirror_panel.build_mirror_panel(output_dir=root / "panel")
+
+            self.assertEqual(render.call_count, 1)
+
     def test_reuses_cached_panel_when_species_and_tiles_are_unchanged(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
