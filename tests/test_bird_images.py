@@ -90,7 +90,8 @@ class BirdImageTests(unittest.TestCase):
             response.__enter__.return_value = response
             response.__exit__.return_value = False
 
-            with patch("paths.OUTPUT_DIR", Path(folder)), \
+            with patch("paths.DATA_DIR", Path(folder) / "data"), \
+                 patch("paths.OUTPUT_DIR", Path(folder) / "output"), \
                  patch("urllib.request.urlopen", return_value=response) as opener:
                 first = bird_images.mirror_tile_path("Blackbird", "Turdus merula")
                 second = bird_images.mirror_tile_path("Blackbird", "Turdus merula")
@@ -267,10 +268,12 @@ class BirdImageTests(unittest.TestCase):
 
 
     def test_default_phone_display_uses_same_local_clean_tile_as_mirror(self):
-        illustration = bird_images.display_illustration_for(
-            "Blue Tit",
-            "Cyanistes caeruleus",
-        )
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("paths.DATA_DIR", Path(folder) / "data"):
+                illustration = bird_images.display_illustration_for(
+                    "Blue Tit",
+                    "Cyanistes caeruleus",
+                )
         self.assertIsNotNone(illustration)
         self.assertFalse(illustration["overridden"])
         self.assertEqual(illustration["artist"], "Joseph Wolf")
