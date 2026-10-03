@@ -46,6 +46,10 @@ class GalleryLibraryTests(unittest.TestCase):
             "created_at": "2026-07-18T08:00:00+01:00",
             "image": "artwork.png",
             "species": ["Robin"],
+            "species_detected": ["Robin", "Blue Tit", "Blackbird"],
+            "species_eligible": ["Robin", "Blue Tit", "Blackbird"],
+            "species_used": ["Robin"],
+            "species_not_featured": ["Blue Tit", "Blackbird"],
         }
         (folder / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         if current:
@@ -98,7 +102,11 @@ class GalleryLibraryTests(unittest.TestCase):
         artwork = library["artworks"][0]
         exhibition = artwork["exhibition"]
         self.assertIn("narrative", exhibition)
-        self.assertEqual(exhibition["visitor_count"], len(artwork["species"]))
+        self.assertEqual(exhibition["visitor_count"], 3)
+        self.assertEqual(exhibition["featured_count"], 1)
+        self.assertEqual(exhibition["featured_birds"], ["Robin"])
+        self.assertEqual(exhibition["heard_birds"], ["Robin", "Blue Tit", "Blackbird"])
+        self.assertEqual(artwork["species_not_featured"], ["Blue Tit", "Blackbird"])
         self.assertIn("hero_birds", exhibition)
 
 
