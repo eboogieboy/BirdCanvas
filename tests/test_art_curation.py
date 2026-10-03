@@ -83,6 +83,88 @@ class ArtCurationTests(unittest.TestCase):
         self.assertEqual(selected, ["Curlew", "Goldfinch", "Blue Tit"])
         self.assertIn("Fallback curation", reason)
 
+
+    def test_bird_plan_separates_light_art_cue_from_verifier_detail(self):
+        reply = SimpleNamespace(
+            output_text=json.dumps(
+                {
+                    "birds": [
+                        {
+                            "index": 1,
+                            "species": "European Goldfinch",
+                            "art_cue": "small finch rhythm with scarlet face spark and gold wing flash",
+                            "recognition_cues": [
+                                "bright red face within black-and-white head pattern",
+                                "black wing crossed by a broad vivid yellow bar",
+                            ],
+                            "avoid_confusions": [
+                                "avoid losing both red face and yellow wing bar"
+                            ],
+                        }
+                    ]
+                }
+            )
+        )
+        client = SimpleNamespace(
+            responses=SimpleNamespace(create=lambda **kwargs: reply)
+        )
+        with patch.object(compose, "_client", return_value=client):
+            plan = compose.create_bird_plan(["European Goldfinch"])
+
+        self.assertEqual(
+            plan[0]["art_cue"],
+            "small finch rhythm with scarlet face spark and gold wing flash",
+        )
+        self.assertEqual(len(plan[0]["recognition_cues"]), 2)
+
+    def test_image_prompt_uses_light_art_cues_not_detailed_verifier_notes(self):
+        reply = SimpleNamespace(output_text="Create a transformed material artwork.")
+        client = SimpleNamespace(
+            responses=SimpleNamespace(create=lambda **kwargs: reply)
+        )
+        bird_plan = [
+            {
+                "index": 1,
+                "species": "European Goldfinch",
+                "art_cue": "small finch rhythm with scarlet spark and gold wing flash",
+                "recognition_cues": [
+                    "bright red face within black-and-white head pattern",
+                    "black wing crossed by a broad vivid yellow bar",
+                ],
+                "avoid_confusions": [
+                    "avoid losing both red face and yellow wing bar"
+                ],
+            }
+        ]
+        brief = {
+            "collection": "Test",
+            "style": "Material abstraction",
+            "style_guidance": "Transform the subject into the medium.",
+            "curator_notes": "",
+            "mood": "quiet",
+            "visual_language": "layered mineral forms",
+            "palette": "restrained",
+            "composition": "open portrait field",
+            "bird_integration": "The bird is transformed into layered mineral form.",
+            "materials": "pigment and plaster",
+            "visual_focus": "material rhythm",
+            "hero_birds": ["European Goldfinch"],
+            "supporting_birds": [],
+            "avoid": [],
+        }
+
+        with patch.object(compose, "_client", return_value=client):
+            prompt = compose.create_image_prompt(
+                ["European Goldfinch"],
+                brief,
+                bird_plan,
+            )
+
+        self.assertIn("small finch rhythm with scarlet spark and gold wing flash", prompt)
+        self.assertNotIn("bright red face within black-and-white head pattern", prompt)
+        self.assertNotIn("avoid losing both red face and yellow wing bar", prompt)
+        self.assertIn("normally rendered naturalistic bird", prompt)
+
     def test_minor_species_issue_does_not_spend_second_generation(self):
         verification = {
             "extra_birds": [],
