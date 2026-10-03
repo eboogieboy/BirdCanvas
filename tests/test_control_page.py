@@ -36,6 +36,17 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("Missing images", html)
         self.assertIn("/api/birds/catalog", html)
 
+    def test_heard_bird_thumbnail_shows_whole_illustration(self):
+        html = display.CONTROL_HTML
+        self.assertIn(
+            ".bird-illustration{width:112px;height:112px;object-fit:contain;",
+            html,
+        )
+        self.assertNotIn(
+            ".bird-illustration{width:112px;height:112px;object-fit:cover;",
+            html,
+        )
+
     def test_field_guide_images_can_be_replaced_and_restored(self):
         html = display.CONTROL_HTML
         self.assertIn('id="bird-override-file"', html)
