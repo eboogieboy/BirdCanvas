@@ -232,15 +232,18 @@ def run(manual=False, now=None):
                                  excluded_terms=settings['excluded_birds'])
                 if not result:
                     raise RuntimeError("Artwork generation returned no image")
+                featured = list(result.get('birds') or used)
                 manifest = publish_artwork(
                     source_image=Path(result['output']), observation_date=end.date().isoformat(),
-                    birds=used, brief=result['brief'], edition=edition,
+                    birds=featured, brief=result['brief'], edition=edition,
                     title=f"Garden Birds — {start:%-d %b}–{end:%-d %b %Y}",
                     observation_window=f"{_iso(start)} to {_iso(end)}",
                     generation=result.get('generation'),
                     observation_started_at=_iso(start), observation_ended_at=_iso(end),
                     detections_total=observed['detections_total'], species_detected=species,
-                    species_used=used, species_excluded=[s for s in species if s not in used],
+                    species_eligible=used, species_used=featured,
+                    species_not_featured=[s for s in used if s not in featured],
+                    species_excluded=[s for s in species if s not in used],
                     generation_frequency=frequency)
                 build_display_page()
             except Exception as error:
