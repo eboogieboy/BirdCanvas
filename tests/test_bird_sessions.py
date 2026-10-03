@@ -51,6 +51,7 @@ class BirdSessionTests(unittest.TestCase):
              ):
             result = bird_sessions.current_session(now)
 
+        self.assertEqual(result["start"], "2026-10-02T04:00:00+01:00")
         self.assertEqual(result["species_count"], 2)
         self.assertEqual(result["detections_total"], 3)
         self.assertEqual(result["birds"][0]["name"], "Black-headed Gull")
@@ -85,6 +86,28 @@ class BirdSessionTests(unittest.TestCase):
 
         self.assertEqual(result["birds"][0]["name"], "Wren")
         self.assertNotIn("Eurasian", result["birds"][0]["name"])
+
+    def test_day_session_uses_local_midnight_boundaries(self):
+        now = datetime(2026, 10, 3, 8, 30, tzinfo=TZ)
+
+        with patch.object(bird_sessions, "detection_rows", return_value=[]) as rows, \
+             patch.object(bird_sessions, "load_settings", return_value={"excluded_birds": []}):
+            today = bird_sessions.day_session("2026-10-03", now)
+
+        today_start, today_end = rows.call_args.args
+        self.assertEqual(today_start, datetime(2026, 10, 3, 0, 0, tzinfo=TZ))
+        self.assertEqual(today_end, now)
+        self.assertEqual(today["kind"], "day")
+
+        rows.reset_mock()
+        with patch.object(bird_sessions, "detection_rows", return_value=[]) as rows, \
+             patch.object(bird_sessions, "load_settings", return_value={"excluded_birds": []}):
+            historical = bird_sessions.day_session("2026-10-02", now)
+
+        historical_start, historical_end = rows.call_args.args
+        self.assertEqual(historical_start, datetime(2026, 10, 2, 0, 0, tzinfo=TZ))
+        self.assertEqual(historical_end, datetime(2026, 10, 3, 0, 0, tzinfo=TZ))
+        self.assertEqual(historical["kind"], "day")
 
     def test_day_session_rejects_future_dates(self):
         now = datetime(2026, 10, 2, 10, tzinfo=TZ)

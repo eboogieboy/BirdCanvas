@@ -268,7 +268,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 </head>
 <body>
 <main class="app">
-<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.21.4</div></header>
+<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.21.5</div></header>
 <section id="home" class="panel active">
   <div class="home-overview">
     <div class="card hero" id="hero"><div class="hero-empty">Loading portrait artwork…</div></div>
@@ -290,10 +290,10 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 <section id="birds" class="panel">
   <div class="journal-head"><div><h2>Garden visitors</h2><p>BirdNET-Go observations, independent of whether a bird is used in the artwork.</p></div><div id="bird-refresh" class="bird-refresh"></div></div>
   <div class="card form-card">
-    <div class="bird-live-head"><div><div class="eyebrow"><span class="bird-live-dot"></span>Current collection</div><h3 id="bird-session-title">Listening…</h3><p id="bird-session-note" class="bird-session-note">Loading BirdNET-Go observations.</p></div><button id="bird-live-button" class="btn secondary" type="button">Live</button></div>
+    <div class="bird-live-head"><div><div class="eyebrow"><span class="bird-live-dot"></span>Current collection</div><h3 id="bird-session-title">Listening…</h3><p id="bird-session-note" class="bird-session-note">Loading BirdNET-Go observations.</p></div><button id="bird-live-button" class="btn secondary" type="button">Current collection</button></div>
     <div class="bird-stats"><div class="bird-stat"><strong id="bird-species-count">—</strong><span>Species</span></div><div class="bird-stat"><strong id="bird-detection-count">—</strong><span>Detections</span></div><div class="bird-stat"><strong id="bird-last-heard">—</strong><span>Last heard</span></div></div>
   </div>
-  <div class="section"><h2>Browse by date</h2><div class="bird-history-controls"><button id="bird-prev-day" class="btn secondary" type="button">‹</button><input id="bird-date" type="date"><button id="bird-next-day" class="btn secondary" type="button">›</button></div></div>
+  <div class="section"><h2>Daily birds</h2><p class="subtle">Calendar-day list used on the Magic Mirror · midnight to midnight.</p><div class="bird-history-controls"><button id="bird-prev-day" class="btn secondary" type="button">‹</button><input id="bird-date" type="date"><button id="bird-next-day" class="btn secondary" type="button">›</button></div></div>
   <div id="bird-grid" class="bird-grid"><div class="empty">Listening for birds…</div></div>
   <p class="subtle">Field-guide illustrations are curated public-domain plates. Birds without a plate yet remain in the written list and get a simple fallback tile.</p>
   <div class="section">
@@ -479,7 +479,7 @@ function moveBirdDate(offset){const base=birdDate?new Date(`${birdDate}T12:00:00
 function renderBirdSession(session){
   $('#bird-session-title').textContent=session.kind==='current'?'Birds heard in this collection':session.label;
   const start=fmt(session.start),end=session.kind==='current'?'now':fmt(session.end);
-  $('#bird-session-note').textContent=session.kind==='current'?`Collecting since ${start} · updates while this page is open`:`${start} to ${end}`;
+  $('#bird-session-note').textContent=session.kind==='current'?`Since the last BirdCanvas artwork generation (${start}) · updates while this page is open`:`Calendar day · ${start} to ${end}`;
   $('#bird-species-count').textContent=String(session.species_count??0);
   $('#bird-detection-count').textContent=String(session.detections_total??0);
   $('#bird-last-heard').textContent=birdClock(session.last_detection);
