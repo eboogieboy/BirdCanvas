@@ -136,9 +136,13 @@ class ProductionTests(unittest.TestCase):
             image = root / 'generated.png'
             image.write_bytes(b'image')
             now = datetime(2026, 9, 24, 4, tzinfo=TZ)
-            observations = {'species': ['Robin', 'Woodpigeon'], 'detections_total': 3}
+            observations = {'species': ['Robin', 'Blue Tit', 'Woodpigeon'], 'detections_total': 4}
             def publish(**kwargs):
                 self.assertEqual(kwargs['birds'], ['Robin'])
+                self.assertEqual(kwargs['species_detected'], ['Robin', 'Blue Tit', 'Woodpigeon'])
+                self.assertEqual(kwargs['species_eligible'], ['Robin', 'Blue Tit'])
+                self.assertEqual(kwargs['species_used'], ['Robin'])
+                self.assertEqual(kwargs['species_not_featured'], ['Blue Tit'])
                 self.assertEqual(kwargs['species_excluded'], ['Woodpigeon'])
                 manifest = {'id': 'birdcanvas-2026-09-24-twice-weekly-20260924-040000'}
                 folder = archive / manifest['id']
@@ -154,7 +158,7 @@ class ProductionTests(unittest.TestCase):
                 patch.object(pipeline, 'load_settings', return_value={'frequency': 'twice_weekly', 'excluded_birds': ['pigeon']}),
                 patch.object(pipeline, 'detections', return_value=observations),
                 patch('compose.excluded_birds', return_value=['pigeon']),
-                patch.object(pipeline, 'compose', return_value={'output': str(image), 'birds': ['Robin'], 'brief': {}, 'generation': {'attempts_used': 1}}),
+                patch.object(pipeline, 'compose', return_value={'output': str(image), 'birds': ['Robin'], 'brief': {}, 'generation': {'eligible_birds': ['Robin', 'Blue Tit'], 'featured_birds': ['Robin'], 'attempts_used': 1}}),
                 patch.object(pipeline, 'publish_artwork', side_effect=publish),
                 patch.object(pipeline, 'build_display_page'),
                 patch.object(pipeline, 'frame_enabled', return_value=True),

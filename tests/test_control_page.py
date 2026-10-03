@@ -83,6 +83,13 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("Portrait display", html)
         self.assertIn("BirdCanvas Gallery", html)
 
+    def test_gallery_detail_distinguishes_heard_and_featured_species(self):
+        html = display.CONTROL_HTML
+        self.assertIn("Featured in artwork", html)
+        self.assertIn("Also heard", html)
+        self.assertIn("species_detected", html)
+        self.assertIn("species_used", html)
+
     def test_gallery_detail_has_send_to_tv_action(self):
         html = display.CONTROL_HTML
         self.assertIn('id="send-tv-button"', html)

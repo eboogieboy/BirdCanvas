@@ -50,7 +50,9 @@ def publish_artwork(
     observation_ended_at: str = "",
     detections_total: int = 0,
     species_detected: list[str] | None = None,
+    species_eligible: list[str] | None = None,
     species_used: list[str] | None = None,
+    species_not_featured: list[str] | None = None,
     species_excluded: list[str] | None = None,
     generation_frequency: str = "",
 ) -> dict:
@@ -81,8 +83,21 @@ def publish_artwork(
     }
     default_title = f"{edition_names.get(edition_slug, 'Garden Birds')} — {date_text}"
 
+    detected_species = [str(item) for item in (species_detected if species_detected is not None else birds)]
+    featured_species = [str(item) for item in (species_used if species_used is not None else birds)]
+    eligible_species = [str(item) for item in (species_eligible if species_eligible is not None else featured_species)]
+    not_featured_species = [
+        str(item)
+        for item in (
+            species_not_featured
+            if species_not_featured is not None
+            else [item for item in eligible_species if item not in featured_species]
+        )
+    ]
+    excluded_species = [str(item) for item in (species_excluded or [])]
+
     manifest = {
-        "schema_version": 2,
+        "schema_version": 3,
         "id": artwork_id,
         "provider": "birdcanvas",
         "collection": "birdcanvas",
@@ -92,16 +107,18 @@ def publish_artwork(
         "observation_started_at": observation_started_at,
         "observation_ended_at": observation_ended_at,
         "detections_total": detections_total,
-        "species_detected": species_detected or [],
-        "species_used": species_used or birds,
-        "species_excluded": species_excluded or [],
+        "species_detected": detected_species,
+        "species_eligible": eligible_species,
+        "species_used": featured_species,
+        "species_not_featured": not_featured_species,
+        "species_excluded": excluded_species,
         "generation_frequency": generation_frequency,
         "edition": edition_slug,
         "created_at": created_at,
         "image": "artwork.png",
         "original_image": "original.png",
         "orientation": "portrait",
-        "species": [str(bird) for bird in birds],
+        "species": featured_species,
         "season": "",
         "style": brief.get("visual_language", ""),
         "palette": brief.get("palette", ""),
