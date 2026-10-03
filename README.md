@@ -87,7 +87,7 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.20.0` — starter field-guide library, slightly smaller Mirror labels, pre-merge CI checks and full candidate preflight before any live deployment changes.
+Version `0.21.6` — field-guide replacements now update the heard-bird cards immediately as well as the field-guide library and Magic Mirror, with adaptive Mirror bird-grid sizing and the existing safe deployment preflight.
 
 
 ## Deployment safety
