@@ -20,7 +20,7 @@ PANEL_META = PANEL_DIR / "panel.json"
 DEFAULT_WIDTH = 1200
 DEFAULT_HEIGHT = 900
 DEFAULT_COLUMNS = 4
-PANEL_RENDER_VERSION = 4
+PANEL_RENDER_VERSION = 5
 
 BACKGROUND = (10, 10, 10)
 LABEL = (242, 242, 242)
@@ -148,6 +148,15 @@ def _draw_empty(panel: Image.Image) -> None:
     draw.text((x, y), title, fill=LABEL, font=font)
 
 
+def _grid_shape(bird_count: int, max_columns: int) -> tuple[int, int]:
+    """Return an adaptive grid for the species currently visible."""
+    if bird_count <= 0:
+        return 1, 1
+    active_columns = max(1, min(max_columns, bird_count))
+    rows = max(1, math.ceil(bird_count / active_columns))
+    return active_columns, rows
+
+
 def _render(
     birds: list[dict],
     tile_paths: list[Path],
@@ -163,20 +172,22 @@ def _render(
         return panel
 
     draw = ImageDraw.Draw(panel)
-    rows = max(1, math.ceil(slots / columns))
+    active_columns, rows = _grid_shape(len(birds), columns)
 
-    # Use a compact fixed grid rather than stretching each slot across the
-    # whole panel. This keeps neighbouring bird plates visually grouped while
-    # preserving the 4 x 3 structure when all 12 slots are occupied.
+    # Fill the available panel with only the rows and columns currently
+    # needed. As more species arrive, the layout naturally tightens until
+    # it reaches the normal four-column grid.
+    outer_pad = max(14, int(width * 0.015))
+    horizontal_gap = max(10, int(width * 0.012))
+    available_width = width - (outer_pad * 2) - (
+        horizontal_gap * (active_columns - 1)
+    )
+    card_width = max(1, available_width / active_columns)
     row_height = height / rows
-    card_width = min(width / columns, max(200, width * 0.19))
-    horizontal_gap = max(3, int(width * 0.003))
-    grid_width = columns * card_width + (columns - 1) * horizontal_gap
-    grid_left = max(0, (width - grid_width) / 2)
 
-    label_gap = max(4, int(row_height * 0.012))
-    label_height = max(68, int(row_height * 0.24))
-    vertical_pad = max(3, int(row_height * 0.012))
+    label_gap = max(7, min(14, int(row_height * 0.025)))
+    label_height = max(56, min(96, int(row_height * 0.21)))
+    vertical_pad = max(6, min(18, int(row_height * 0.025)))
     image_side = int(
         max(
             1,
@@ -188,8 +199,12 @@ def _render(
     )
 
     for index, (bird, tile_path) in enumerate(zip(birds, tile_paths)):
-        row, column = divmod(index, columns)
-        left = grid_left + column * (card_width + horizontal_gap)
+        row, column = divmod(index, active_columns)
+        row_start = row * active_columns
+        row_count = min(active_columns, len(birds) - row_start)
+        row_width = row_count * card_width + (row_count - 1) * horizontal_gap
+        row_left = max(0, (width - row_width) / 2)
+        left = row_left + column * (card_width + horizontal_gap)
         top = row * row_height
 
         with Image.open(tile_path) as opened:
@@ -219,7 +234,7 @@ def _render(
             draw,
             name,
             max_width=int(card_width - 2),
-            start_size=max(38, int(card_width * 0.17)),
+            start_size=max(30, min(62, int(card_width * 0.11))),
         )
         bounds = draw.multiline_textbbox((0, 0), label, font=font, spacing=2, align="center")
         text_width = bounds[2] - bounds[0]
