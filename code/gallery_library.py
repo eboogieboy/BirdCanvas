@@ -70,35 +70,70 @@ def artwork_image_path(artwork_id: str) -> Path:
     return image_path
 
 
+
 def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], species: list[str]) -> dict[str, Any]:
     observation_date = str(manifest.get("observation_date", "")).strip()
     collection = str(creative_brief.get("collection", "")).strip()
     mood = str(manifest.get("mood", creative_brief.get("mood", ""))).strip()
     composition = str(creative_brief.get("composition", "")).strip()
-    hero = [str(item) for item in creative_brief.get("hero_birds", []) if str(item).strip()]
-    character = [str(item) for item in creative_brief.get("character_birds", []) if str(item).strip()]
-    supporting = [str(item) for item in creative_brief.get("supporting_birds", []) if str(item).strip()]
 
-    if species:
-        visitors = ", ".join(species[:-1]) + (f" and {species[-1]}" if len(species) > 1 else species[0])
-        opening = f"This BirdCanvas artwork preserves a garden visit by {visitors}."
+    featured = [
+        str(item)
+        for item in manifest.get("species_used", species)
+        if str(item).strip()
+    ]
+    heard = [
+        str(item)
+        for item in manifest.get("species_detected", featured)
+        if str(item).strip()
+    ]
+    hero = [
+        str(item)
+        for item in creative_brief.get("hero_birds", [])
+        if str(item).strip() and str(item) in featured
+    ]
+    supporting = [
+        str(item)
+        for item in creative_brief.get("supporting_birds", [])
+        if str(item).strip() and str(item) in featured and str(item) not in hero
+    ]
+
+    if heard:
+        opening = (
+            f"BirdNET heard {len(heard)} species during this collection. "
+            f"The artwork curates {len(featured)} of them"
+            + (
+                f": {', '.join(featured[:-1])} and {featured[-1]}."
+                if len(featured) > 1
+                else f": {featured[0]}."
+                if featured
+                else "."
+            )
+        )
+    elif featured:
+        visitors = ", ".join(featured[:-1]) + (
+            f" and {featured[-1]}" if len(featured) > 1 else featured[0]
+        )
+        opening = f"This BirdCanvas artwork features {visitors}."
     else:
-        opening = "This early BirdCanvas artwork preserves a day in the garden, although the individual visitors were not recorded."
+        opening = (
+            "This early BirdCanvas artwork preserves a day in the garden, "
+            "although the individual visitors were not recorded."
+        )
 
-    emphasis = ""
-    if hero:
-        emphasis = f" The composition gives particular prominence to {', '.join(hero)}."
     atmosphere = f" Its atmosphere is {mood.rstrip('.').lower()}." if mood else ""
-    narrative = opening + emphasis + atmosphere
+    narrative = opening + atmosphere
 
     return {
         "narrative": narrative,
         "collection": collection,
         "composition": composition,
         "hero_birds": hero,
-        "character_birds": character,
         "supporting_birds": supporting,
-        "visitor_count": len(species),
+        "featured_birds": featured,
+        "heard_birds": heard,
+        "visitor_count": len(heard or featured),
+        "featured_count": len(featured),
         "observation_date": observation_date,
     }
 
@@ -134,8 +169,10 @@ def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str,
         "observation_started_at": str(manifest.get("observation_started_at", "")),
         "observation_ended_at": str(manifest.get("observation_ended_at", "")),
         "detections_total": manifest.get("detections_total", 0),
-        "species_detected": manifest.get("species_detected", []),
+        "species_detected": manifest.get("species_detected", species),
+        "species_eligible": manifest.get("species_eligible", manifest.get("species_used", species)),
         "species_used": manifest.get("species_used", species),
+        "species_not_featured": manifest.get("species_not_featured", []),
         "species_excluded": manifest.get("species_excluded", []),
         "generation_frequency": str(manifest.get("generation_frequency", "")),
         "created_at": created_at,
