@@ -29,17 +29,17 @@ class BirdImageTests(unittest.TestCase):
             "Dipper": "Dipper Grönvold.jpg",
             "Wheatear": "Wheatear Grönvold.jpg",
             "House Sparrow": "Passer%20domesticus%20m.jpg",
-            "Starling": "Sturnus%20vulgaris%20m.jpg",
+            "Starling": "SturnusVulgarisGould.jpg",
             "Goldfinch": "11002252763",
             "Greenfinch": "Chloris%20chloris",
             "Chaffinch": "Fringilla%20coelebs%20m.jpg",
-            "Woodpigeon": "6092234605",
+            "Woodpigeon": "Wood%20pigeon.jpg",
             "Collared Dove": "Columba%20decaocto%20Frivaldski.jpg",
             "Magpie": "14564915648",
             "Jackdaw": "14771431613",
             "Carrion Crow": "Wilhelm%20von%20Wright%20-%20Crow",
             "Black-headed Gull": "00047.jpg",
-            "Herring Gull": "00122.jpg",
+            "Herring Gull": "Larus%20argentatus%20Gould.jpg",
             "Green Woodpecker": "14565126947",
             "Great Spotted Woodpecker": "00015.jpg",
             "Swift": "Wellcome%20V0022226ER.jpg",
@@ -60,11 +60,12 @@ class BirdImageTests(unittest.TestCase):
     def test_plain_field_guide_sources_override_scenic_fallbacks(self):
         expected = {
             "Blackbird": ("Wilhelm von Wright", "images.rawpixel.com"),
-            "Blue Tit": ("John Gerrard Keulemans", "Cyanistes%20caeruleus%201869.jpg"),
+            "Blue Tit": ("Joseph Wolf", "Feathered%20Favourites"),
             "Coal Tit": ("von Wright brothers", "00087.jpg"),
             "Dunnock": ("John Gould & H. C. Richter", "NGA%2053544.jpg"),
-            "Great Tit": ("von Wright brothers", "00141.jpg"),
-            "Robin": ("Benjamin Fawcett", "Redbreast.jpg"),
+            "Great Tit": ("John Gould", "ParusMajorGould.jpg"),
+            "Robin": ("John Gould & H. C. Richter", "Erithacus%20rubecula"),
+            "Starling": ("John Gould & H. C. Richter", "SturnusVulgarisGould.jpg"),
             "Wren": ("von Wright brothers", "00088.jpg"),
         }
         for name, (artist, filename) in expected.items():
@@ -193,10 +194,25 @@ class BirdImageTests(unittest.TestCase):
         )
         self.assertIsNotNone(illustration)
         self.assertFalse(illustration["overridden"])
-        self.assertEqual(illustration["artist"], "John Gerrard Keulemans")
+        self.assertEqual(illustration["artist"], "Joseph Wolf")
         self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
         self.assertIn("Blue+Tit", illustration["image_url"])
         self.assertIn("v=", illustration["image_url"])
+
+    def test_colour_first_sources_override_plainer_defaults(self):
+        expected = {
+            "Blue Tit": "Joseph Wolf",
+            "Great Tit": "John Gould",
+            "Robin": "John Gould & H. C. Richter",
+            "Starling": "John Gould & H. C. Richter",
+            "Herring Gull": "John Gould",
+            "Woodpigeon": "John Gould & Edward Lear",
+        }
+        for name, artist in expected.items():
+            with self.subTest(name=name):
+                result = illustration_for(name)
+                self.assertIsNotNone(result)
+                self.assertEqual(result["artist"], artist)
 
     def test_finished_sources_can_supply_normalised_crop_hints(self):
         coal = illustration_for("Coal Tit", "Periparus ater")
