@@ -139,6 +139,30 @@ class BirdImageTests(unittest.TestCase):
 
                 self.assertFalse(default_info["overridden"])
 
+    def test_phone_display_illustration_uses_custom_override(self):
+        with tempfile.TemporaryDirectory() as folder:
+            payload = io.BytesIO()
+            Image.new("RGB", (500, 500), "white").save(payload, "PNG")
+
+            with patch("paths.DATA_DIR", Path(folder) / "data"):
+                bird_images.save_tile_override(
+                    "Northern Pintail",
+                    "Anas acuta",
+                    payload.getvalue(),
+                    filename="pintail.png",
+                )
+                illustration = bird_images.display_illustration_for(
+                    "Northern Pintail",
+                    "Anas acuta",
+                )
+
+        self.assertIsNotNone(illustration)
+        self.assertTrue(illustration["overridden"])
+        self.assertEqual(illustration["artist"], "Custom replacement")
+        self.assertEqual(illustration["license"], "")
+        self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
+        self.assertIn("Northern+Pintail", illustration["image_url"])
+
     def test_custom_override_rejects_non_image_payload(self):
         with tempfile.TemporaryDirectory() as folder:
             with patch("paths.DATA_DIR", Path(folder) / "data"):
