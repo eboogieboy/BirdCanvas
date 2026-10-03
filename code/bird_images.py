@@ -7,7 +7,7 @@ Magic Mirror.
 """
 from __future__ import annotations
 
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=700"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
@@ -330,6 +330,40 @@ def _override_info(common_name: str, scientific_name: str = "") -> dict | None:
         "source_url": "",
         "overridden": True,
     }
+
+
+def display_illustration_for(common_name: str, scientific_name: str = "") -> dict | None:
+    """Return the illustration used by the phone bird cards, including overrides."""
+    override = _override_info(common_name, scientific_name)
+    if override:
+        path = override["path"]
+        revision = path.name
+        try:
+            stat = path.stat()
+            revision = f"{revision}-{stat.st_mtime_ns}-{stat.st_size}"
+        except OSError:
+            pass
+
+        query = urlencode(
+            {
+                "name": str(common_name).strip(),
+                "scientific": str(scientific_name).strip(),
+                "v": revision,
+            }
+        )
+        return {
+            "image_url": f"/api/mirror/bird-image?{query}",
+            "artist": str(override.get("artist") or OVERRIDE_ARTIST),
+            "source": "BirdCanvas custom replacement",
+            "source_url": "",
+            "license": "",
+            "overridden": True,
+        }
+
+    illustration = illustration_for(common_name, scientific_name)
+    if illustration is None:
+        return None
+    return {**illustration, "overridden": False}
 
 
 def _tile_cache(common_name: str, scientific_name: str = ""):
