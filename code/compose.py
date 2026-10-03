@@ -455,9 +455,12 @@ Do not give every bird equal visual weight.
 One bird may be the hero; the others may be supporting, quiet or partially
 embedded in material, pattern, light, shadow or negative space.
 
-Every selected species must still be recognisable through broad silhouette,
-posture, characteristic colour placement or a small number of diagnostic cues.
-Recognition should survive stylisation, but minor field marks are not the point.
+Every selected species should retain a light visual identity, but the brief must
+not turn into an ornithology specification. Use one or two restrained identity
+hints per species at most; do not enumerate field marks, anatomy or plumage.
+
+The artistic medium must transform the birds. A conventionally rendered bird
+placed inside an abstract or sculptural composition is a failure of integration.
 
 Do not force birds into separate compartments or reserved positions.
 Do not make the composition look like a field-guide plate.
@@ -493,7 +496,8 @@ Return ONLY valid JSON in this exact format:
 
 Rules:
 - Every selected species must be represented, but the artwork does not need to be about birds at first glance.
-- bird_integration should describe a flexible artistic relationship, not fixed boxes or coordinates.
+- bird_integration should describe how the artistic medium transforms the birds, not their detailed anatomy, plumage or field marks.
+- bird_integration must not ask for a normal naturalistic bird simply placed inside an abstract composition.
 - hero_birds may contain zero or one selected species.
 - supporting_birds should contain the remaining selected species when useful.
 - visual_focus must describe the artwork itself: light, material, texture, geometry, colour or composition, never a bird.
@@ -921,6 +925,7 @@ Return ONLY valid JSON:
     {{
       "index": 1,
       "species": "",
+      "art_cue": "",
       "recognition_cues": ["", ""],
       "avoid_confusions": [""]
     }}
@@ -930,14 +935,17 @@ Return ONLY valid JSON:
 Rules:
 - Return exactly {exact_count} entries in the supplied order.
 - Preserve exact species names.
-- Give each species 2 or 3 broad, high-value recognition cues.
+- Give each species one art_cue: a short, evocative 6-14 word identity hint suitable for an artist.
+- art_cue should use only one or two broad signals such as silhouette, movement or a signature colour accent.
+- Give each species 2 or 3 broader recognition_cues for the verifier only.
 - Prefer silhouette, bill shape, overall colour blocking, head pattern,
-  tail shape or characteristic posture.
+  tail shape or characteristic posture in recognition_cues.
 - Do not specify a position, bounding box, exact scale or composition.
 - Do not demand every small field mark.
-- Stylisation and partial integration into the artwork are allowed.
+- Stylisation and deep integration into the artwork are allowed.
 - avoid_confusions should mention only the most important likely visual mix-up.
-- This guide protects recognisability; it must not dictate the artwork.
+- The image generator will receive art_cue, NOT the detailed recognition_cues.
+- The detailed guide protects recognisability during verification; it must not dictate the artwork.
 """
     )
 
@@ -957,6 +965,7 @@ Rules:
                     f"Bird plan changed species order: expected {expected_species!r}, received {actual_species!r}"
                 )
 
+            art_cue = str(item.get("art_cue", "")).strip()
             cues = [
                 str(value).strip()
                 for value in item.get("recognition_cues", [])
@@ -967,12 +976,15 @@ Rules:
                 for value in item.get("avoid_confusions", [])
                 if str(value).strip()
             ]
+            if not art_cue:
+                raise ValueError(f"No art cue for {expected_species}.")
             if not cues:
                 raise ValueError(f"No recognition cues for {expected_species}.")
 
             cleaned.append({
                 "index": index,
                 "species": expected_species,
+                "art_cue": art_cue,
                 "recognition_cues": cues[:3],
                 "avoid_confusions": confusions[:2],
             })
@@ -985,6 +997,7 @@ Rules:
             {
                 "index": index,
                 "species": species,
+                "art_cue": f"{species}: recognisable silhouette with one restrained signature colour or shape cue",
                 "recognition_cues": [
                     "recognisable species-specific silhouette",
                     "characteristic broad colour or marking pattern",
@@ -996,6 +1009,21 @@ Rules:
             for index, species in enumerate(birds, start=1)
         ]
 
+
+
+def format_art_cues_for_prompt(bird_plan):
+    sections = []
+
+    for bird in bird_plan:
+        cue = str(bird.get("art_cue", "")).strip()
+        if not cue:
+            cue = f'{bird["species"]}: recognisable identity through one restrained visual cue'
+        sections.append(
+            f'FEATURED SPECIES {bird["index"]}: {bird["species"]}\n'
+            f'ART IDENTITY CUE: {cue}'
+        )
+
+    return "\n\n".join(sections)
 
 
 def format_bird_plan_for_prompt(bird_plan):
@@ -1023,7 +1051,7 @@ def create_image_prompt(
     correction=None,
 ):
     featured_count = len(birds)
-    plan_text = format_bird_plan_for_prompt(bird_plan)
+    art_cues_text = format_art_cues_for_prompt(bird_plan)
     correction_text = ""
 
     if correction:
@@ -1056,8 +1084,11 @@ factual list of birds heard in the garden.
 Creative brief:
 {json.dumps(brief, indent=2)}
 
-Recognition guide:
-{plan_text}
+Art identity cues:
+{art_cues_text}
+
+The detailed ornithological recognition guide is intentionally withheld from
+the image generator. A separate verifier will check species identity afterwards.
 
 {correction_text}
 
@@ -1066,8 +1097,10 @@ Priorities:
 - let the selected movement control composition, atmosphere and material
 - the birds do not need equal prominence or separate positions
 - one bird may be a hero while others are quiet, embedded or discovered later
-- each featured species must remain recognisable somewhere through its broad cues
-- stylisation, abstraction and integration into pattern/material/light are welcome
+- each featured species should remain recognisable through only the light art identity cue supplied
+- transform the birds into the movement's own material language rather than drawing ordinary birds and decorating around them
+- a conventionally rendered naturalistic bird placed inside an abstract, sculptural or graphic scene is a failure
+- stylisation, abstraction and integration into pattern/material/light are strongly preferred
 - do not turn the image into a wildlife plate or a grid of bird portraits
 - do not add obvious unlisted real bird species
 - important recognisable bird forms should survive the final 9:16 crop
@@ -1088,15 +1121,17 @@ Do not explain your work. Return only the finished image prompt.
     final_prompt = f"""
 {artistic_prompt}
 
-FEATURED SPECIES RECOGNITION GUIDE
+FEATURED SPECIES ART IDENTITY CUES
 
-{plan_text}
+{art_cues_text}
 
 BIRDCANVAS EXECUTION RULES
 
-- Include every featured species in an identifiable way.
+- Include every featured species in an identifiable but transformed way.
 - Do not force separate compartments, reserved coordinates or equal scale.
-- Preserve broad recognition cues; minor plumage details are secondary.
+- Use only the supplied lightweight identity cues; do not elaborate them into field-guide anatomy.
+- The birds should inherit the artwork's material, geometry, texture and visual logic.
+- A normally rendered naturalistic bird inserted into an otherwise abstract, sculptural or graphic artwork is a failure.
 - Birds may emerge from material, pattern, shadow, reflection, negative space,
   abstraction or landscape structure if they remain recognisable.
 - One species may dominate and the others may be subtle.
@@ -1134,8 +1169,9 @@ ART-FIRST BIRD GUIDANCE:
 - Every selected species should be recognisable somewhere in the finished work.
 - One selected bird may be prominent; the others may be smaller or subtly
   integrated.
-- Preserve broad silhouette, posture and characteristic colour/marking cues.
-- Do not obsess over tiny field marks.
+- Use only a few broad identity signals; do not construct a complete field-guide rendering.
+- The selected birds should be transformed by the chosen medium, not painted conventionally and placed on top of it.
+- If the surrounding work is abstract, sculptural, textile, ceramic, architectural or graphic, the birds must visibly belong to that same material language.
 - Do not add obvious unlisted real bird species.
 - Do not arrange the birds as equal isolated specimens.
 - Composition, atmosphere, material, light and beauty are the primary visual
@@ -1194,6 +1230,11 @@ Score this artwork from 1-10 for:
 - adherence to the movement
 - contemporary art quality
 - bird integration
+
+For bird integration, score highly only when the birds genuinely inherit the
+movement's material and visual language. If ordinary or naturalistic birds are
+simply placed into an otherwise abstract/sculptural/graphic composition, bird
+integration should score 3 or below.
 
 Return ONLY JSON:
 
