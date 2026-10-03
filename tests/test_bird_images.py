@@ -18,8 +18,8 @@ from bird_images import illustration_for
 class BirdImageTests(unittest.TestCase):
     def test_expanded_historical_library_covers_common_species(self):
         expected = {
-            "Long-tailed Tit": "Long-tailed Titmouse Grönvold.jpg",
-            "Song Thrush": "Song Thrush Grönvold.jpg",
+            "Long-tailed Tit": "RMNH.ART.422",
+            "Song Thrush": "Turdus%20philomelos%201873.jpg",
             "Mistle Thrush": "Missel Thrush Grönvold.jpg",
             "Nuthatch": "Nuthatch Grönvold.jpg",
             "Pied Wagtail": "Pied Wagtail Grönvold.jpg",
@@ -28,16 +28,16 @@ class BirdImageTests(unittest.TestCase):
             "Whitethroat": "Whitethroat Grönvold.jpg",
             "Dipper": "Dipper Grönvold.jpg",
             "Wheatear": "Wheatear Grönvold.jpg",
-            "House Sparrow": "Feathered%20Favourites",
-            "Starling": "00005.jpg",
-            "Goldfinch": "11002252763",
+            "House Sparrow": "A%20House%20Sparrow",
+            "Starling": "A%20Starling",
+            "Goldfinch": "A%20European%20Goldfinch",
             "Greenfinch": "Chloris%20chloris",
-            "Chaffinch": "Chaffinch%20%28PSF%29.jpg",
+            "Chaffinch": "Fringilla%20coelebs%20m.jpg",
             "Woodpigeon": "6092234605",
             "Collared Dove": "Columba%20decaocto%20Frivaldski.jpg",
             "Magpie": "14564915648",
             "Jackdaw": "14771431613",
-            "Carrion Crow": "14568695650",
+            "Carrion Crow": "A%20Crow",
             "Black-headed Gull": "00047.jpg",
             "Herring Gull": "00122.jpg",
             "Green Woodpecker": "14565126947",
@@ -57,10 +57,27 @@ class BirdImageTests(unittest.TestCase):
                 self.assertIn(unquote(filename), unquote(result["image_url"]))
                 self.assertEqual(result["license"], "Public domain")
 
+    def test_plain_field_guide_sources_override_scenic_fallbacks(self):
+        expected = {
+            "Blackbird": ("James Sowerby", "A%20Blackbird"),
+            "Blue Tit": ("James Sowerby", "A%20Blue%20Tit"),
+            "Coal Tit": ("Yūshi Ishizaki", "RMNH.ART.411"),
+            "Dunnock": ("James Sowerby", "A%20Hedge%20Sparrow"),
+            "Great Tit": ("Yūshi Ishizaki", "RMNH.ART.387"),
+            "Robin": ("Benjamin Fawcett", "Redbreast.jpg"),
+            "Wren": ("Yūshi Ishizaki", "RMNH.ART.423"),
+        }
+        for name, (artist, filename) in expected.items():
+            with self.subTest(name=name):
+                result = illustration_for(name)
+                self.assertIsNotNone(result)
+                self.assertEqual(result["artist"], artist)
+                self.assertIn(filename, result["image_url"])
+
     def test_scientific_name_can_resolve_an_illustration(self):
         result = illustration_for("Unexpected BirdNET label", "Aegithalos caudatus")
         self.assertIsNotNone(result)
-        self.assertIn("Long-tailed%20Titmouse%20Gr%C3%B6nvold.jpg", result["image_url"])
+        self.assertIn("RMNH.ART.422", result["image_url"])
 
 
     def test_tile_cache_downloads_once_and_serves_local_square_jpeg(self):
