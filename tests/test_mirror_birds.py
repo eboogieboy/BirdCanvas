@@ -13,11 +13,12 @@ TZ = ZoneInfo("Europe/London")
 
 
 class MirrorBirdFeedTests(unittest.TestCase):
-    def test_feed_selects_recent_species_then_sorts_tiles_alphabetically(self):
+    def test_feed_uses_today_then_selects_recent_species_and_sorts_alphabetically(self):
         session = {
-            "start": "2026-10-03T04:00:00+01:00",
+            "start": "2026-10-03T00:00:00+01:00",
+            "end": "2026-10-03T09:00:00+01:00",
             "species_count": 4,
-            # current_session returns birds most-recently-heard first.
+            # day_session returns birds most-recently-heard first.
             "birds": [
                 {"name": "Wren", "scientific_name": "Troglodytes troglodytes"},
                 {"name": "Robin", "scientific_name": "Erithacus rubecula"},
@@ -26,9 +27,10 @@ class MirrorBirdFeedTests(unittest.TestCase):
             ],
         }
         now = datetime(2026, 10, 3, 9, tzinfo=TZ)
-        with patch.object(mirror_birds, "current_session", return_value=session):
+        with patch.object(mirror_birds, "day_session", return_value=session) as day:
             result = mirror_birds.mirror_birds(now=now, limit=3)
 
+        day.assert_called_once_with("2026-10-03", now=now)
         self.assertEqual(
             [bird["name"] for bird in result["birds"]],
             ["Blackbird", "Robin", "Wren"],
@@ -36,13 +38,21 @@ class MirrorBirdFeedTests(unittest.TestCase):
         self.assertEqual(result["species_count"], 4)
         self.assertEqual(result["tiles_returned"], 3)
         self.assertEqual(result["order"], "alphabetical")
-        self.assertEqual(result["selection"], "most_recent_species")
+        self.assertEqual(result["selection"], "calendar_day_most_recent_species")
+        self.assertEqual(result["day_start"], "2026-10-03T00:00:00+01:00")
+        self.assertEqual(result["day_end"], "2026-10-03T09:00:00+01:00")
         self.assertIn("name=Blackbird", result["birds"][0]["image_url"])
 
     def test_feed_limit_is_bounded(self):
-        session = {"start": "", "species_count": 0, "birds": []}
-        with patch.object(mirror_birds, "current_session", return_value=session):
-            result = mirror_birds.mirror_birds(limit=999)
+        session = {
+            "start": "2026-10-03T00:00:00+01:00",
+            "end": "2026-10-03T09:00:00+01:00",
+            "species_count": 0,
+            "birds": [],
+        }
+        now = datetime(2026, 10, 3, 9, tzinfo=TZ)
+        with patch.object(mirror_birds, "day_session", return_value=session):
+            result = mirror_birds.mirror_birds(now=now, limit=999)
         self.assertEqual(result["max_tiles"], 24)
 
 
