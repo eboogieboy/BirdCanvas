@@ -18,7 +18,7 @@ from bird_images import illustration_for
 class BirdImageTests(unittest.TestCase):
     def test_expanded_historical_library_covers_common_species(self):
         expected = {
-            "Long-tailed Tit": "RMNH.ART.422",
+            "Long-tailed Tit": "rawpixel",
             "Song Thrush": "Turdus%20philomelos%201873.jpg",
             "Mistle Thrush": "Missel Thrush Grönvold.jpg",
             "Nuthatch": "Nuthatch Grönvold.jpg",
@@ -28,8 +28,8 @@ class BirdImageTests(unittest.TestCase):
             "Whitethroat": "Whitethroat Grönvold.jpg",
             "Dipper": "Dipper Grönvold.jpg",
             "Wheatear": "Wheatear Grönvold.jpg",
-            "House Sparrow": "A%20House%20Sparrow",
-            "Starling": "A%20Starling",
+            "House Sparrow": "Passer%20domesticus%20m.jpg",
+            "Starling": "Sturnus%20vulgaris%20m.jpg",
             "Goldfinch": "A%20European%20Goldfinch",
             "Greenfinch": "Chloris%20chloris",
             "Chaffinch": "Fringilla%20coelebs%20m.jpg",
@@ -37,7 +37,7 @@ class BirdImageTests(unittest.TestCase):
             "Collared Dove": "Columba%20decaocto%20Frivaldski.jpg",
             "Magpie": "14564915648",
             "Jackdaw": "14771431613",
-            "Carrion Crow": "A%20Crow",
+            "Carrion Crow": "Wilhelm%20von%20Wright%20-%20Crow",
             "Black-headed Gull": "00047.jpg",
             "Herring Gull": "00122.jpg",
             "Green Woodpecker": "14565126947",
@@ -55,17 +55,17 @@ class BirdImageTests(unittest.TestCase):
                 result = illustration_for(name)
                 self.assertIsNotNone(result)
                 self.assertIn(unquote(filename), unquote(result["image_url"]))
-                self.assertEqual(result["license"], "Public domain")
+                self.assertTrue(result["license"])
 
     def test_plain_field_guide_sources_override_scenic_fallbacks(self):
         expected = {
-            "Blackbird": ("James Sowerby", "A%20Blackbird"),
-            "Blue Tit": ("James Sowerby", "A%20Blue%20Tit"),
-            "Coal Tit": ("Yūshi Ishizaki", "RMNH.ART.411"),
-            "Dunnock": ("James Sowerby", "A%20Hedge%20Sparrow"),
-            "Great Tit": ("Yūshi Ishizaki", "RMNH.ART.387"),
+            "Blackbird": ("Wilhelm von Wright", "images.rawpixel.com"),
+            "Blue Tit": ("John Gerrard Keulemans", "Cyanistes%20caeruleus%201869.jpg"),
+            "Coal Tit": ("von Wright brothers", "00087.jpg"),
+            "Dunnock": ("John Gould & H. C. Richter", "NGA%2053544.jpg"),
+            "Great Tit": ("von Wright brothers", "00141.jpg"),
             "Robin": ("Benjamin Fawcett", "Redbreast.jpg"),
-            "Wren": ("Yūshi Ishizaki", "RMNH.ART.423"),
+            "Wren": ("von Wright brothers", "00088.jpg"),
         }
         for name, (artist, filename) in expected.items():
             with self.subTest(name=name):
@@ -77,7 +77,7 @@ class BirdImageTests(unittest.TestCase):
     def test_scientific_name_can_resolve_an_illustration(self):
         result = illustration_for("Unexpected BirdNET label", "Aegithalos caudatus")
         self.assertIsNotNone(result)
-        self.assertIn("RMNH.ART.422", result["image_url"])
+        self.assertIn("images.rawpixel.com", result["image_url"])
 
 
     def test_tile_cache_downloads_once_and_serves_local_square_jpeg(self):
@@ -193,10 +193,26 @@ class BirdImageTests(unittest.TestCase):
         )
         self.assertIsNotNone(illustration)
         self.assertFalse(illustration["overridden"])
-        self.assertEqual(illustration["artist"], "James Sowerby")
+        self.assertEqual(illustration["artist"], "John Gerrard Keulemans")
         self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
         self.assertIn("Blue+Tit", illustration["image_url"])
         self.assertIn("v=", illustration["image_url"])
+
+    def test_finished_sources_can_supply_normalised_crop_hints(self):
+        coal = illustration_for("Coal Tit", "Periparus ater")
+        self.assertIsNotNone(coal)
+        self.assertEqual(coal["crop"], (0.22, 0.07, 0.80, 0.43))
+        self.assertEqual(coal["license"], "CC BY-SA 4.0")
+
+        source = Image.new("RGB", (1000, 1000), "white")
+        for x in range(250, 750):
+            for y in range(100, 400):
+                source.putpixel((x, y), (30, 30, 30))
+        tile = bird_images._clean_field_guide_tile(
+            source,
+            crop=(0.20, 0.05, 0.80, 0.45),
+        )
+        self.assertEqual(tile.size, (600, 600))
 
     def test_renderer_version_invalidates_cached_default_tiles(self):
         with tempfile.TemporaryDirectory() as folder:
