@@ -30,7 +30,7 @@ class BirdImageTests(unittest.TestCase):
             "Wheatear": "Wheatear Grönvold.jpg",
             "House Sparrow": "Passer%20domesticus%20m.jpg",
             "Starling": "Sturnus%20vulgaris%20m.jpg",
-            "Goldfinch": "A%20European%20Goldfinch",
+            "Goldfinch": "11002252763",
             "Greenfinch": "Chloris%20chloris",
             "Chaffinch": "Fringilla%20coelebs%20m.jpg",
             "Woodpigeon": "6092234605",
