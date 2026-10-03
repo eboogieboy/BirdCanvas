@@ -495,7 +495,7 @@ function renderBirdSession(session){
       ?`<img class="bird-illustration" src="${escapeHtml(illustration.image_url)}" alt="${escapeHtml(bird.name)} illustration" loading="lazy">`
       :`<div class="bird-fallback" aria-hidden="true">${escapeHtml((bird.name||'?').slice(0,1))}</div>`;
     const excluded=bird.excluded_from_artwork?'<span class="bird-excluded">Excluded from artwork</span>':'';
-    const credit=illustration?`<div class="bird-credit">${escapeHtml(illustration.artist)} · public domain</div>`:'';
+    const credit=illustration?`<div class="bird-credit">${escapeHtml([illustration.artist,illustration.license].filter(Boolean).join(' · '))}</div>`:'';
     card.innerHTML=`${visual}<div class="bird-copy"><h3>${escapeHtml(bird.name)}</h3><div class="bird-scientific">${escapeHtml(bird.scientific_name||'')}</div><div class="bird-meta">${bird.detections} detection${bird.detections===1?'':'s'} · last heard ${birdClock(bird.last_heard)} · best ${Math.round((bird.max_confidence||0)*100)}%</div>${excluded}${credit}</div>`;
     grid.append(card);
   }
@@ -553,7 +553,7 @@ function renderBirdCatalogue(){
         try{
           await post('/api/birds/illustration/restore',{name:bird.name,scientific:bird.scientific_name||''});
           $('#bird-override-status').textContent=`${bird.name} restored to the default illustration.`;
-          await refreshBirdCatalogue();
+          await refreshBirds();
         }catch(error){
           $('#bird-override-status').textContent=error.message;
           restoreButton.disabled=false;
@@ -685,8 +685,8 @@ $('#bird-override-file').onchange=async event=>{
     const response=await fetch('/api/birds/illustration',{method:'POST',body:form});
     const data=await response.json();
     if(!response.ok)throw new Error(data.error||'Replacement failed');
-    $('#bird-override-status').textContent=`${bird.name} updated. The Magic Mirror will pick it up automatically.`;
-    await refreshBirdCatalogue();
+    $('#bird-override-status').textContent=`${bird.name} updated. The bird list and Magic Mirror will pick it up automatically.`;
+    await refreshBirds();
   }catch(error){
     $('#bird-override-status').textContent=error.message;
   }finally{
