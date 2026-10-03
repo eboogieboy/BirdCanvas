@@ -13,7 +13,7 @@ from urllib.parse import quote, urlencode
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=900"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
 OVERRIDE_ARTIST = "Custom replacement"
-TILE_RENDER_VERSION = 4
+TILE_RENDER_VERSION = 5
 TILE_SIZE = 600
 TILE_INSET = 548
 TILE_BACKGROUND = (250, 249, 245)
@@ -103,6 +103,53 @@ _FINISHED_STARLING = _commons_entry(
     "Sturnus vulgaris m.jpg",
     "Wilhelm von Wright",
 )
+
+COLOUR_FIELD_GUIDE_ILLUSTRATIONS = {
+    # Gould/Richter and similarly rich hand-coloured plates are preferred
+    # where a good public-domain source exists. These deliberately favour
+    # vivid, accurate plumage over the very plain study-drawing look.
+    "great tit": _commons_entry("ParusMajorGould.jpg", "John Gould"),
+    "parus major": _commons_entry("ParusMajorGould.jpg", "John Gould"),
+
+    "european robin": _commons_entry(
+        "Erithacus rubecula. John Gould. The birds of Great Britain. Volume II. 1873.jpg",
+        "John Gould & H. C. Richter",
+    ),
+    "robin": _commons_entry(
+        "Erithacus rubecula. John Gould. The birds of Great Britain. Volume II. 1873.jpg",
+        "John Gould & H. C. Richter",
+    ),
+    "erithacus rubecula": _commons_entry(
+        "Erithacus rubecula. John Gould. The birds of Great Britain. Volume II. 1873.jpg",
+        "John Gould & H. C. Richter",
+    ),
+
+    "common starling": _commons_entry("SturnusVulgarisGould.jpg", "John Gould & H. C. Richter"),
+    "starling": _commons_entry("SturnusVulgarisGould.jpg", "John Gould & H. C. Richter"),
+    "sturnus vulgaris": _commons_entry("SturnusVulgarisGould.jpg", "John Gould & H. C. Richter"),
+
+    "eurasian blue tit": _commons_entry(
+        "60 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11043862023).jpg",
+        "Joseph Wolf",
+    ),
+    "blue tit": _commons_entry(
+        "60 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11043862023).jpg",
+        "Joseph Wolf",
+    ),
+    "cyanistes caeruleus": _commons_entry(
+        "60 of 'Feathered Favourites. Twelve coloured pictures of British birds, from drawings by Joseph Wolf. (With descriptions in verse by various authors.)' (11043862023).jpg",
+        "Joseph Wolf",
+    ),
+
+    "european herring gull": _commons_entry("Larus argentatus Gould.jpg", "John Gould"),
+    "herring gull": _commons_entry("Larus argentatus Gould.jpg", "John Gould"),
+    "larus argentatus": _commons_entry("Larus argentatus Gould.jpg", "John Gould"),
+
+    "common woodpigeon": _commons_entry("Wood pigeon.jpg", "John Gould & Edward Lear"),
+    "woodpigeon": _commons_entry("Wood pigeon.jpg", "John Gould & Edward Lear"),
+    "wood pigeon": _commons_entry("Wood pigeon.jpg", "John Gould & Edward Lear"),
+    "columba palumbus": _commons_entry("Wood pigeon.jpg", "John Gould & Edward Lear"),
+}
 
 PLAIN_FIELD_GUIDE_ILLUSTRATIONS = {
     "eurasian blackbird": _FINISHED_BLACKBIRD,
@@ -469,7 +516,9 @@ def illustration_for(common_name: str, scientific_name: str = "") -> dict | None
     common_key = str(common_name).strip().casefold()
     scientific_key = str(scientific_name).strip().casefold()
     entry = (
-        PLAIN_FIELD_GUIDE_ILLUSTRATIONS.get(common_key)
+        COLOUR_FIELD_GUIDE_ILLUSTRATIONS.get(common_key)
+        or COLOUR_FIELD_GUIDE_ILLUSTRATIONS.get(scientific_key)
+        or PLAIN_FIELD_GUIDE_ILLUSTRATIONS.get(common_key)
         or PLAIN_FIELD_GUIDE_ILLUSTRATIONS.get(scientific_key)
         or ILLUSTRATIONS.get(common_key)
         or ILLUSTRATIONS.get(scientific_key)
@@ -626,7 +675,7 @@ def _read_tile_metadata(path) -> dict:
 
 def _clean_field_guide_tile(source, crop=None):
     """Normalise a finished bird plate into a calm, consistent square field-guide tile."""
-    from PIL import Image, ImageChops, ImageFilter, ImageOps, ImageStat
+    from PIL import Image, ImageChops, ImageEnhance, ImageFilter, ImageOps, ImageStat
 
     image = ImageOps.exif_transpose(source).convert("RGB")
     if crop:
@@ -641,6 +690,13 @@ def _clean_field_guide_tile(source, crop=None):
         if box[2] > box[0] and box[3] > box[1]:
             image = image.crop(box)
     image.thumbnail((1100, 1100), Image.Resampling.LANCZOS)
+
+    # The source scans vary a lot in age and saturation. A restrained lift
+    # keeps plumage lively on the phone and Mirror without changing the
+    # species' field marks or turning the tiles into poster art.
+    image = ImageEnhance.Color(image).enhance(1.14)
+    image = ImageEnhance.Contrast(image).enhance(1.06)
+    image = ImageEnhance.Sharpness(image).enhance(1.04)
 
     width, height = image.size
     edge = max(4, min(width, height) // 18)
