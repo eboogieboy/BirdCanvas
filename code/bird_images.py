@@ -13,16 +13,66 @@ from urllib.parse import quote, urlencode
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=900"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
 OVERRIDE_ARTIST = "Custom replacement"
-TILE_RENDER_VERSION = 2
+TILE_RENDER_VERSION = 3
 TILE_SIZE = 600
 TILE_INSET = 548
 TILE_BACKGROUND = (250, 249, 245)
 
 # Common names are normalised to casefold before lookup.
-# Prefer the clean Grönvold/Butler plates where available. For species not
-# covered by that set, use the clearest accurate public-domain natural-history
-# illustration available on Commons rather than forcing a busier plate merely
-# for artist consistency.
+#
+# The first-choice set below is deliberately stricter than the broad fallback
+# library: one accurately identified bird on mostly plain paper, little or no
+# perch, and no decorative habitat scene. These are the "plain field guide"
+# thumbnails used for the common BirdCanvas species.
+PLAIN_FIELD_GUIDE_ILLUSTRATIONS = {
+    "eurasian blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
+    "common blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
+    "blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
+    "turdus merula": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
+
+    "eurasian blue tit": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
+    "blue tit": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
+    "cyanistes caeruleus": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
+
+    "great tit": ("Naturalis Biodiversity Center - RMNH.ART.387 - Parus major - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "parus major": ("Naturalis Biodiversity Center - RMNH.ART.387 - Parus major - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "coal tit": ("Naturalis Biodiversity Center - RMNH.ART.411 - Parus ater - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "periparus ater": ("Naturalis Biodiversity Center - RMNH.ART.411 - Parus ater - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "long-tailed tit": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "long-tailed titmouse": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "aegithalos caudatus": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+
+    "dunnock": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
+    "hedge accentor": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
+    "prunella modularis": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
+
+    "european robin": ("Redbreast.jpg", "Benjamin Fawcett"),
+    "robin": ("Redbreast.jpg", "Benjamin Fawcett"),
+    "erithacus rubecula": ("Redbreast.jpg", "Benjamin Fawcett"),
+    "song thrush": ("Turdus philomelos 1873.jpg", "John Gerrard Keulemans"),
+    "turdus philomelos": ("Turdus philomelos 1873.jpg", "John Gerrard Keulemans"),
+
+    "eurasian wren": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "wren": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "troglodytes troglodytes": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+
+    "house sparrow": ("James Sowerby - A House Sparrow - B1978.43.145 - Yale Center for British Art.jpg", "James Sowerby"),
+    "passer domesticus": ("James Sowerby - A House Sparrow - B1978.43.145 - Yale Center for British Art.jpg", "James Sowerby"),
+    "common starling": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
+    "starling": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
+    "sturnus vulgaris": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
+    "european goldfinch": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
+    "goldfinch": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
+    "carduelis carduelis": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
+    "common chaffinch": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
+    "chaffinch": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
+    "fringilla coelebs": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
+
+    "carrion crow": ("James Sowerby - A Crow - B1978.43.117 - Yale Center for British Art.jpg", "James Sowerby"),
+    "corvus corone": ("James Sowerby - A Crow - B1978.43.117 - Yale Center for British Art.jpg", "James Sowerby"),
+}
+
+# Broader fallback library for species not yet represented by the stricter set.
 ILLUSTRATIONS = {
     # Thrushes, chats and familiar garden birds.
     "eurasian blackbird": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
@@ -336,7 +386,12 @@ ILLUSTRATIONS = {
 def illustration_for(common_name: str, scientific_name: str = "") -> dict | None:
     common_key = str(common_name).strip().casefold()
     scientific_key = str(scientific_name).strip().casefold()
-    entry = ILLUSTRATIONS.get(common_key) or ILLUSTRATIONS.get(scientific_key)
+    entry = (
+        PLAIN_FIELD_GUIDE_ILLUSTRATIONS.get(common_key)
+        or PLAIN_FIELD_GUIDE_ILLUSTRATIONS.get(scientific_key)
+        or ILLUSTRATIONS.get(common_key)
+        or ILLUSTRATIONS.get(scientific_key)
+    )
     if entry is None:
         return None
     filename, artist = entry
