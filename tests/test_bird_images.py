@@ -193,7 +193,7 @@ class BirdImageTests(unittest.TestCase):
         )
         self.assertIsNotNone(illustration)
         self.assertFalse(illustration["overridden"])
-        self.assertEqual(illustration["artist"], "Henrik Grönvold")
+        self.assertEqual(illustration["artist"], "James Sowerby")
         self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
         self.assertIn("Blue+Tit", illustration["image_url"])
         self.assertIn("v=", illustration["image_url"])
