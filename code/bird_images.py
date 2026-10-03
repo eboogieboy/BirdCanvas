@@ -279,6 +279,57 @@ ILLUSTRATIONS = {
         "132 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11001967465).jpg",
         "Historical British bird plate",
     ),
+
+
+    # Additional waterbirds and corvids encountered by the live listener.
+    "eurasian curlew": (
+        "166 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002096075).jpg",
+        "Historical British bird plate",
+    ),
+    "curlew": (
+        "166 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002096075).jpg",
+        "Historical British bird plate",
+    ),
+    "numenius arquata": (
+        "166 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002096075).jpg",
+        "Historical British bird plate",
+    ),
+    "hooded crow": (
+        "Nederlandsche vogelen (KB) - Corvus cornix (205pl).jpg",
+        "Nederlandsche vogelen",
+    ),
+    "corvus cornix": (
+        "Nederlandsche vogelen (KB) - Corvus cornix (205pl).jpg",
+        "Nederlandsche vogelen",
+    ),
+    "northern pintail": (
+        "A history of British birds (10422094213).jpg",
+        "Historical British bird plate",
+    ),
+    "pintail": (
+        "A history of British birds (10422094213).jpg",
+        "Historical British bird plate",
+    ),
+    "anas acuta": (
+        "A history of British birds (10422094213).jpg",
+        "Historical British bird plate",
+    ),
+    "pink-footed goose": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564454277).jpg",
+        "F. O. Morris",
+    ),
+    "anser brachyrhynchus": (
+        "A history of British birds. By the Rev. F.O. Morris (1862) (14564454277).jpg",
+        "F. O. Morris",
+    ),
+    "whooper swan": (
+        "Nederlandsche vogelen (KB) - Cygnus cygnus (490b).jpg",
+        "Nederlandsche vogelen",
+    ),
+    "cygnus cygnus": (
+        "Nederlandsche vogelen (KB) - Cygnus cygnus (490b).jpg",
+        "Nederlandsche vogelen",
+    ),
 }
 
 
