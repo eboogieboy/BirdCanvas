@@ -46,7 +46,7 @@ class BirdSessionTests(unittest.TestCase):
              patch.object(bird_sessions, "load_settings", return_value={"excluded_birds": ["gull"]}), \
              patch.object(
                  bird_sessions,
-                 "illustration_for",
+                 "display_illustration_for",
                  side_effect=lambda name, scientific: {"image_url": "blackbird.jpg"} if "Blackbird" in name else None,
              ):
             result = bird_sessions.current_session(now)
@@ -62,6 +62,39 @@ class BirdSessionTests(unittest.TestCase):
         self.assertFalse(blackbird["excluded_from_artwork"])
         self.assertTrue(gull["excluded_from_artwork"])
         self.assertIsNotNone(blackbird["illustration"])
+
+    def test_custom_field_guide_override_is_used_in_heard_bird_cards(self):
+        rows = [
+            {
+                "timestamp": "2026-10-03T12:45:00+01:00",
+                "commonName": "Northern Pintail",
+                "scientificName": "Anas acuta",
+                "confidence": 0.76,
+            }
+        ]
+        now = datetime(2026, 10, 3, 13, tzinfo=TZ)
+        custom = {
+            "image_url": "/api/mirror/bird-image?name=Northern+Pintail&v=custom",
+            "artist": "Custom replacement",
+            "source": "BirdCanvas custom replacement",
+            "source_url": "",
+            "license": "",
+            "overridden": True,
+        }
+
+        with patch.object(bird_sessions, "detection_rows", return_value=rows), \
+             patch.object(bird_sessions, "load_settings", return_value={"excluded_birds": []}), \
+             patch.object(
+                 bird_sessions,
+                 "display_illustration_for",
+                 return_value=custom,
+             ):
+            result = bird_sessions.day_session("2026-10-03", now)
+
+        bird = result["birds"][0]
+        self.assertEqual(bird["name"], "Northern Pintail")
+        self.assertEqual(bird["illustration"], custom)
+        self.assertTrue(bird["illustration"]["overridden"])
 
     def test_eurasian_prefix_is_removed_from_display_names(self):
         rows = [
