@@ -163,6 +163,50 @@ class BirdImageTests(unittest.TestCase):
         self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
         self.assertIn("Northern+Pintail", illustration["image_url"])
 
+
+    def test_default_phone_display_uses_same_local_clean_tile_as_mirror(self):
+        illustration = bird_images.display_illustration_for(
+            "Blue Tit",
+            "Cyanistes caeruleus",
+        )
+        self.assertIsNotNone(illustration)
+        self.assertFalse(illustration["overridden"])
+        self.assertEqual(illustration["artist"], "Henrik Grönvold")
+        self.assertTrue(illustration["image_url"].startswith("/api/mirror/bird-image?"))
+        self.assertIn("Blue+Tit", illustration["image_url"])
+        self.assertIn("v=", illustration["image_url"])
+
+    def test_renderer_version_invalidates_cached_default_tiles(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("paths.OUTPUT_DIR", Path(folder)):
+                with patch.object(bird_images, "TILE_RENDER_VERSION", 2):
+                    _, first, _ = bird_images._tile_cache(
+                        "Blackbird",
+                        "Turdus merula",
+                    )
+                with patch.object(bird_images, "TILE_RENDER_VERSION", 3):
+                    _, second, _ = bird_images._tile_cache(
+                        "Blackbird",
+                        "Turdus merula",
+                    )
+            self.assertNotEqual(first.name, second.name)
+
+    def test_clean_field_guide_renderer_enlarges_central_subject(self):
+        source = Image.new("RGB", (800, 1000), (232, 225, 208))
+        for x in range(300, 500):
+            for y in range(350, 650):
+                source.putpixel((x, y), (45, 55, 65))
+
+        tile = bird_images._clean_field_guide_tile(source)
+        self.assertEqual(tile.size, (600, 600))
+        self.assertEqual(tile.getpixel((0, 0)), bird_images.TILE_BACKGROUND)
+        dark_pixels = sum(
+            1
+            for pixel in tile.getdata()
+            if max(pixel) < 100
+        )
+        self.assertGreater(dark_pixels, 100000)
+
     def test_custom_override_rejects_non_image_payload(self):
         with tempfile.TemporaryDirectory() as folder:
             with patch("paths.DATA_DIR", Path(folder) / "data"):
