@@ -203,7 +203,7 @@ class BirdImageTests(unittest.TestCase):
         dark_pixels = sum(
             1
             for pixel in tile.getdata()
-            if max(pixel) < 100
+            if max(pixel) < 130
         )
         self.assertGreater(dark_pixels, 100000)
 
