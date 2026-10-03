@@ -1,21 +1,28 @@
-"""Curated field-guide illustrations for the live bird views.
+"""Curated, clean field-guide illustrations for the live bird views.
 
-The UI uses stable Wikimedia Commons file redirects for public-domain
-illustrations. The mapping is intentionally curated rather than searched at
-runtime so the same bird keeps the same visual identity on the phone and
-Magic Mirror.
+BirdCanvas uses stable Wikimedia Commons redirects for public-domain
+scientific illustrations. Grönvold is preferred where a strong plate exists;
+other public-domain natural-history artists fill gaps when their source is
+clearer or more species-accurate. Every default is rendered through the same
+local clean-field-guide tile pipeline before it reaches the phone or Mirror.
 """
 from __future__ import annotations
 
 from urllib.parse import quote, urlencode
 
-COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=700"
+COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=900"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
 OVERRIDE_ARTIST = "Custom replacement"
+TILE_RENDER_VERSION = 2
+TILE_SIZE = 600
+TILE_INSET = 548
+TILE_BACKGROUND = (250, 249, 245)
 
 # Common names are normalised to casefold before lookup.
-# These are public-domain historical plates from Henrik Grönvold / F.O. Morris
-# and related British bird works hosted on Wikimedia Commons.
+# Prefer the clean Grönvold/Butler plates where available. For species not
+# covered by that set, use the clearest accurate public-domain natural-history
+# illustration available on Commons rather than forcing a busier plate merely
+# for artist consistency.
 ILLUSTRATIONS = {
     # Thrushes, chats and familiar garden birds.
     "eurasian blackbird": ("Blackbird Grönvold.jpg", "Henrik Grönvold"),
@@ -333,8 +340,14 @@ def _override_info(common_name: str, scientific_name: str = "") -> dict | None:
 
 
 def display_illustration_for(common_name: str, scientific_name: str = "") -> dict | None:
-    """Return the illustration used by the phone bird cards, including overrides."""
+    """Return the same locally normalised field-guide tile used by the Mirror."""
+    import hashlib
+
     override = _override_info(common_name, scientific_name)
+    illustration = illustration_for(common_name, scientific_name)
+    if override is None and illustration is None:
+        return None
+
     if override:
         path = override["path"]
         revision = path.name
@@ -343,27 +356,37 @@ def display_illustration_for(common_name: str, scientific_name: str = "") -> dic
             revision = f"{revision}-{stat.st_mtime_ns}-{stat.st_size}"
         except OSError:
             pass
+        artist = str(override.get("artist") or OVERRIDE_ARTIST)
+        source = "BirdCanvas custom replacement"
+        source_url = ""
+        license_name = ""
+        overridden = True
+    else:
+        source_url = str(illustration.get("source_url") or "")
+        source_identity = str(illustration.get("image_url") or source_url)
+        revision = hashlib.sha1(
+            f"{TILE_RENDER_VERSION}|{source_identity}".encode("utf-8")
+        ).hexdigest()[:12]
+        artist = str(illustration.get("artist") or "")
+        source = str(illustration.get("source") or "Wikimedia Commons")
+        license_name = str(illustration.get("license") or "")
+        overridden = False
 
-        query = urlencode(
-            {
-                "name": str(common_name).strip(),
-                "scientific": str(scientific_name).strip(),
-                "v": revision,
-            }
-        )
-        return {
-            "image_url": f"/api/mirror/bird-image?{query}",
-            "artist": str(override.get("artist") or OVERRIDE_ARTIST),
-            "source": "BirdCanvas custom replacement",
-            "source_url": "",
-            "license": "",
-            "overridden": True,
+    query = urlencode(
+        {
+            "name": str(common_name).strip(),
+            "scientific": str(scientific_name).strip(),
+            "v": revision,
         }
-
-    illustration = illustration_for(common_name, scientific_name)
-    if illustration is None:
-        return None
-    return {**illustration, "overridden": False}
+    )
+    return {
+        "image_url": f"/api/mirror/bird-image?{query}",
+        "artist": artist,
+        "source": source,
+        "source_url": source_url,
+        "license": license_name,
+        "overridden": overridden,
+    }
 
 
 def _tile_cache(common_name: str, scientific_name: str = ""):
@@ -375,7 +398,13 @@ def _tile_cache(common_name: str, scientific_name: str = ""):
     tile_dir.mkdir(parents=True, exist_ok=True)
     illustration = illustration_for(common_name, scientific_name)
     source_url = illustration["image_url"] if illustration else ""
-    revision = hashlib.sha1(source_url.encode("utf-8")).hexdigest()[:10] if source_url else "fallback"
+    revision = (
+        hashlib.sha1(
+            f"{TILE_RENDER_VERSION}|{source_url}".encode("utf-8")
+        ).hexdigest()[:10]
+        if source_url
+        else f"fallback-v{TILE_RENDER_VERSION}"
+    )
     destination = tile_dir / f"{_safe_slug(common_name)}-{revision}.jpg"
     metadata = destination.with_suffix(".json")
     return illustration, destination, metadata
@@ -401,6 +430,71 @@ def _read_tile_metadata(path) -> dict:
     except (OSError, json.JSONDecodeError):
         return {}
     return value if isinstance(value, dict) else {}
+
+
+def _clean_field_guide_tile(source):
+    """Normalise a historical plate into a calm, consistent square field-guide tile."""
+    from PIL import Image, ImageChops, ImageFilter, ImageOps, ImageStat
+
+    image = ImageOps.exif_transpose(source).convert("RGB")
+    image.thumbnail((1100, 1100), Image.Resampling.LANCZOS)
+
+    width, height = image.size
+    edge = max(4, min(width, height) // 18)
+    corners = (
+        image.crop((0, 0, edge, edge)),
+        image.crop((width - edge, 0, width, edge)),
+        image.crop((0, height - edge, edge, height)),
+        image.crop((width - edge, height - edge, width, height)),
+    )
+    medians = [ImageStat.Stat(corner).median for corner in corners]
+    paper = tuple(
+        int(round(sum(median[channel] for median in medians) / len(medians)))
+        for channel in range(3)
+    )
+
+    # Shift the scan's paper tone towards the BirdCanvas neutral background
+    # without recolouring the bird itself.
+    channels = image.split()
+    shifted_channels = []
+    for channel, target, current in zip(channels, TILE_BACKGROUND, paper):
+        offset = target - current
+        shifted_channels.append(
+            channel.point(lambda value, delta=offset: max(0, min(255, value + delta)))
+        )
+    image = Image.merge("RGB", shifted_channels)
+
+    # Find the meaningful illustration area against the now-normalised paper.
+    # A light morphological pass joins fine feather/branch detail and avoids
+    # treating isolated scan speckles as part of the subject.
+    flat = Image.new("RGB", image.size, TILE_BACKGROUND)
+    difference = ImageChops.difference(image, flat).convert("L")
+    mask = difference.point(lambda value: 255 if value >= 18 else 0)
+    mask = mask.filter(ImageFilter.MaxFilter(5))
+    bbox = mask.getbbox()
+
+    if bbox:
+        left, top, right, bottom = bbox
+        content_width = right - left
+        content_height = bottom - top
+        if content_width > 0 and content_height > 0:
+            pad = max(12, int(max(content_width, content_height) * 0.08))
+            left = max(0, left - pad)
+            top = max(0, top - pad)
+            right = min(image.width, right + pad)
+            bottom = min(image.height, bottom + pad)
+            image = image.crop((left, top, right, bottom))
+
+    contained = ImageOps.contain(
+        image,
+        (TILE_INSET, TILE_INSET),
+        method=Image.Resampling.LANCZOS,
+    )
+    canvas = Image.new("RGB", (TILE_SIZE, TILE_SIZE), TILE_BACKGROUND)
+    x = (TILE_SIZE - contained.width) // 2
+    y = (TILE_SIZE - contained.height) // 2
+    canvas.paste(contained, (x, y))
+    return canvas
 
 
 def save_tile_override(
@@ -441,9 +535,9 @@ def save_tile_override(
     except Exception as error:
         raise ValueError("Replacement image could not be read.") from error
 
-    canvas = Image.new("RGB", (600, 600), (246, 244, 237))
-    x = (600 - contained.width) // 2
-    y = (600 - contained.height) // 2
+    canvas = Image.new("RGB", (TILE_SIZE, TILE_SIZE), TILE_BACKGROUND)
+    x = (TILE_SIZE - contained.width) // 2
+    y = (TILE_SIZE - contained.height) // 2
     canvas.paste(contained, (x, y))
 
     destination, metadata = _override_paths(name, scientific)
@@ -479,7 +573,7 @@ def restore_tile_override(common_name: str, scientific_name: str = "") -> bool:
 def _fallback_tile(destination, common_name: str) -> None:
     from PIL import Image, ImageDraw, ImageFont
 
-    canvas = Image.new("RGB", (600, 600), (246, 244, 237))
+    canvas = Image.new("RGB", (TILE_SIZE, TILE_SIZE), TILE_BACKGROUND)
     draw = ImageDraw.Draw(canvas)
     initial = (str(common_name).strip()[:1] or "?").upper()
     try:
@@ -531,13 +625,8 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
             with urllib.request.urlopen(request, timeout=10) as response:
                 payload = response.read(12 * 1024 * 1024)
             with Image.open(io.BytesIO(payload)) as opened:
-                source = ImageOps.exif_transpose(opened).convert("RGB")
-                contained = ImageOps.contain(source, (560, 560), method=Image.Resampling.LANCZOS)
-                canvas = Image.new("RGB", (600, 600), (246, 244, 237))
-                x = (600 - contained.width) // 2
-                y = (600 - contained.height) // 2
-                canvas.paste(contained, (x, y))
-                canvas.save(destination, "JPEG", quality=90, optimize=True)
+                canvas = _clean_field_guide_tile(opened)
+                canvas.save(destination, "JPEG", quality=92, optimize=True)
             _write_tile_metadata(
                 metadata,
                 {
