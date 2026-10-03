@@ -13,38 +13,118 @@ from urllib.parse import quote, urlencode
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=900"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
 OVERRIDE_ARTIST = "Custom replacement"
-TILE_RENDER_VERSION = 3
+TILE_RENDER_VERSION = 4
 TILE_SIZE = 600
 TILE_INSET = 548
 TILE_BACKGROUND = (250, 249, 245)
 
 # Common names are normalised to casefold before lookup.
 #
-# The first-choice set below is deliberately stricter than the broad fallback
-# library: one accurately identified bird on mostly plain paper, little or no
-# perch, and no decorative habitat scene. These are the "plain field guide"
-# thumbnails used for the common BirdCanvas species.
+# Finished colour field-guide plates are preferred over preparatory sketches.
+# A per-source crop may isolate one bird from a multi-bird plate and remove
+# printed captions before the common tile renderer normalises the background.
+
+def _commons_entry(filename: str, artist: str, *, license_name: str = "Public domain", crop=None) -> dict:
+    return {
+        "image_url": COMMONS_REDIRECT.format(file=quote(filename, safe="")),
+        "artist": artist,
+        "source": "Wikimedia Commons",
+        "source_url": f"https://commons.wikimedia.org/wiki/File:{quote(filename.replace(' ', '_'), safe='_:()-.')}",
+        "license": license_name,
+        "crop": crop,
+    }
+
+
+def _direct_entry(image_url: str, artist: str, source: str, source_url: str, license_name: str, crop=None) -> dict:
+    return {
+        "image_url": image_url,
+        "artist": artist,
+        "source": source,
+        "source_url": source_url,
+        "license": license_name,
+        "crop": crop,
+    }
+
+
+_FINISHED_BLACKBIRD = _direct_entry(
+    "https://images.rawpixel.com/image_social_landscape/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTExL2xyL2ZuZzI5Nzg2Ny1pbWFnZS5qcGc.jpg",
+    "Wilhelm von Wright",
+    "Finnish National Gallery / Rawpixel",
+    "https://www.rawpixel.com/image/8864828/blackbird-male-1828-1838-wilhelm-von-wright",
+    "Public domain / CC0",
+    crop=(0.02, 0.02, 0.98, 0.82),
+)
+_FINISHED_BLUE_TIT = _commons_entry(
+    "Cyanistes caeruleus 1869.jpg",
+    "John Gerrard Keulemans",
+    crop=(0.04, 0.08, 0.78, 0.96),
+)
+_FINISHED_GREAT_TIT = _commons_entry(
+    "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00141.jpg",
+    "von Wright brothers",
+    license_name="CC BY-SA 4.0",
+    crop=(0.05, 0.08, 0.95, 0.70),
+)
+_FINISHED_COAL_TIT = _commons_entry(
+    "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00087.jpg",
+    "von Wright brothers",
+    license_name="CC BY-SA 4.0",
+    crop=(0.22, 0.07, 0.80, 0.43),
+)
+_FINISHED_DUNNOCK = _commons_entry(
+    "John Gould and H.C. Richter, Accentor modularis (Dunnock), NGA 53544.jpg",
+    "John Gould & H. C. Richter",
+    crop=(0.08, 0.03, 0.92, 0.48),
+)
+_FINISHED_CROW = _commons_entry(
+    "Wilhelm von Wright - Crow - A II 1254-133 - Finnish National Gallery.jpg",
+    "Wilhelm von Wright",
+    license_name="CC0 / Public domain",
+)
+_FINISHED_LONG_TAILED_TIT = _direct_entry(
+    "https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcGQxMi10b25nLTEyM18wLmpwZw.jpg",
+    "von Wright brothers",
+    "Rawpixel",
+    "https://www.rawpixel.com/image/325632/free-illustration-image-bird-tit-sketch",
+    "Public domain",
+    crop=(0.04, 0.04, 0.96, 0.76),
+)
+_FINISHED_WREN = _commons_entry(
+    "Bird illustration from Svenska Fåglar (Swedish Birds) by the von Wright brothers from rawpixel's original edition of the publication 00088.jpg",
+    "von Wright brothers",
+    license_name="CC BY-SA 4.0",
+    crop=(0.23, 0.43, 0.82, 0.80),
+)
+_FINISHED_HOUSE_SPARROW = _commons_entry(
+    "Passer domesticus m.jpg",
+    "Wilhelm von Wright",
+)
+_FINISHED_STARLING = _commons_entry(
+    "Sturnus vulgaris m.jpg",
+    "Wilhelm von Wright",
+)
+
 PLAIN_FIELD_GUIDE_ILLUSTRATIONS = {
-    "eurasian blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
-    "common blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
-    "blackbird": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
-    "turdus merula": ("James Sowerby - A Blackbird - B1978.43.124 - Yale Center for British Art.jpg", "James Sowerby"),
+    "eurasian blackbird": _FINISHED_BLACKBIRD,
+    "common blackbird": _FINISHED_BLACKBIRD,
+    "blackbird": _FINISHED_BLACKBIRD,
+    "turdus merula": _FINISHED_BLACKBIRD,
 
-    "eurasian blue tit": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
-    "blue tit": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
-    "cyanistes caeruleus": ("James Sowerby - A Blue Tit - B1978.43.51 - Yale Center for British Art.jpg", "James Sowerby"),
+    "eurasian blue tit": _FINISHED_BLUE_TIT,
+    "blue tit": _FINISHED_BLUE_TIT,
+    "cyanistes caeruleus": _FINISHED_BLUE_TIT,
 
-    "great tit": ("Naturalis Biodiversity Center - RMNH.ART.387 - Parus major - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "parus major": ("Naturalis Biodiversity Center - RMNH.ART.387 - Parus major - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "coal tit": ("Naturalis Biodiversity Center - RMNH.ART.411 - Parus ater - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "periparus ater": ("Naturalis Biodiversity Center - RMNH.ART.411 - Parus ater - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "long-tailed tit": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "long-tailed titmouse": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "aegithalos caudatus": ("Naturalis Biodiversity Center - RMNH.ART.422 - Aegithalos caudatus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "great tit": _FINISHED_GREAT_TIT,
+    "parus major": _FINISHED_GREAT_TIT,
+    "coal tit": _FINISHED_COAL_TIT,
+    "periparus ater": _FINISHED_COAL_TIT,
+    "long-tailed tit": _FINISHED_LONG_TAILED_TIT,
+    "long-tailed titmouse": _FINISHED_LONG_TAILED_TIT,
+    "aegithalos caudatus": _FINISHED_LONG_TAILED_TIT,
 
-    "dunnock": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
-    "hedge accentor": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
-    "prunella modularis": ("James Sowerby - A Hedge Sparrow - B1978.43.107 - Yale Center for British Art.jpg", "James Sowerby"),
+    "dunnock": _FINISHED_DUNNOCK,
+    "hedge accentor": _FINISHED_DUNNOCK,
+    "prunella modularis": _FINISHED_DUNNOCK,
 
     "european robin": ("Redbreast.jpg", "Benjamin Fawcett"),
     "robin": ("Redbreast.jpg", "Benjamin Fawcett"),
@@ -52,24 +132,26 @@ PLAIN_FIELD_GUIDE_ILLUSTRATIONS = {
     "song thrush": ("Turdus philomelos 1873.jpg", "John Gerrard Keulemans"),
     "turdus philomelos": ("Turdus philomelos 1873.jpg", "John Gerrard Keulemans"),
 
-    "eurasian wren": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "wren": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
-    "troglodytes troglodytes": ("Naturalis Biodiversity Center - RMNH.ART.423 - Troglodytes troglodytes - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg", "Yūshi Ishizaki"),
+    "eurasian wren": _FINISHED_WREN,
+    "wren": _FINISHED_WREN,
+    "troglodytes troglodytes": _FINISHED_WREN,
 
-    "house sparrow": ("James Sowerby - A House Sparrow - B1978.43.145 - Yale Center for British Art.jpg", "James Sowerby"),
-    "passer domesticus": ("James Sowerby - A House Sparrow - B1978.43.145 - Yale Center for British Art.jpg", "James Sowerby"),
-    "common starling": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
-    "starling": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
-    "sturnus vulgaris": ("James Sowerby - A Starling - B1978.43.132 - Yale Center for British Art.jpg", "James Sowerby"),
-    "european goldfinch": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
-    "goldfinch": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
-    "carduelis carduelis": ("James Sowerby - A European Goldfinch - B1978.43.53 - Yale Center for British Art.jpg", "James Sowerby"),
+    "house sparrow": _FINISHED_HOUSE_SPARROW,
+    "passer domesticus": _FINISHED_HOUSE_SPARROW,
+    "common starling": _FINISHED_STARLING,
+    "starling": _FINISHED_STARLING,
+    "sturnus vulgaris": _FINISHED_STARLING,
+
+    "european goldfinch": ("100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg", "Historical British bird plate"),
+    "goldfinch": ("100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg", "Historical British bird plate"),
+    "carduelis carduelis": ("100 of 'British Ornithology; being the history, with a coloured representation of every known species of British birds' (11002252763).jpg", "Historical British bird plate"),
+
     "common chaffinch": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
     "chaffinch": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
     "fringilla coelebs": ("Fringilla coelebs m.jpg", "Wilhelm von Wright"),
 
-    "carrion crow": ("James Sowerby - A Crow - B1978.43.117 - Yale Center for British Art.jpg", "James Sowerby"),
-    "corvus corone": ("James Sowerby - A Crow - B1978.43.117 - Yale Center for British Art.jpg", "James Sowerby"),
+    "carrion crow": _FINISHED_CROW,
+    "corvus corone": _FINISHED_CROW,
 }
 
 # Broader fallback library for species not yet represented by the stricter set.
@@ -394,6 +476,8 @@ def illustration_for(common_name: str, scientific_name: str = "") -> dict | None
     )
     if entry is None:
         return None
+    if isinstance(entry, dict):
+        return dict(entry)
     filename, artist = entry
     return {
         "image_url": COMMONS_REDIRECT.format(file=quote(filename, safe="")),
@@ -401,6 +485,7 @@ def illustration_for(common_name: str, scientific_name: str = "") -> dict | None
         "source": "Wikimedia Commons",
         "source_url": f"https://commons.wikimedia.org/wiki/File:{quote(filename.replace(' ', '_'), safe='_:()-.')}",
         "license": "Public domain",
+        "crop": None,
     }
 
 
@@ -504,9 +589,10 @@ def _tile_cache(common_name: str, scientific_name: str = ""):
     tile_dir.mkdir(parents=True, exist_ok=True)
     illustration = illustration_for(common_name, scientific_name)
     source_url = illustration["image_url"] if illustration else ""
+    crop = (illustration or {}).get("crop")
     revision = (
         hashlib.sha1(
-            f"{TILE_RENDER_VERSION}|{source_url}".encode("utf-8")
+            f"{TILE_RENDER_VERSION}|{source_url}|{crop}".encode("utf-8")
         ).hexdigest()[:10]
         if source_url
         else f"fallback-v{TILE_RENDER_VERSION}"
@@ -538,11 +624,22 @@ def _read_tile_metadata(path) -> dict:
     return value if isinstance(value, dict) else {}
 
 
-def _clean_field_guide_tile(source):
-    """Normalise a historical plate into a calm, consistent square field-guide tile."""
+def _clean_field_guide_tile(source, crop=None):
+    """Normalise a finished bird plate into a calm, consistent square field-guide tile."""
     from PIL import Image, ImageChops, ImageFilter, ImageOps, ImageStat
 
     image = ImageOps.exif_transpose(source).convert("RGB")
+    if crop:
+        width, height = image.size
+        left, top, right, bottom = crop
+        box = (
+            max(0, min(width - 1, int(width * left))),
+            max(0, min(height - 1, int(height * top))),
+            max(1, min(width, int(width * right))),
+            max(1, min(height, int(height * bottom))),
+        )
+        if box[2] > box[0] and box[3] > box[1]:
+            image = image.crop(box)
     image.thumbnail((1100, 1100), Image.Resampling.LANCZOS)
 
     width, height = image.size
@@ -731,7 +828,7 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
             with urllib.request.urlopen(request, timeout=10) as response:
                 payload = response.read(12 * 1024 * 1024)
             with Image.open(io.BytesIO(payload)) as opened:
-                canvas = _clean_field_guide_tile(opened)
+                canvas = _clean_field_guide_tile(opened, illustration.get("crop"))
                 canvas.save(destination, "JPEG", quality=92, optimize=True)
             _write_tile_metadata(
                 metadata,
