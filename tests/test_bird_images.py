@@ -44,6 +44,11 @@ class BirdImageTests(unittest.TestCase):
             "Great Spotted Woodpecker": "00015.jpg",
             "Swift": "Wellcome%20V0022226ER.jpg",
             "Swallow": "11001967465",
+            "Curlew": "11002096075",
+            "Hooded Crow": "Corvus%20cornix%20%28205pl%29.jpg",
+            "Northern Pintail": "10422094213",
+            "Pink-footed Goose": "14564454277",
+            "Whooper Swan": "Cygnus%20cygnus%20%28490b%29.jpg",
         }
         for name, filename in expected.items():
             with self.subTest(name=name):
