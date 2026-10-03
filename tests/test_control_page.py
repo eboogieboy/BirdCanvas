@@ -29,6 +29,14 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn('id="birds" class="panel"', html)
         self.assertIn("/api/birds/current", html)
 
+    def test_bird_page_distinguishes_collection_from_calendar_day(self):
+        html = display.CONTROL_HTML
+        self.assertIn("Birds heard in this collection", html)
+        self.assertIn("Since the last BirdCanvas artwork generation", html)
+        self.assertIn("Daily birds", html)
+        self.assertIn("midnight to midnight", html)
+        self.assertIn("Current collection</button>", html)
+
     def test_bird_master_thumbnail_library_is_present(self):
         html = display.CONTROL_HTML
         self.assertIn('id="bird-catalog-grid"', html)
