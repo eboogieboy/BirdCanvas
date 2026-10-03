@@ -13,6 +13,7 @@ from urllib.parse import quote, urlencode
 COMMONS_REDIRECT = "https://commons.wikimedia.org/wiki/Special:Redirect/file/{file}?width=900"
 BIRD_OVERRIDE_MAX_BYTES = 10 * 1024 * 1024
 OVERRIDE_ARTIST = "Custom replacement"
+LOCAL_DEFAULT_ARTIST = "BirdCanvas AI field guide"
 TILE_RENDER_VERSION = 5
 TILE_SIZE = 600
 TILE_INSET = 548
@@ -562,6 +563,24 @@ def _override_paths(common_name: str, scientific_name: str = ""):
     )
 
 
+def _default_paths(common_name: str, scientific_name: str = ""):
+    import hashlib
+
+    from paths import DATA_DIR
+
+    identity = (
+        str(scientific_name).strip().casefold()
+        or str(common_name).strip().casefold()
+    )
+    digest = hashlib.sha1(identity.encode("utf-8")).hexdigest()[:10]
+    default_dir = DATA_DIR / "bird-image-defaults"
+    stem = f"{_safe_slug(common_name)}-{digest}"
+    return (
+        default_dir / f"{stem}.jpg",
+        default_dir / f"{stem}.json",
+    )
+
+
 def _override_info(common_name: str, scientific_name: str = "") -> dict | None:
     destination, metadata = _override_paths(common_name, scientific_name)
     if not destination.is_file():
@@ -579,13 +598,32 @@ def _override_info(common_name: str, scientific_name: str = "") -> dict | None:
     }
 
 
+def _default_info(common_name: str, scientific_name: str = "") -> dict | None:
+    destination, metadata = _default_paths(common_name, scientific_name)
+    if not destination.is_file():
+        return None
+
+    status = _read_tile_metadata(metadata)
+    return {
+        "path": destination,
+        "status": "ready",
+        "has_mapping": True,
+        "problem": "",
+        "artist": str(status.get("artist") or LOCAL_DEFAULT_ARTIST),
+        "source_url": "",
+        "overridden": False,
+        "local_default": True,
+    }
+
+
 def display_illustration_for(common_name: str, scientific_name: str = "") -> dict | None:
     """Return the same locally normalised field-guide tile used by the Mirror."""
     import hashlib
 
     override = _override_info(common_name, scientific_name)
+    local_default = _default_info(common_name, scientific_name)
     illustration = illustration_for(common_name, scientific_name)
-    if override is None and illustration is None:
+    if override is None and local_default is None and illustration is None:
         return None
 
     if override:
@@ -601,6 +639,19 @@ def display_illustration_for(common_name: str, scientific_name: str = "") -> dic
         source_url = ""
         license_name = ""
         overridden = True
+    elif local_default:
+        path = local_default["path"]
+        revision = path.name
+        try:
+            stat = path.stat()
+            revision = f"{revision}-{stat.st_mtime_ns}-{stat.st_size}"
+        except OSError:
+            pass
+        artist = str(local_default.get("artist") or LOCAL_DEFAULT_ARTIST)
+        source = "BirdCanvas default illustration"
+        source_url = ""
+        license_name = ""
+        overridden = False
     else:
         source_url = str(illustration.get("source_url") or "")
         source_identity = str(illustration.get("image_url") or source_url)
@@ -756,6 +807,78 @@ def _clean_field_guide_tile(source, crop=None):
     return canvas
 
 
+def promote_tile_overrides_to_defaults() -> dict:
+    """Promote all current replacement tiles into BirdCanvas local defaults.
+
+    The promoted images remain in runtime data so deploys do not overwrite
+    them. The previous override directory is archived after a successful copy,
+    which removes the CUSTOM state while keeping an easy rollback copy.
+    """
+    import json
+    import shutil
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    from paths import DATA_DIR
+
+    source_dir = DATA_DIR / "bird-image-overrides"
+    default_dir = DATA_DIR / "bird-image-defaults"
+    images = sorted(source_dir.glob("*.jpg")) if source_dir.is_dir() else []
+    if not images:
+        return {
+            "promoted": 0,
+            "default_dir": str(default_dir),
+            "archive_dir": "",
+        }
+
+    default_dir.mkdir(parents=True, exist_ok=True)
+    promoted = 0
+
+    for source in images:
+        destination = default_dir / source.name
+        temporary = destination.with_suffix(".tmp")
+        shutil.copyfile(source, temporary)
+        temporary.replace(destination)
+
+        source_metadata = source.with_suffix(".json")
+        metadata = {}
+        try:
+            value = json.loads(source_metadata.read_text(encoding="utf-8"))
+            if isinstance(value, dict):
+                metadata = value
+        except (OSError, json.JSONDecodeError):
+            metadata = {}
+
+        _write_tile_metadata(
+            destination.with_suffix(".json"),
+            {
+                "status": "ready",
+                "has_mapping": True,
+                "problem": "",
+                "artist": LOCAL_DEFAULT_ARTIST,
+                "source_url": "",
+                "overridden": False,
+                "local_default": True,
+                "original_filename": str(metadata.get("original_filename") or ""),
+            },
+        )
+        promoted += 1
+
+    stamp = datetime.now(ZoneInfo("Europe/London")).strftime("%Y%m%d-%H%M%S")
+    archive_dir = DATA_DIR / f"bird-image-overrides-promoted-{stamp}"
+    suffix = 1
+    while archive_dir.exists():
+        archive_dir = DATA_DIR / f"bird-image-overrides-promoted-{stamp}-{suffix}"
+        suffix += 1
+    source_dir.replace(archive_dir)
+
+    return {
+        "promoted": promoted,
+        "default_dir": str(default_dir),
+        "archive_dir": str(archive_dir),
+    }
+
+
 def save_tile_override(
     common_name: str,
     scientific_name: str,
@@ -860,6 +983,10 @@ def mirror_tile_path(common_name: str, scientific_name: str = ""):
     if override_path.is_file():
         return override_path
 
+    default_path, _ = _default_paths(common_name, scientific_name)
+    if default_path.is_file():
+        return default_path
+
     illustration, destination, metadata = _tile_cache(common_name, scientific_name)
     if destination.is_file():
         if not metadata.is_file():
@@ -930,6 +1057,10 @@ def mirror_tile_info(common_name: str, scientific_name: str = "") -> dict:
     override = _override_info(common_name, scientific_name)
     if override:
         return override
+
+    local_default = _default_info(common_name, scientific_name)
+    if local_default:
+        return local_default
 
     illustration, destination, metadata = _tile_cache(common_name, scientific_name)
     mirror_tile_path(common_name, scientific_name)
