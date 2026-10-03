@@ -63,6 +63,12 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("/api/birds/illustration", html)
         self.assertIn("/api/birds/illustration/restore", html)
 
+    def test_field_guide_changes_refresh_heard_bird_cards(self):
+        html = display.CONTROL_HTML
+        self.assertGreaterEqual(html.count("await refreshBirds();"), 2)
+        self.assertIn("The bird list and Magic Mirror will pick it up automatically.", html)
+        self.assertIn("[illustration.artist,illustration.license].filter(Boolean)", html)
+
     def test_legacy_birdnet_import_is_not_shown_on_control_page(self):
         html = display.CONTROL_HTML
         self.assertNotIn('data-go="birdnet"', html)
