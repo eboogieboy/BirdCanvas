@@ -140,7 +140,7 @@ class ProductionTests(unittest.TestCase):
             def publish(**kwargs):
                 self.assertEqual(kwargs['birds'], ['Robin'])
                 self.assertEqual(kwargs['species_excluded'], ['Woodpigeon'])
-                manifest = {'id': 'birdcanvas-2026-09-24-twice_weekly-20260924-040000'}
+                manifest = {'id': 'birdcanvas-2026-09-24-twice-weekly-20260924-040000'}
                 folder = archive / manifest['id']
                 folder.mkdir(parents=True)
                 (folder / 'manifest.json').write_text(__import__('json').dumps(manifest))
@@ -165,6 +165,14 @@ class ProductionTests(unittest.TestCase):
                 first = pipeline.run(now=now)
                 self.assertEqual(first['status'], 'published')
                 self.assertEqual(first['pending_delivery'], 1)
+                self.assertEqual(
+                    first['artwork_id'],
+                    'birdcanvas-2026-09-24-twice-weekly-20260924-040000',
+                )
+                self.assertEqual(
+                    pipeline.load_state()['deliveries'][0]['id'],
+                    'birdcanvas-2026-09-24-twice-weekly-20260924-040000',
+                )
                 self.assertEqual(pipeline.run(now=now)['status'], 'not_due')
                 self.assertEqual(pipeline.load_state()['last_end'], now.isoformat(timespec='seconds'))
                 self.assertEqual(pipeline.load_state()['deliveries'][0]['content_id'], 'MY_123')

@@ -26,6 +26,11 @@ def _safe_slug(value: str) -> str:
     return slug or "daily"
 
 
+def artwork_id_for(observation_date: str, edition: str) -> str:
+    """Return the canonical archive ID used by publish_artwork()."""
+    return f"birdcanvas-{_safe_date(observation_date)}-{_safe_slug(edition)}"
+
+
 def _write_json(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
@@ -54,7 +59,7 @@ def publish_artwork(
 
     date_text = _safe_date(observation_date)
     edition_slug = _safe_slug(edition)
-    artwork_id = f"birdcanvas-{date_text}-{edition_slug}"
+    artwork_id = artwork_id_for(date_text, edition_slug)
     created_at = datetime.now().astimezone().isoformat(timespec="seconds")
 
     archive_folder = ARCHIVE_DIR / artwork_id

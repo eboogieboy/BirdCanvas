@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from artwork_store import ARCHIVE_DIR, publish_artwork
+from artwork_store import ARCHIVE_DIR, artwork_id_for, publish_artwork
 from birdnet_go import detections
 from compose import compose, filter_birds
 from display import build_display_page
@@ -214,7 +214,7 @@ def run(manual=False, now=None):
         # A deterministic ID allows recovery if a process stops after publishing
         # but before committing the window cursor.
         edition = f"{frequency}-{end.strftime('%Y%m%d-%H%M%S')}"
-        artwork_id = f"birdcanvas-{end.date().isoformat()}-{edition}"
+        artwork_id = artwork_id_for(end.date().isoformat(), edition)
         manifest_path = ARCHIVE_DIR / artwork_id / 'manifest.json'
         if manifest_path.is_file():
             manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
