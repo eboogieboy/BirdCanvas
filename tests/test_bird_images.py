@@ -162,6 +162,85 @@ class BirdImageTests(unittest.TestCase):
 
                 self.assertFalse(default_info["overridden"])
 
+    def test_current_overrides_can_be_promoted_into_local_defaults(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            payload = io.BytesIO()
+            Image.new("RGB", (700, 500), "white").save(payload, "PNG")
+
+            with patch("paths.DATA_DIR", root / "data"), \
+                 patch("paths.OUTPUT_DIR", root / "output"):
+                bird_images.save_tile_override(
+                    "Blue Tit",
+                    "Cyanistes caeruleus",
+                    payload.getvalue(),
+                    filename="blue-tit-ai.png",
+                )
+                result = bird_images.promote_tile_overrides_to_defaults()
+
+                self.assertEqual(result["promoted"], 1)
+                self.assertTrue(Path(result["archive_dir"]).is_dir())
+
+                info = bird_images.mirror_tile_info(
+                    "Blue Tit",
+                    "Cyanistes caeruleus",
+                )
+                self.assertFalse(info["overridden"])
+                self.assertTrue(info.get("local_default"))
+                self.assertEqual(info["artist"], "BirdCanvas AI field guide")
+                self.assertIn("bird-image-defaults", str(info["path"]))
+                self.assertTrue(info["path"].is_file())
+
+                display = bird_images.display_illustration_for(
+                    "Blue Tit",
+                    "Cyanistes caeruleus",
+                )
+                self.assertIsNotNone(display)
+                self.assertFalse(display["overridden"])
+                self.assertEqual(display["artist"], "BirdCanvas AI field guide")
+
+    def test_new_custom_override_can_sit_on_top_of_promoted_default(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            first = io.BytesIO()
+            Image.new("RGB", (500, 500), "white").save(first, "PNG")
+            second = io.BytesIO()
+            Image.new("RGB", (500, 500), "black").save(second, "PNG")
+
+            with patch("paths.DATA_DIR", root / "data"), \
+                 patch("paths.OUTPUT_DIR", root / "output"):
+                bird_images.save_tile_override(
+                    "Robin",
+                    "Erithacus rubecula",
+                    first.getvalue(),
+                    filename="robin-default.png",
+                )
+                bird_images.promote_tile_overrides_to_defaults()
+
+                bird_images.save_tile_override(
+                    "Robin",
+                    "Erithacus rubecula",
+                    second.getvalue(),
+                    filename="robin-new.png",
+                )
+                custom = bird_images.mirror_tile_info(
+                    "Robin",
+                    "Erithacus rubecula",
+                )
+                self.assertTrue(custom["overridden"])
+
+                bird_images.restore_tile_override(
+                    "Robin",
+                    "Erithacus rubecula",
+                )
+                restored = bird_images.mirror_tile_info(
+                    "Robin",
+                    "Erithacus rubecula",
+                )
+                self.assertFalse(restored["overridden"])
+                self.assertTrue(restored.get("local_default"))
+                self.assertEqual(restored["artist"], "BirdCanvas AI field guide")
+
     def test_phone_display_illustration_uses_custom_override(self):
         with tempfile.TemporaryDirectory() as folder:
             payload = io.BytesIO()
