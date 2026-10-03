@@ -59,6 +59,15 @@ class MirrorPanelTests(unittest.TestCase):
             self.assertEqual(meta["birds"], ["Blackbird", "Robin", "Wren"])
             record.assert_called_once_with(birds)
 
+    def test_grid_shape_expands_small_species_counts(self):
+        self.assertEqual(mirror_panel._grid_shape(1, 4), (1, 1))
+        self.assertEqual(mirror_panel._grid_shape(2, 4), (2, 1))
+        self.assertEqual(mirror_panel._grid_shape(3, 4), (3, 1))
+        self.assertEqual(mirror_panel._grid_shape(4, 4), (4, 1))
+        self.assertEqual(mirror_panel._grid_shape(5, 4), (4, 2))
+        self.assertEqual(mirror_panel._grid_shape(8, 4), (4, 2))
+        self.assertEqual(mirror_panel._grid_shape(12, 4), (4, 3))
+
     def test_short_bird_name_stays_on_one_line(self):
         image = Image.new("RGB", (600, 300), "black")
         from PIL import ImageDraw
