@@ -53,3 +53,6 @@ sudo bash deployment/restore-from-backup.sh /path/to/birdcanvas-backup-YYYYMMDD-
 8. Verify BirdNET-Go, the microphone, GalleryOS and Frame delivery before re-enabling production.
 
 The restore script restores data and machine-specific configuration. It intentionally does not overwrite the GitHub-managed BirdCanvas source code.
+
+
+Mirror delivery note: the BirdCanvas-to-Mirror push token is intentionally treated as a secret and is not included in disaster-recovery archives. Reconfigure it after a full restore.
