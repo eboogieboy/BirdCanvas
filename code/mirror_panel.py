@@ -108,8 +108,10 @@ def _signature(
     height: int,
     columns: int,
     slots: int,
+    day_key: str,
 ) -> str:
     payload = {
+        "day": day_key,
         "width": width,
         "height": height,
         "columns": columns,
@@ -265,7 +267,8 @@ def build_mirror_panel(
     columns = _bounded(columns, default=DEFAULT_COLUMNS, low=2, high=6)
     limit = _bounded(limit, default=DEFAULT_TILE_LIMIT, low=1, high=24)
 
-    _, _, birds = selected_birds(now=now, limit=limit)
+    resolved_now, _, birds = selected_birds(now=now, limit=limit)
+    day_key = resolved_now.date().isoformat()
     birds = [bird for bird in birds if str(bird.get("name", "")).strip()]
     record_birds(birds)
     tile_paths = [
@@ -288,6 +291,7 @@ def build_mirror_panel(
         height=height,
         columns=columns,
         slots=limit,
+        day_key=day_key,
     )
     previous = _read_meta(meta_path)
     if panel_path.is_file() and previous.get("signature") == signature:
@@ -307,6 +311,7 @@ def build_mirror_panel(
         json.dumps(
             {
                 "signature": signature,
+                "day": day_key,
                 "updated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
                 "width": width,
                 "height": height,
