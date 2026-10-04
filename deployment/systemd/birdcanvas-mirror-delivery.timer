@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh the cached BirdCanvas panel on the Magic Mirror
+
+[Timer]
+OnBootSec=45s
+OnUnitActiveSec=60s
+AccuracySec=5s
+Persistent=true
+Unit=birdcanvas-mirror-delivery.service
+
+[Install]
+WantedBy=timers.target
