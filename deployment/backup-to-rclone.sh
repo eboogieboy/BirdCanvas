@@ -107,7 +107,8 @@ copy_etc_file() {
 copy_etc_file /etc/modprobe.d/alsa-birdnet.conf
 copy_etc_file /etc/default/birdcanvas-auto-deploy
 copy_etc_file /etc/default/birdcanvas-backup
-for path in   /etc/systemd/system/canvasos.service   /etc/systemd/system/birdcanvas-production.service   /etc/systemd/system/birdcanvas-production.timer   /etc/systemd/system/birdcanvas-auto-deploy.service   /etc/systemd/system/birdcanvas-auto-deploy.timer   /etc/systemd/system/birdcanvas-backup.service   /etc/systemd/system/birdcanvas-backup.timer   "/etc/systemd/system/$BIRDCANVAS_BIRDNET_SERVICE"
+copy_etc_file /etc/default/birdcanvas-mirror-delivery
+for path in   /etc/systemd/system/canvasos.service   /etc/systemd/system/birdcanvas-production.service   /etc/systemd/system/birdcanvas-production.timer   /etc/systemd/system/birdcanvas-auto-deploy.service   /etc/systemd/system/birdcanvas-auto-deploy.timer   /etc/systemd/system/birdcanvas-backup.service   /etc/systemd/system/birdcanvas-backup.timer   /etc/systemd/system/birdcanvas-mirror-delivery.service   /etc/systemd/system/birdcanvas-mirror-delivery.timer   "/etc/systemd/system/$BIRDCANVAS_BIRDNET_SERVICE"
 do
   copy_etc_file "$path"
 done
