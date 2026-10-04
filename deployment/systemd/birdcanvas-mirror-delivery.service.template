@@ -1,0 +1,20 @@
+[Unit]
+Description=Push the current BirdCanvas panel to the Magic Mirror cache
+After=network-online.target canvasos.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=__USER__
+Group=__GROUP__
+WorkingDirectory=__PROJECT_DIR__
+Environment=PYTHONUNBUFFERED=1
+Environment=TZ=Europe/London
+EnvironmentFile=-__PROJECT_DIR__/.env
+EnvironmentFile=-/etc/default/birdcanvas-mirror-delivery
+ExecStart=__PROJECT_DIR__/.venv/bin/python __PROJECT_DIR__/code/mirror_delivery.py
+TimeoutStartSec=45s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=__PROJECT_DIR__
