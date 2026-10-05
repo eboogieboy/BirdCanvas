@@ -152,6 +152,7 @@ def save_creative_history(movement, brief, critique, featured_birds=None):
         "materials": brief.get("materials",""),
         "palette": brief.get("palette",""),
         "composition": brief.get("composition",""),
+        "subject_balance": brief.get("subject_balance",""),
         "originality": critique.get("originality",0),
         "featured_birds": list(featured_birds or []),
         "creative_dna": dna
@@ -372,10 +373,49 @@ Return ONLY JSON:
 
 
 
+SUBJECT_BALANCE_MODES = (
+    "environment-led",
+    "subtle-wildlife",
+    "shared",
+    "bird-led",
+)
+
+
+def select_subject_balance():
+    """Rotate visual emphasis so BirdCanvas does not default to bird portraits."""
+    history = load_creative_history(limit=12)
+    recent = [
+        str(item.get("subject_balance", "")).strip()
+        for item in history
+        if str(item.get("subject_balance", "")).strip() in SUBJECT_BALANCE_MODES
+    ]
+
+    counts = {
+        mode: recent.count(mode)
+        for mode in SUBJECT_BALANCE_MODES
+    }
+    last = recent[-1] if recent else None
+
+    candidates = [
+        mode
+        for mode in SUBJECT_BALANCE_MODES
+        if mode != last
+    ] or list(SUBJECT_BALANCE_MODES)
+
+    return min(
+        candidates,
+        key=lambda mode: (
+            counts[mode],
+            SUBJECT_BALANCE_MODES.index(mode),
+        ),
+    )
+
+
 def create_creative_brief(birds, movement=None, edition="daily", observation_window=""):
 
     bird_list = "\n".join(f"- {bird}" for bird in birds)
     season = current_season()
+    subject_balance = select_subject_balance()
 
     response = _client().responses.create(
         model="gpt-5.6-sol",
@@ -395,6 +435,23 @@ BirdCanvas values:
 - originality over obviousness
 - premium contemporary home aesthetics
 - selected birds remain recognisable, but this is not wildlife-calendar art
+
+Subject balance for THIS artwork: {subject_balance}
+
+Interpret that balance as follows:
+- bird-led: birds may be the principal visual feature, but the work must still contain a convincing wider world
+- shared: birds and environment/objects/architecture share visual importance
+- environment-led: the setting, architecture, objects, furniture, landscape, material or light is the main visual subject; birds live naturally within it
+- subtle-wildlife: the artwork works first as a complete scene or composition and the birds are smaller discoveries noticed on closer viewing
+
+Do not override this selected balance just because birds supplied the source data.
+
+The wider scene may include, when artistically appropriate, buildings, windows,
+walls, rooftops, sheds, greenhouses, furniture, chairs, tables, fences, paths,
+garden structures, domestic objects, vessels, textiles, plants, trees, water,
+weather, reflections, landscape, interiors or views through windows.
+
+These are genuine compositional subjects, not merely background decoration.
 
 The Magic Mirror carries the factual record of all birds heard. This Frame
 artwork is a CURATED artistic response, using only a small selected set.
@@ -486,6 +543,7 @@ Return ONLY valid JSON in this exact format:
   "visual_language": "",
   "palette": "",
   "composition": "",
+  "subject_balance": "",
   "bird_integration": "",
   "materials": "",
   "visual_focus": "",
@@ -495,7 +553,10 @@ Return ONLY valid JSON in this exact format:
 }}
 
 Rules:
+- subject_balance must be exactly "{subject_balance}".
 - Every selected species must be represented, but the artwork does not need to be about birds at first glance.
+- In environment-led and subtle-wildlife modes, do not enlarge or centre birds merely to make them more obvious.
+- Buildings, furniture, objects, structures, landscape, plants, weather, light and interior/exterior space may carry the composition.
 - bird_integration should describe how the artistic medium transforms the birds, not their detailed anatomy, plumage or field marks.
 - bird_integration must not ask for a normal naturalistic bird simply placed inside an abstract composition.
 - hero_birds may contain zero or one selected species.
@@ -524,6 +585,7 @@ Rules:
         for bird in birds:
             if bird not in hero and bird not in supporting:
                 supporting.append(bird)
+        brief["subject_balance"] = subject_balance
         brief["hero_birds"] = hero
         brief["supporting_birds"] = supporting
         return brief
@@ -540,6 +602,7 @@ Rules:
             "visual_language": "minimal contemporary portrait-format wall art with restrained abstract forms",
             "palette": "warm neutrals, sea glass, soft greens, charcoal, sandstone and linen",
             "composition": "9:16 portrait composition with strong vertical balance and generous negative space",
+            "subject_balance": subject_balance,
             "bird_integration": "Integrate the selected birds subtly into the artistic language while keeping each species recognisable.",
             "materials": "Layered paper, limewashed wood, mineral pigments and subtle textured surfaces.",
             "visual_focus": "The composition and materials should attract attention before the birds are noticed.",
@@ -629,17 +692,17 @@ This is contemporary bird artwork.
 
 The artwork must feel like premium contemporary art, not a wildlife illustration.
 
-Today's birds are the subject of the artwork.
+Today's birds are the creative trigger for the artwork, not necessarily its dominant visual subject.
 
-The selected exhibition movement determines the artistic language, materials and composition.
+The selected exhibition movement and subject balance determine the artistic language, materials and composition.
 
-The birds must remain recognisable and important within that artistic language.
+The birds must remain recognisable within that artistic language, but their prominence may range from leading subjects to quiet discoveries within a larger scene.
 
 The viewer should first see a beautiful contemporary artwork.
 
-The birds should be immediately noticeable as the subject of the piece.
+Architecture, furniture, objects, landscape, plants, weather, water, interiors, structures, light and material may be as important as—or more important than—the birds.
 
-The artistic movement should enhance the birds, not hide them.
+The artistic movement should integrate the birds naturally rather than forcing them to dominate.
 
 A person viewing the Samsung Frame from across the room should understand that this is artwork inspired by today's birds.
 
@@ -1094,9 +1157,13 @@ the image generator. A separate verifier will check species identity afterwards.
 
 Priorities:
 - make a beautiful, original artwork first
+- obey the creative brief's subject_balance; it controls how visually prominent the birds should be
 - let the selected movement control composition, atmosphere and material
+- architecture, buildings, furniture, objects, garden structures, plants, landscape, weather, water, windows, interiors and light may be major or dominant features
+- environmental features should feel intentionally composed, not like generic background scenery
 - the birds do not need equal prominence or separate positions
-- one bird may be a hero while others are quiet, embedded or discovered later
+- the birds do not need to be the main subject; in environment-led or subtle-wildlife work they may be small, distant, partially obscured or discovered later
+- one bird may be a hero only when the selected subject_balance supports it; otherwise keep all birds subordinate to the wider artwork
 - each featured species should remain recognisable through only the light art identity cue supplied
 - transform the birds into the movement's own material language rather than drawing ordinary birds and decorating around them
 - a conventionally rendered naturalistic bird placed inside an abstract, sculptural or graphic scene is a failure
@@ -1134,7 +1201,11 @@ BIRDCANVAS EXECUTION RULES
 - A normally rendered naturalistic bird inserted into an otherwise abstract, sculptural or graphic artwork is a failure.
 - Birds may emerge from material, pattern, shadow, reflection, negative space,
   abstraction or landscape structure if they remain recognisable.
-- One species may dominate and the others may be subtle.
+- Birds may perch on, move through or quietly inhabit architecture, furniture,
+  garden structures, domestic objects, plants, water, landscape or interior space.
+- Do not automatically centre, enlarge or foreground a bird.
+- One species may dominate only when the creative brief's subject_balance supports it.
+- In environment-led and subtle-wildlife modes, let non-bird elements clearly carry the visual hierarchy.
 - Do not add an obvious real bird species that was not selected.
 - The artwork must remain compelling even before the viewer consciously notices
   every bird.
@@ -1167,8 +1238,15 @@ ART-FIRST BIRD GUIDANCE:
 - This is a contemporary artwork inspired by selected bird species, not an
   identification plate.
 - Every selected species should be recognisable somewhere in the finished work.
-- One selected bird may be prominent; the others may be smaller or subtly
-  integrated.
+- Bird prominence must follow the supplied creative brief: birds may be principal,
+  shared, subordinate or deliberately subtle within the larger artwork.
+- Buildings, furniture, structures, domestic objects, plants, landscape, water,
+  weather, windows, interiors, reflections and light are allowed to become the
+  dominant visual features.
+- Small, distant, partially obscured or quietly perched birds are valid when the
+  selected subject balance calls for them.
+- Do not automatically make a bird the focal point just because birds triggered
+  the artwork.
 - Use only a few broad identity signals; do not construct a complete field-guide rendering.
 - The selected birds should be transformed by the chosen medium, not painted conventionally and placed on top of it.
 - If the surrounding work is abstract, sculptural, textile, ceramic, architectural or graphic, the birds must visibly belong to that same material language.
