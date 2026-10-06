@@ -42,7 +42,7 @@ class MirrorPanelTests(unittest.TestCase):
                  patch.object(mirror_panel, "mirror_tile_path", side_effect=lambda name, scientific="": tiles[name]):
                 path = mirror_panel.build_mirror_panel(
                     width=1200,
-                    height=984,
+                    height=900,
                     columns=4,
                     limit=16,
                     output_dir=root / "panel",
@@ -50,7 +50,7 @@ class MirrorPanelTests(unittest.TestCase):
 
             self.assertTrue(path.is_file())
             with Image.open(path) as image:
-                self.assertEqual(image.size, (1200, 984))
+                self.assertEqual(image.size, (1200, 900))
                 self.assertEqual(image.format, "JPEG")
 
             meta = json.loads((root / "panel" / "panel.json").read_text())
