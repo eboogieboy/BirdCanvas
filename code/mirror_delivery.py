@@ -60,7 +60,7 @@ def deliver(*, force: bool = False, now: datetime | None = None) -> dict:
     panel_path = build_mirror_panel(
         now=now,
         width=1200,
-        height=984,
+        height=900,
         columns=4,
         limit=16,
     )

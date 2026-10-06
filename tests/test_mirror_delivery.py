@@ -63,7 +63,7 @@ class MirrorDeliveryTests(unittest.TestCase):
                 {
                     "now": datetime(2026, 10, 4, 8, 0, tzinfo=TZ),
                     "width": 1200,
-                    "height": 984,
+                    "height": 900,
                     "columns": 4,
                     "limit": 16,
                 },

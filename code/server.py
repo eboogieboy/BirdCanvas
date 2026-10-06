@@ -144,7 +144,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 path = build_mirror_panel(
                     limit=int((query.get("limit") or ["16"])[0]),
                     width=int((query.get("width") or ["1200"])[0]),
-                    height=int((query.get("height") or ["984"])[0]),
+                    height=int((query.get("height") or ["900"])[0]),
                     columns=int((query.get("columns") or ["4"])[0]),
                 )
                 body = path.read_bytes()
