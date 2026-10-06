@@ -43,6 +43,23 @@ class MirrorBirdFeedTests(unittest.TestCase):
         self.assertEqual(result["day_end"], "2026-10-03T09:00:00+01:00")
         self.assertIn("name=Blackbird", result["birds"][0]["image_url"])
 
+    def test_default_feed_capacity_is_four_rows(self):
+        session = {
+            "start": "2026-10-03T00:00:00+01:00",
+            "end": "2026-10-03T09:00:00+01:00",
+            "species_count": 20,
+            "birds": [
+                {"name": f"Bird {index:02d}", "scientific_name": f"Species {index:02d}"}
+                for index in range(20)
+            ],
+        }
+        now = datetime(2026, 10, 3, 9, tzinfo=TZ)
+        with patch.object(mirror_birds, "day_session", return_value=session):
+            result = mirror_birds.mirror_birds(now=now)
+
+        self.assertEqual(result["max_tiles"], 16)
+        self.assertEqual(result["tiles_returned"], 16)
+
     def test_feed_limit_is_bounded(self):
         session = {
             "start": "2026-10-03T00:00:00+01:00",
