@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from bird_sessions import day_session
 
 LOCAL = ZoneInfo("Europe/London")
-DEFAULT_TILE_LIMIT = 12
+DEFAULT_TILE_LIMIT = 16
 
 
 def _normalise_limit(limit: int) -> int:

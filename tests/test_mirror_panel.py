@@ -17,7 +17,7 @@ TZ = ZoneInfo("Europe/London")
 
 
 class MirrorPanelTests(unittest.TestCase):
-    def test_builds_fixed_four_by_three_jpeg_with_names(self):
+    def test_builds_four_by_four_capable_jpeg_with_names(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             tiles = {}
@@ -42,20 +42,20 @@ class MirrorPanelTests(unittest.TestCase):
                  patch.object(mirror_panel, "mirror_tile_path", side_effect=lambda name, scientific="": tiles[name]):
                 path = mirror_panel.build_mirror_panel(
                     width=1200,
-                    height=900,
+                    height=984,
                     columns=4,
-                    limit=12,
+                    limit=16,
                     output_dir=root / "panel",
                 )
 
             self.assertTrue(path.is_file())
             with Image.open(path) as image:
-                self.assertEqual(image.size, (1200, 900))
+                self.assertEqual(image.size, (1200, 984))
                 self.assertEqual(image.format, "JPEG")
 
             meta = json.loads((root / "panel" / "panel.json").read_text())
             self.assertEqual(meta["columns"], 4)
-            self.assertEqual(meta["slots"], 12)
+            self.assertEqual(meta["slots"], 16)
             self.assertEqual(meta["birds"], ["Blackbird", "Robin", "Wren"])
             record.assert_called_once_with(birds)
 
@@ -67,6 +67,7 @@ class MirrorPanelTests(unittest.TestCase):
         self.assertEqual(mirror_panel._grid_shape(5, 4), (4, 2))
         self.assertEqual(mirror_panel._grid_shape(8, 4), (4, 2))
         self.assertEqual(mirror_panel._grid_shape(12, 4), (4, 3))
+        self.assertEqual(mirror_panel._grid_shape(16, 4), (4, 4))
 
     def test_short_bird_name_stays_on_one_line(self):
         image = Image.new("RGB", (600, 300), "black")
