@@ -60,9 +60,9 @@ def deliver(*, force: bool = False, now: datetime | None = None) -> dict:
     panel_path = build_mirror_panel(
         now=now,
         width=1200,
-        height=736,
+        height=984,
         columns=4,
-        limit=12,
+        limit=16,
     )
     metadata = _read_json(PANEL_META)
     signature = str(metadata.get("signature") or "").strip()
