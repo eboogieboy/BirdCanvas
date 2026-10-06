@@ -58,6 +58,16 @@ class MirrorDeliveryTests(unittest.TestCase):
             self.assertEqual(first["status"], "delivered")
             self.assertEqual(second["status"], "unchanged")
             self.assertEqual(opener.call_count, 1)
+            self.assertEqual(
+                mirror_delivery.build_mirror_panel.call_args_list[0].kwargs,
+                {
+                    "now": datetime(2026, 10, 4, 8, 0, tzinfo=TZ),
+                    "width": 1200,
+                    "height": 984,
+                    "columns": 4,
+                    "limit": 16,
+                },
+            )
 
             request = opener.call_args.args[0]
             self.assertEqual(request.get_header("Content-type"), "image/jpeg")
