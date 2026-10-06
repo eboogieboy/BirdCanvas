@@ -300,6 +300,7 @@ def create_art_direction(
     season: str,
     edition: str,
     observation_window: str,
+    subject_balance: str,
 ) -> dict[str, Any]:
     """One strong call replaces movement, selection, brief, DNA and prompt calls."""
     art_cues = [
@@ -321,6 +322,7 @@ heard in North Shields on the north-east coast of England.
 Edition: {edition}
 Observation window: {observation_window or "current collection"}
 Season: {season}
+Subject balance for THIS artwork: {subject_balance}
 Selected species: {json.dumps(birds)}
 Light identity cues: {json.dumps(art_cues, indent=2)}
 Recent creative history: {json.dumps(_compact_history(history), indent=2)}
@@ -334,6 +336,12 @@ Do all creative planning in this ONE response:
 
 Creative principles:
 - artwork first; birds are source material, not a checklist
+- obey the supplied subject balance exactly:
+  * bird-led: birds may lead but must inhabit a convincing wider world
+  * shared: birds and environment/objects/architecture share importance
+  * environment-led: setting, architecture, furniture, objects, landscape, material or light leads
+  * subtle-wildlife: the complete scene/composition leads and birds are smaller discoveries
+- in environment-led and subtle-wildlife modes, never enlarge or centre birds merely to make them obvious
 - beautiful, calm, original, premium contemporary-home aesthetics
 - one bird may be the hero; others can be quieter or discovered later
 - every selected species should remain recognisable using only its light identity cue
@@ -366,6 +374,7 @@ Return ONLY valid JSON in exactly this structure:
     "visual_language":"",
     "palette":"",
     "composition":"",
+    "subject_balance":"",
     "bird_integration":"",
     "materials":"",
     "visual_focus":"",
@@ -414,6 +423,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
         for bird in birds:
             if bird not in hero and bird not in supporting:
                 supporting.append(bird)
+        brief["subject_balance"] = subject_balance
         brief["hero_birds"] = hero
         brief["supporting_birds"] = supporting
         return {
@@ -442,6 +452,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             "visual_language": "layered material forms with restrained abstraction",
             "palette": "warm neutrals, sea glass, soft greens, charcoal and sandstone",
             "composition": "portrait composition with strong vertical balance and generous negative space",
+            "subject_balance": subject_balance,
             "bird_integration": "Transform each bird into the material language while retaining a recognisable identity cue.",
             "materials": movement["materials"],
             "visual_focus": "material, light and spatial rhythm",
