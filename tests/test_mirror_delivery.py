@@ -46,7 +46,7 @@ class MirrorDeliveryTests(unittest.TestCase):
                 clear=False,
             ), patch.object(mirror_delivery, "PANEL_META", meta), \
                  patch.object(mirror_delivery, "STATE_PATH", state), \
-                 patch.object(mirror_delivery, "build_mirror_panel", return_value=panel), \
+                 patch.object(mirror_delivery, "build_mirror_panel", return_value=panel) as builder, \
                  patch.object(mirror_delivery, "urlopen", return_value=response) as opener:
                 first = mirror_delivery.deliver(
                     now=datetime(2026, 10, 4, 8, 0, tzinfo=TZ)
@@ -59,7 +59,7 @@ class MirrorDeliveryTests(unittest.TestCase):
             self.assertEqual(second["status"], "unchanged")
             self.assertEqual(opener.call_count, 1)
             self.assertEqual(
-                mirror_delivery.build_mirror_panel.call_args_list[0].kwargs,
+                builder.call_args_list[0].kwargs,
                 {
                     "now": datetime(2026, 10, 4, 8, 0, tzinfo=TZ),
                     "width": 1200,
