@@ -25,6 +25,8 @@ runtime/logs/
 imports/*.zip
 
 # Generated caches
+data/bird_recognition_cache.json
+data/bird_recognition_cache.json.tmp
 output/current/
 output/control/
 output/gallery/

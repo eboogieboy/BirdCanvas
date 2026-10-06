@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.22.0 — Cost-Optimised Artwork Generation
+
+- Replaced multiple creative-planning API calls with one consolidated GPT-5.6 Sol creative-director call at low reasoning.
+- Moved bird selection and post-generation review to GPT-5.6 Luna with reasoning disabled.
+- Combined ornithology verification and art critique into one visual review call.
+- Added a persistent local species-recognition cache so known birds do not need repeated API descriptions.
+- Switched final artwork generation from deprecated GPT Image 1 to GPT Image 2 at medium 1024x1536.
+- Preserved rotating subject-balance modes, major-failure-only image retries, gallery metadata and creative-history anti-repetition.
+- Stored per-generation model configuration and raw API usage metadata with each artwork for later cost analysis.
+
+
 ## 0.12.0 — BirdNET-Go Production Pipeline
 
 - Added Daily, Monday/Thursday and Weekly collection schedules and a phone control for excluded birds.
