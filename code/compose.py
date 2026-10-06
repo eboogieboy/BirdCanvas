@@ -1597,6 +1597,9 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     print("Loading Bird Recognition Guide...")
     bird_plan = generation_ai.create_bird_plan(birds)
 
+    subject_balance = select_subject_balance()
+    print("Subject balance:", subject_balance)
+
     print("Creating consolidated creative direction...")
     direction = generation_ai.create_art_direction(
         birds,
@@ -1605,6 +1608,7 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         season=current_season(),
         edition=edition,
         observation_window=observation_window,
+        subject_balance=subject_balance,
     )
 
     movements = direction["movement_options"]
