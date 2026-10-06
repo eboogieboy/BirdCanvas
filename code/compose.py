@@ -9,6 +9,7 @@ from functools import lru_cache
 from storage import get_birds, get_yesterday_birds
 from generation_settings import excluded_birds
 from paths import OUTPUT_DIR, DATA_DIR
+import generation_ai
 OUTPUT = OUTPUT_DIR / "final_scene.png"
 CANDIDATE_DIR = OUTPUT_DIR / "candidates"
 MAX_ATTEMPTS = 2
@@ -139,27 +140,54 @@ Return ONLY JSON:
         }
 
 
-def save_creative_history(movement, brief, critique, featured_birds=None):
-
+def save_creative_history(
+    movement,
+    brief,
+    critique,
+    featured_birds=None,
+    creative_dna=None,
+):
+    """Persist creative memory without making another paid API call."""
     HISTORY_FILE.parent.mkdir(exist_ok=True)
     history = load_creative_history(limit=100)
 
-    dna = extract_creative_dna(brief)
+    if isinstance(creative_dna, dict) and creative_dna:
+        dna = creative_dna
+    else:
+        material_value = brief.get("materials", "")
+        if isinstance(material_value, list):
+            materials = material_value[:6]
+        else:
+            materials = [
+                part.strip()
+                for part in str(material_value).split(",")
+                if part.strip()
+            ][:6]
+
+        dna = {
+            "dominant_family": movement.get("name", "") or brief.get("style", ""),
+            "materials": materials,
+            "palette_type": brief.get("palette", ""),
+            "energy": brief.get("mood", ""),
+            "complexity": "",
+            "surface": brief.get("visual_language", ""),
+            "geometry": brief.get("composition", ""),
+            "overall_character": brief.get("style_guidance", ""),
+        }
 
     history.append({
         "date": str(date.today()),
-        "movement": movement.get("name",""),
-        "materials": brief.get("materials",""),
-        "palette": brief.get("palette",""),
-        "composition": brief.get("composition",""),
-        "subject_balance": brief.get("subject_balance",""),
-        "originality": critique.get("originality",0),
+        "movement": movement.get("name", ""),
+        "materials": brief.get("materials", ""),
+        "palette": brief.get("palette", ""),
+        "composition": brief.get("composition", ""),
+        "subject_balance": brief.get("subject_balance", ""),
+        "originality": critique.get("originality", 0),
         "featured_birds": list(featured_birds or []),
-        "creative_dna": dna
+        "creative_dna": dna,
     })
 
     HISTORY_FILE.write_text(json.dumps(history, indent=2))
-
 
 
 def select_featured_birds(birds):
@@ -1541,6 +1569,8 @@ def build_verification_correction(
 
 def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None):
 
+    generation_ai.reset_usage()
+
     print("compose() started")
     print("Loading birds...")
     eligible_birds = list(birds) if birds is not None else load_birds_for_source(source)
@@ -1551,39 +1581,44 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         print(f"No birds recorded in {source}.")
         return None
 
-    birds, curation_reason = select_featured_birds(eligible_birds)
+    history = load_creative_history(limit=10)
+
+    birds, curation_reason = generation_ai.select_featured_birds(
+        eligible_birds,
+        history=history,
+        minimum=MIN_FEATURED_BIRDS,
+        maximum=MAX_FEATURED_BIRDS,
+    )
     print(f"Curated {len(birds)} featured birds from {len(eligible_birds)} eligible species")
     print("Featured birds:", ", ".join(birds))
     if curation_reason:
         print("Curation reason:", curation_reason)
 
-    print("Creating movement options...")
-    movements = create_movement_options(birds, current_season(), edition)
-    print(f"Created {len(movements)} movement options")
+    print("Loading Bird Recognition Guide...")
+    bird_plan = generation_ai.create_bird_plan(birds)
 
-    print("Movement options:")
-    for i, movement_option in enumerate(movements, 1):
-        print(f"{i}. {movement_option.get('name','Untitled')}")
-
-    selected_movement, selection_reason = select_movement(movements, birds)
-    brief = create_creative_brief(
+    print("Creating consolidated creative direction...")
+    direction = generation_ai.create_art_direction(
         birds,
-        movement=selected_movement,
+        bird_plan,
+        history=history,
+        season=current_season(),
         edition=edition,
-        observation_window=observation_window
+        observation_window=observation_window,
     )
+
+    movements = direction["movement_options"]
+    selected_movement = direction["selected_movement"]
+    selection_reason = direction.get("selection_reason", "")
+    brief = direction["brief"]
+    creative_dna = direction.get("creative_dna", {})
+    base_prompt = direction["image_prompt"]
 
     print(f"BirdCanvas source: {source}")
     print(f"Image size: {IMAGE_SIZE}")
+    print("Selected movement:", selected_movement.get("name", "Untitled"))
     print("Creative brief:")
     print(json.dumps(brief, indent=2))
-    print()
-
-    print("Creating Bird Recognition Guide...")
-    bird_plan = create_bird_plan(birds)
-
-    print("Bird Recognition Guide:")
-    print(json.dumps({"birds": bird_plan}, indent=2))
     print()
 
     correction = None
@@ -1591,25 +1626,34 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     for attempt in range(1, MAX_ATTEMPTS + 1):
         print(f"Generating artwork attempt {attempt}/{MAX_ATTEMPTS}...")
 
-        prompt = create_image_prompt(
-            birds=birds,
-            brief=brief,
-            bird_plan=bird_plan,
-            correction=correction,
-        )
+        if correction:
+            prompt = generation_ai.build_retry_prompt(base_prompt, correction)
+        else:
+            prompt = base_prompt
 
         print("Final image prompt:")
         print(prompt)
         print()
 
-        image_bytes = generate_image(prompt)
+        image_bytes = generation_ai.generate_image(
+            prompt,
+            size=IMAGE_SIZE,
+            quality="medium",
+        )
         save_image(image_bytes)
 
-        print("Verifying featured species...")
+        print("Reviewing artwork and featured species...")
         try:
-            verification = verify_image(birds, bird_plan)
+            review = generation_ai.review_artwork(
+                birds,
+                brief,
+                OUTPUT,
+                bird_plan,
+            )
+            verification = review["verification"]
+            critique = review["critique"]
         except Exception as error:
-            print(f"Verification failed, keeping generated artwork: {error}")
+            print(f"Artwork review failed, keeping generated artwork: {error}")
             return {
                 "birds": birds,
                 "brief": brief,
@@ -1618,13 +1662,26 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
                     "eligible_birds": eligible_birds,
                     "featured_birds": birds,
                     "curation_reason": curation_reason,
-                    "verification_error": str(error),
+                    "movement_options": movements,
+                    "selected_movement": selected_movement,
+                    "selection_reason": selection_reason,
+                    "bird_plan": bird_plan,
+                    "image_prompt": prompt,
+                    "review_error": str(error),
                     "attempts_used": attempt,
+                    "api_profile": generation_ai.model_profile(),
+                    "api_usage": generation_ai.usage_snapshot(),
                 },
             }
 
         print("Verification results:")
         print(json.dumps(verification, indent=2))
+
+        print()
+        print("Art Director critique")
+        print("---------------------")
+        for key, value in critique.items():
+            print(f"{key}: {value}")
 
         major_failure = verification_has_major_failure(verification)
 
@@ -1637,19 +1694,12 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
                     "Accepting artwork without another paid generation."
                 )
 
-            critique = critique_artwork(birds, brief, OUTPUT)
-
-            print()
-            print("Art Director critique")
-            print("---------------------")
-            for key, value in critique.items():
-                print(f"{key}: {value}")
-
             save_creative_history(
                 selected_movement,
                 brief,
                 critique,
                 featured_birds=birds,
+                creative_dna=creative_dna,
             )
 
             return {
@@ -1671,6 +1721,9 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
                     "accepted_with_minor_issues": verification.get("passed") is not True,
                     "attempts_used": attempt,
                     "critique": critique,
+                    "creative_dna": creative_dna,
+                    "api_profile": generation_ai.model_profile(),
+                    "api_usage": generation_ai.usage_snapshot(),
                 },
             }
 
@@ -1691,6 +1744,8 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     return {
         "birds": birds,
         "brief": brief,
+        "critique": critique,
+        "verification": verification,
         "output": str(OUTPUT),
         "generation": {
             "eligible_birds": eligible_birds,
@@ -1704,6 +1759,10 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
             "verification": verification,
             "verification_failed": True,
             "attempts_used": MAX_ATTEMPTS,
+            "critique": critique,
+            "creative_dna": creative_dna,
+            "api_profile": generation_ai.model_profile(),
+            "api_usage": generation_ai.usage_snapshot(),
         },
     }
 
