@@ -408,33 +408,35 @@ SUBJECT_BALANCE_MODES = (
     "bird-led",
 )
 
+# Long-term mix: 70% art/setting-led, 20% shared, 10% bird-led.
+# Keep both art-first modes in rotation for distinct visual approaches.
+SUBJECT_BALANCE_WEIGHTS = {
+    "environment-led": 0.4,
+    "subtle-wildlife": 0.3,
+    "shared": 0.2,
+    "bird-led": 0.1,
+}
+
 
 def select_subject_balance():
-    """Rotate visual emphasis so BirdCanvas does not default to bird portraits."""
-    history = load_creative_history(limit=12)
+    """Choose the most underrepresented weighted mode in recent history."""
+    history = load_creative_history(limit=10)
     recent = [
         str(item.get("subject_balance", "")).strip()
         for item in history
         if str(item.get("subject_balance", "")).strip() in SUBJECT_BALANCE_MODES
     ]
-
-    counts = {
-        mode: recent.count(mode)
-        for mode in SUBJECT_BALANCE_MODES
-    }
+    counts = {mode: recent.count(mode) for mode in SUBJECT_BALANCE_MODES}
     last = recent[-1] if recent else None
 
-    candidates = [
-        mode
-        for mode in SUBJECT_BALANCE_MODES
-        if mode != last
-    ] or list(SUBJECT_BALANCE_MODES)
-
-    return min(
-        candidates,
+    # Weighted deficit balances the collection without a random generator
+    # or any additional API call. Avoid repeating the previous mode on ties.
+    return max(
+        SUBJECT_BALANCE_MODES,
         key=lambda mode: (
-            counts[mode],
-            SUBJECT_BALANCE_MODES.index(mode),
+            SUBJECT_BALANCE_WEIGHTS[mode] * (len(recent) + 1) - counts[mode],
+            mode != last,
+            -SUBJECT_BALANCE_MODES.index(mode),
         ),
     )
 
