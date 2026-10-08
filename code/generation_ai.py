@@ -342,6 +342,18 @@ Creative principles:
   * environment-led: setting, architecture, furniture, objects, landscape, material or light leads
   * subtle-wildlife: the complete scene/composition leads and birds are smaller discoveries
 - in environment-led and subtle-wildlife modes, never enlarge or centre birds merely to make them obvious
+- in these art-first modes, birds normally occupy only a small portion of the canvas
+  (roughly 5-15% of visual area in total); these are compositional guidelines,
+  not rigid quotas or a reason to hide the selected species
+- use convincing environmental storytelling: a roofline, garden wall, chair,
+  window, fence, boat, harbour structure, shed, planting, shoreline or interior
+  may be the main visual subject; birds belong naturally within that world
+- avoid large central bird portraits, oversized foreground birds, symmetrical
+  species lineups or bird-first framing except when the selected balance is bird-led
+- shared mode makes birds and non-bird subjects genuinely coequal, not a bird
+  portrait with a decorative background
+- bird-led mode is an occasional deliberate contrast, not the default
+- a viewer should appreciate the artwork before discovering its birds
 - beautiful, calm, original, premium contemporary-home aesthetics
 - one bird may be the hero; others can be quieter or discovered later
 - every selected species should remain recognisable using only its light identity cue
@@ -480,7 +492,8 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
                 "Create a museum-quality contemporary material abstraction in portrait format, full bleed, "
                 "using layered mineral pigment, paper and weathered surfaces under cool northern light. "
                 f"Integrate these selected birds as transformed but recognisable motifs: {cues}. "
-                "One may be prominent and the others subtle; do not use a field-guide layout. Buildings, "
+                "Keep the birds secondary to a fully realised environment unless this edition is explicitly bird-led. " 
+                "Do not use a field-guide layout or oversized central bird portraits. Buildings, "
                 "architectural forms or objects may share the composition. Keep important forms in the central "
                 "80% width for a final 9:16 crop. No text, border, mat, signature, watermark or humans."
             ),
