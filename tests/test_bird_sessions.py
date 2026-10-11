@@ -62,6 +62,8 @@ class BirdSessionTests(unittest.TestCase):
         self.assertFalse(blackbird["excluded_from_artwork"])
         self.assertTrue(gull["excluded_from_artwork"])
         self.assertIsNotNone(blackbird["illustration"])
+        self.assertEqual(blackbird["rarity"]["level"], "common")
+        self.assertEqual(gull["rarity"]["level"], "common")
 
     def test_custom_field_guide_override_is_used_in_heard_bird_cards(self):
         rows = [

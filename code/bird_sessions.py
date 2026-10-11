@@ -5,6 +5,7 @@ from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 from bird_images import display_illustration_for
+from bird_rarity import rarity_for
 from birdnet_go import _timestamp, detection_rows
 from generation_settings import load_settings
 from production_pipeline import status as production_status
@@ -66,6 +67,7 @@ def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
                 "first_heard": item["first_heard"].isoformat(timespec="seconds"),
                 "last_heard": item["last_heard"].isoformat(timespec="seconds"),
                 "max_confidence": round(item["max_confidence"], 3),
+                "rarity": rarity_for(item["name"], item["scientific_name"]),
                 "excluded_from_artwork": _excluded(item["name"], excluded_terms),
                 "illustration": illustration,
             }

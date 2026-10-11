@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 from bird_images import mirror_tile_info
+from bird_rarity import rarity_for
 from paths import DATA_DIR
 
 LOCAL = ZoneInfo("Europe/London")
@@ -160,6 +161,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
                 "last_seen": item.get("last_seen") or None,
                 "starter": key in starter_keys,
                 "heard": heard,
+                "rarity": rarity_for(name, scientific),
                 "image_url": f"/api/mirror/bird-image?{query}",
                 "image_status": tile["status"],
                 "image_ready": tile["status"] == "ready",

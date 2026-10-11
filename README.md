@@ -22,8 +22,11 @@ Open port `8000` in Codespaces.
 - Magic Mirror bird feed: `/api/mirror/birds` (defaults to 12 tile-ready birds)
 - Magic Mirror rendered panel: `/api/mirror/panel.jpg` (defaults to a 1200 × 900, 4 × 3 grid)
 - Field-guide catalogue: `/api/birds/catalog` (all species BirdCanvas has recorded, with thumbnail health)
+- Local rarity: `/api/birds/current`, `/api/birds/day` and `/api/birds/catalog` each include the same `rarity` object for each species (`level`, `label`, `region`, `context`, `basis`). The phone Garden visitors screen shows it on daily bird cards and field-guide tiles, with an `Uncommon +` filter.
 
 BirdCanvas does the display work for the Mirror: it selects the most recently heard species, shortens BirdNET names such as “Eurasian Blackbird” to “Blackbird”, alphabetises the selected set, caches square historical field-guide illustrations locally, and renders a finished named grid JPEG. The Mirror can therefore display one image and refresh it periodically. The Garden visitors page starts with 20 common UK birds and then grows automatically as BirdCanvas encounters new species. It clearly distinguishes starter species from birds actually heard by BirdNET, flags any missing or failed field-guide image, and lets an individual illustration be replaced from the phone and restored to its curated default later. Those custom replacements are stored in BirdCanvas data, survive application deployments and are used by the rendered Magic Mirror panel.
+
+Local rarity refers to **indicative frequency around North Tyneside and the nearby North East coast**, not UK conservation status, a personal encounter rate, or a verified identification. Seasonal context is shown where useful. Unreviewed species are marked **Unrated** rather than incorrectly labelled rare. The reviewable baseline is in `code/bird_rarity.py`; BTO BirdFacts Places and Northumberland & Tyneside Bird Club records are useful when updating it. Rare or surprising BirdNET-Go detections still need audio review. These labels are display-only and do not change detection thresholds, artwork exclusions, generation or TV/Mirror delivery.
 
 Stop the server with `Ctrl+C`.
 
