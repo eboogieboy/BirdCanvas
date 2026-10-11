@@ -85,6 +85,8 @@ class BirdCatalogueTests(unittest.TestCase):
         self.assertEqual(result["missing_count"], 1)
         self.assertEqual([bird["name"] for bird in result["birds"]], ["Blackbird", "Mystery Bird"])
         self.assertFalse(result["birds"][1]["image_ready"])
+        self.assertEqual(result["birds"][0]["rarity"]["level"], "common")
+        self.assertEqual(result["birds"][1]["rarity"]["level"], "unrated")
 
     def test_catalogue_starts_with_twenty_common_birds_without_faking_detections(self):
         with tempfile.TemporaryDirectory() as folder:
