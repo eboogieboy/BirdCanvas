@@ -1616,6 +1616,7 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         edition=edition,
         observation_window=observation_window,
         subject_balance=subject_balance,
+        art_style=art_style,
     )
 
     movements = direction["movement_options"]
