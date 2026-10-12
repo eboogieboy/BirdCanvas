@@ -301,8 +301,10 @@ def create_art_direction(
     edition: str,
     observation_window: str,
     subject_balance: str,
+    art_style: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """One strong call replaces movement, selection, brief, DNA and prompt calls."""
+    art_style = art_style or {"name": "Contemporary gallery art", "guidance": "Create original gallery-quality artwork."}
     art_cues = [
         {"species": item["species"], "art_cue": item["art_cue"]}
         for item in bird_plan
@@ -323,13 +325,15 @@ Edition: {edition}
 Observation window: {observation_window or "current collection"}
 Season: {season}
 Subject balance for THIS artwork: {subject_balance}
+REQUIRED ARTISTIC MEDIUM: {art_style['name']}
+MEDIUM CHARACTERISTICS: {art_style['guidance']}
 Selected species: {json.dumps(birds)}
 Light identity cues: {json.dumps(art_cues, indent=2)}
 Recent creative history: {json.dumps(_compact_history(history), indent=2)}
 
 Do all creative planning in this ONE response:
-1. Consider FIVE radically different exhibition movements. Keep each proposal concise.
-2. Select the strongest one for today's birds and recent-history contrast.
+1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in setting and composition, not medium.
+2. Select the strongest concept for today's birds, retaining the required artistic medium.
 3. Develop it into a curator's brief.
 4. Extract concise Creative DNA for future anti-repetition memory.
 5. Write the finished prompt that will be sent directly to GPT Image.
@@ -354,7 +358,7 @@ Creative principles:
   portrait with a decorative background
 - bird-led mode is an occasional deliberate contrast, not the default
 - a viewer should appreciate the artwork before discovering its birds
-- beautiful, calm, original, premium contemporary-home aesthetics
+- beautiful, original, premium contemporary-home aesthetics; bold, lively and playful colour is welcome when the required medium calls for it
 - one bird may be the hero; others can be quieter or discovered later
 - every selected species should remain recognisable using only its light identity cue
 - birds must inherit the chosen medium/material language rather than appear as
@@ -368,6 +372,8 @@ Creative principles:
 - avoid wildlife-calendar art, field-guide plates, greeting cards, stock illustration,
   children's illustration, AI clichés and overly busy scenes
 - do not imitate a living artist
+- the required artistic medium is non-negotiable across the movement, creative brief, creative DNA and final image prompt
+- do not return to muted stone, scagliola, distressed plaster, architectural aquatint or weathered mixed media unless required by this edition's medium
 - do not add obvious unlisted real bird species
 
 Return ONLY valid JSON in exactly this structure:
@@ -436,6 +442,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             if bird not in hero and bird not in supporting:
                 supporting.append(bird)
         brief["subject_balance"] = subject_balance
+        brief["art_style"] = art_style["name"]
         brief["hero_birds"] = hero
         brief["supporting_birds"] = supporting
         return {
@@ -465,6 +472,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             "palette": "warm neutrals, sea glass, soft greens, charcoal and sandstone",
             "composition": "portrait composition with strong vertical balance and generous negative space",
             "subject_balance": subject_balance,
+            "art_style": art_style["name"],
             "bird_integration": "Transform each bird into the material language while retaining a recognisable identity cue.",
             "materials": movement["materials"],
             "visual_focus": "material, light and spatial rhythm",
@@ -489,7 +497,8 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
                 "overall_character": "quiet northern contemporary",
             },
             "image_prompt": (
-                "Create a museum-quality contemporary material abstraction in portrait format, full bleed, "
+                f"In the REQUIRED ARTISTIC MEDIUM of {art_style['name']}: {art_style['guidance']} "
+                "Create a museum-quality artwork in portrait format, full bleed, "
                 "using layered mineral pigment, paper and weathered surfaces under cool northern light. "
                 f"Integrate these selected birds as transformed but recognisable motifs: {cues}. "
                 "Keep the birds secondary to a fully realised environment unless this edition is explicitly bird-led. " 
