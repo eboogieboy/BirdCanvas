@@ -10,6 +10,7 @@ from storage import get_birds, get_yesterday_birds
 from generation_settings import excluded_birds
 from paths import OUTPUT_DIR, DATA_DIR
 import generation_ai
+from art_style_rotation import choose_style
 OUTPUT = OUTPUT_DIR / "final_scene.png"
 CANDIDATE_DIR = OUTPUT_DIR / "candidates"
 MAX_ATTEMPTS = 2
@@ -146,6 +147,7 @@ def save_creative_history(
     critique,
     featured_birds=None,
     creative_dna=None,
+    art_style=None,
 ):
     """Persist creative memory without making another paid API call."""
     HISTORY_FILE.parent.mkdir(exist_ok=True)
@@ -178,6 +180,7 @@ def save_creative_history(
     history.append({
         "date": str(date.today()),
         "movement": movement.get("name", ""),
+        "art_style": art_style or brief.get("art_style", ""),
         "materials": brief.get("materials", ""),
         "palette": brief.get("palette", ""),
         "composition": brief.get("composition", ""),
@@ -1602,6 +1605,8 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     subject_balance = select_subject_balance()
     print("Subject balance:", subject_balance)
 
+    art_style = choose_style(history)
+    print("Artistic tradition:", art_style["name"])
     print("Creating consolidated creative direction...")
     direction = generation_ai.create_art_direction(
         birds,
@@ -1619,6 +1624,17 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     brief = direction["brief"]
     creative_dna = direction.get("creative_dna", {})
     base_prompt = direction["image_prompt"]
+    brief["art_style"] = art_style["name"]
+    base_prompt = (
+        "MANDATORY CREATIVE DIRECTION FOR THIS EDITION: "
+        + art_style["name"] + ". " + art_style["guidance"] + "\n"
+        "Interpret the ENTIRE artwork, birds and environment alike, through this "
+        "distinct artistic tradition. Do not drift back to the previous muted, "
+        "weathered mixed-media house style unless it is this edition\x27s selected medium. "
+        "Preserve every existing species, subject-balance, 9:16 crop, quality and "
+        "verification requirement in the original prompt.\n\n"
+        + base_prompt
+    )
 
     print(f"BirdCanvas source: {source}")
     print(f"Image size: {IMAGE_SIZE}")
@@ -1706,6 +1722,7 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
                 critique,
                 featured_birds=birds,
                 creative_dna=creative_dna,
+                art_style=art_style["name"],
             )
 
             return {
