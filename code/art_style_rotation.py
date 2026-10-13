@@ -2,7 +2,6 @@
 STYLES = [
     ("Pop art", "Bold, colourful screenprint-inspired pop art with sophisticated graphic composition."),
     ("Oil painting", "Expressive oil painting with visible brushwork and luminous pigment."),
-    ("Storybook illustration", "Inventive, polished illustrated worlds with expressive drawing; refined rather than childish."),
     ("Japanese woodblock", "Ukiyo-e-inspired carved shapes, elegant ink outlines, and flat colour."),
     ("Impressionism", "Impressionist broken colour, light-filled brushwork, and atmospheric space."),
     ("Art Deco", "Art Deco geometry, rich colour, architectural ornament, and elegant composition."),
