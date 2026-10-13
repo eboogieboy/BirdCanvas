@@ -1633,7 +1633,13 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         "distinct artistic tradition. Do not drift back to the previous muted, "
         "weathered mixed-media house style unless it is this edition\x27s selected medium. "
         "Preserve every existing species, subject-balance, 9:16 crop, quality and "
-        "verification requirement in the original prompt.\n\n"
+        "verification requirement in the original prompt.\n"
+        "AUTHENTICITY AND RESTRAINT: Make the artistic world internally convincing, "
+        "not an idealised picture-postcard montage. Prefer purposeful scenes with "
+        "plausible spatial relationships, some ordinary imperfection and room to breathe. "
+        "Let birds feel discovered rather than staged. Keep any whimsy, abstraction, "
+        "bold colour or surrealism integral to the chosen style; do not default "
+        "back to muted weathered architecture.\n\n"
         + base_prompt
     )
 
