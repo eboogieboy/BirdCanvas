@@ -123,6 +123,41 @@ class GenerationAITests(unittest.TestCase):
 
         self.assertEqual(result["brief"]["subject_balance"], "environment-led")
 
+    def test_art_direction_preserves_style_and_grounded_authenticity_on_fallback(self):
+        plan = [{
+            "species": "Blackbird",
+            "art_cue": "dark compact silhouette",
+        }]
+        with patch.object(
+            generation_ai,
+            "_responses_create",
+            return_value=SimpleNamespace(output_text="{}"),
+        ) as create:
+            result = generation_ai.create_art_direction(
+                ["Blackbird"],
+                plan,
+                history=[],
+                season="autumn",
+                edition="daily",
+                observation_window="test",
+                subject_balance="subtle-wildlife",
+                art_style={
+                    "name": "Pop art",
+                    "guidance": "Strong graphic shapes and exuberant print colour.",
+                },
+            )
+
+        director_input = create.call_args.kwargs["input"]
+        self.assertIn("REQUIRED ARTISTIC MEDIUM: Pop art", director_input)
+        self.assertIn("Authenticity and restraint", director_input)
+        self.assertIn("not photorealism", director_input.lower())
+        self.assertIn("not posed", director_input)
+        self.assertEqual(result["brief"]["art_style"], "Pop art")
+        self.assertEqual(result["brief"]["subject_balance"], "subtle-wildlife")
+        self.assertIn("Pop art", result["image_prompt"])
+        self.assertIn("postcard montage", result["image_prompt"])
+        self.assertIn("Blackbird", result["image_prompt"])
+
     def test_retry_reuses_original_art_direction(self):
         base = "Original art direction."
         retry = generation_ai.build_retry_prompt(base, "- Curlew: missing.")
