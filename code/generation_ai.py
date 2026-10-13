@@ -333,10 +333,29 @@ Recent creative history: {json.dumps(_compact_history(history), indent=2)}
 
 Do all creative planning in this ONE response:
 1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in setting and composition, not medium.
-2. Select the strongest concept for today's birds, retaining the required artistic medium.
+2. Select the strongest concept for today's birds, retaining the required artistic medium. Prefer a specific, internally convincing composition over the most ornate, picturesque or conventionally pretty concept.
 3. Develop it into a curator's brief.
 4. Extract concise Creative DNA for future anti-repetition memory.
 5. Write the finished prompt that will be sent directly to GPT Image.
+
+Authenticity and restraint — mandatory in EVERY artistic medium:
+- Make the scene feel observed or thoughtfully conceived, not assembled from
+  attractive stock motifs to create an idealised postcard.
+- Ordinary, imperfect and overlooked settings can be powerful: a modest back
+  garden, fence, quiet street, shed, window view, allotment, harbour structure
+  or lived-in interior. These are options, not a compulsory subject checklist.
+- Let objects and structures have a believable spatial relationship and purpose.
+  Do not pile on picturesque mansions, ornamental gardens, golden-hour glow,
+  decorative clutter or romantic scenery simply because they look impressive.
+- Leave room for negative space, asymmetry, ordinary weather and quiet detail.
+  A sparse scene is as valid as an elaborate one.
+- Birds should feel incidentally encountered, not posed or distributed as
+  decorative ornaments solely to make every species obvious.
+- "Believable" means an intentional, coherent artistic world, NOT photorealism:
+  pop art may be exuberant, illustration whimsical, and surrealism impossible.
+  Preserve the selected medium's genuine colour, energy and boldness.
+- Preserve surprising artistic variety; do not solve this requirement by
+  returning every day to muted concrete, coastal textures or stone architecture.
 
 Creative principles:
 - artwork first; birds are source material, not a checklist
@@ -417,7 +436,7 @@ The image_prompt must be complete and ready for image generation. It must descri
 one collectible contemporary artwork, include all selected species once in an
 identifiable but transformed way, explicitly preserve crop safety/full bleed, and
 prioritise composition, atmosphere, material, light and beauty over ornithological
-micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim.
+micro-detail. Carry the authenticity-and-restraint direction into the actual image_prompt: believable spatial storytelling, unforced bird placement, intentional negative space, and no automatically picturesque perfection. Do not turn it into a checklist or repeat the whole brief verbatim.
 """,
     )
 
@@ -466,7 +485,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             "collection": "Quiet Northern Forms",
             "style": "Contemporary material abstraction",
             "style_guidance": "Create elegant contemporary wall art led by composition, material and atmosphere.",
-            "curator_notes": "Birds are selected visual cues inside a broader artwork.",
+            "curator_notes": "Birds are incidental discoveries in a deliberately composed, imperfect and believable setting; avoid picturesque staging.",
             "mood": "calm",
             "visual_language": "layered material forms with restrained abstraction",
             "palette": "warm neutrals, sea glass, soft greens, charcoal and sandstone",
@@ -478,7 +497,7 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             "visual_focus": "material, light and spatial rhythm",
             "hero_birds": birds[:1],
             "supporting_birds": birds[1:],
-            "avoid": ["wildlife calendar art", "field-guide plate", "clip art", "busy garden scene"],
+            "avoid": ["wildlife calendar art", "field-guide plate", "clip art", "busy garden scene", "picturesque postcard staging", "ornamental filler"],
         }
         cues = "; ".join(f"{x['species']}: {x['art_cue']}" for x in bird_plan)
         return {
@@ -499,7 +518,11 @@ micro-detail. Do not turn it into a checklist or repeat the whole brief verbatim
             "image_prompt": (
                 f"In the REQUIRED ARTISTIC MEDIUM of {art_style['name']}: {art_style['guidance']} "
                 "Create a museum-quality artwork in portrait format, full bleed, "
-                "using layered mineral pigment, paper and weathered surfaces under cool northern light. "
+                "using materials, palette and mark-making true to the specified medium. "
+                "Choose an internally believable, unforced setting with ordinary imperfections, "
+                "convincing spatial relationships and deliberate negative space, never an idealised "
+                "postcard montage or decorative fantasy garden. Whimsy and abstraction remain welcome "
+                "when the artistic world feels intentional. "
                 f"Integrate these selected birds as transformed but recognisable motifs: {cues}. "
                 "Keep the birds secondary to a fully realised environment unless this edition is explicitly bird-led. " 
                 "Do not use a field-guide layout or oversized central bird portraits. Buildings, "
