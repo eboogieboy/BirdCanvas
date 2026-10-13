@@ -475,20 +475,23 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
     except Exception as error:
         print(f"Creative director response invalid; using safe local fallback: {error}")
         movement = {
-            "name": "Quiet Northern Material Study",
-            "creative_direction": "Contemporary material abstraction shaped by cool northern light.",
-            "materials": "mineral pigment, layered paper and weathered surfaces",
-            "composition": "open portrait composition with calm negative space",
+            "name": f"Everyday Encounters — {art_style['name']}",
+            "creative_direction": (
+                f"{art_style['guidance']} Create an unforced, compositionally convincing "
+                "scene with ordinary detail, room to breathe and natural bird integration."
+            ),
+            "materials": f"Authentic mark-making and material language of {art_style['name']}",
+            "composition": "purposeful portrait composition with believable space and calm negative space",
             "why_it_is_distinct": "fallback",
         }
         brief = {
-            "collection": "Quiet Northern Forms",
-            "style": "Contemporary material abstraction",
-            "style_guidance": "Create elegant contemporary wall art led by composition, material and atmosphere.",
+            "collection": f"Everyday Encounters — {art_style['name']}",
+            "style": art_style["name"],
+            "style_guidance": art_style["guidance"],
             "curator_notes": "Birds are incidental discoveries in a deliberately composed, imperfect and believable setting; avoid picturesque staging.",
             "mood": "calm",
-            "visual_language": "layered material forms with restrained abstraction",
-            "palette": "warm neutrals, sea glass, soft greens, charcoal and sandstone",
+            "visual_language": f"Consistent {art_style['name']} treatment across scene and birds",
+            "palette": "A considered palette true to the medium; no automatic muted coastal default",
             "composition": "portrait composition with strong vertical balance and generous negative space",
             "subject_balance": subject_balance,
             "art_style": art_style["name"],
@@ -506,9 +509,9 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
             "selection_reason": "Safe fallback after creative-director parsing failure.",
             "brief": brief,
             "creative_dna": {
-                "dominant_family": "material abstraction",
-                "materials": ["mineral pigment", "paper"],
-                "palette_type": "restrained coastal neutrals",
+                "dominant_family": art_style["name"],
+                "materials": [movement["materials"]],
+                "palette_type": "palette led by the selected artistic medium",
                 "energy": "calm",
                 "complexity": "low",
                 "surface": "layered",
