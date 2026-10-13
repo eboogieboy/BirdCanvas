@@ -261,7 +261,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 <style>
 :root{--paper:#f2efe8;--card:#fbfaf7;--ink:#1e2522;--muted:#6e746f;--line:#ddd8cf;--accent:#344b43;--soft:#e5e9e4;--danger:#8b3d3d;--shadow:0 12px 34px rgba(33,38,35,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{width:min(900px,100%);margin:0 auto;padding:env(safe-area-inset-top) 18px calc(96px + env(safe-area-inset-bottom))}.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 2px 14px}.brand{font:700 28px/1 Georgia,serif}.version{font-size:12px;color:var(--muted)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}.home-overview{display:grid;gap:18px;align-items:start}.home-status{display:grid;gap:18px}.home-status .section{margin-top:0}.hero{position:relative;width:min(82vw,340px);aspect-ratio:9/16;min-height:0;margin:0 auto;background:#202522}.hero img{width:100%;height:100%;object-fit:cover;display:block}.hero-gradient{position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(8,12,10,.82))}.hero-label{position:absolute;left:22px;right:22px;bottom:22px;color:#fff}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800}.hero h1{margin:7px 0 4px;font:700 34px/1.05 Georgia,serif}.hero p{margin:0;color:rgba(255,255,255,.78)}.hero-empty{height:100%;min-height:0;display:grid;place-items:center;color:#bfc4c0;padding:24px;text-align:center}.section{margin-top:18px}.section h2{font:700 22px/1.1 Georgia,serif;margin:0 0 12px}.mode-row,.quick-grid,.stats{display:grid;gap:12px}.mode-row{grid-template-columns:1fr auto;align-items:center;padding:16px 18px}.pill{display:inline-flex;align-items:center;gap:8px;font-weight:700}.dot{width:9px;height:9px;border-radius:50%;background:#64816f}.subtle{color:var(--muted);font-size:13px;margin-top:3px}.quick-grid{grid-template-columns:1fr 1fr}.quick{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:18px;text-align:left;color:var(--ink)}.quick strong{display:block;font-size:17px;margin-bottom:4px}.quick span{color:var(--muted);font-size:13px}.btn{border:0;border-radius:14px;background:var(--accent);color:#fff;padding:13px 16px;font-weight:800}.btn.secondary{background:var(--soft);color:var(--ink)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.form-card{padding:18px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-weight:750;font-size:14px}.field input,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}.status{min-height:22px;color:var(--muted);margin-top:10px}.upload-preview{width:min(100%,320px);aspect-ratio:9/16;margin:0 auto;border:1px dashed #bdb8af;border-radius:18px;display:grid;place-items:center;overflow:hidden;background:#eeeae2;color:var(--muted);text-align:center}.upload-preview img{width:100%;height:100%;object-fit:contain;background:#151515}.toolbar{display:grid;gap:10px;margin-bottom:14px}.search{display:flex;gap:8px}.search input{flex:1;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px}.chip{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 13px;border-radius:999px}.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}.library-summary{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 2px 12px}.art-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.art-tile{padding:0;border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden;text-align:left;color:var(--ink);box-shadow:0 6px 20px rgba(33,38,35,.05)}.art-tile img{width:100%;aspect-ratio:9/16;object-fit:cover;background:#171717;display:block}.tile-body{padding:11px}.tile-title{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tile-meta{font-size:12px;color:var(--muted);margin-top:3px}.fav{color:#9a7730}.empty{padding:28px;text-align:center;color:var(--muted);background:var(--card);border-radius:18px;border:1px solid var(--line)}.schedule-row{padding:15px 0;border-bottom:1px solid var(--line)}.schedule-row:last-child{border:0}.schedule-row p{color:var(--muted);margin:5px 0 10px}.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(820px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(251,250,247,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}.nav{border:0;background:transparent;color:var(--muted);padding:8px 3px;font-size:12px}.nav strong{display:block;font-size:20px;line-height:1.1}.nav.active{color:var(--accent);font-weight:800}.modal{position:fixed;inset:0;background:rgba(20,24,22,.62);z-index:50;display:grid;align-items:end}.sheet{background:var(--paper);max-height:92vh;overflow:auto;border-radius:28px 28px 0 0;padding:16px 18px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.2)}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:0;background:var(--soft);width:38px;height:38px;border-radius:50%}.detail-img{width:min(100%,360px);aspect-ratio:9/16;max-height:70vh;object-fit:contain;background:#151515;border-radius:18px;display:block;margin:0 auto}.detail-title{font:700 28px/1.1 Georgia,serif;margin:16px 0 5px}.detail-meta{color:var(--muted);margin:0 0 14px}.species{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.species span{background:var(--soft);padding:7px 10px;border-radius:999px;font-size:13px}.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.action-grid .btn{width:100%}.rename-row{display:flex;gap:8px;margin:12px 0}.rename-row input{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line)}.journal-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.journal-head p{margin:5px 0 0;color:var(--muted)}.journal-month{margin:22px 0 10px;font:700 21px/1.1 Georgia,serif}.journal-list{display:grid;gap:12px}.journal-entry{display:grid;grid-template-columns:78px 1fr;gap:14px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:10px;text-align:left;color:var(--ink)}.journal-entry img{width:78px;aspect-ratio:9/16;height:auto;object-fit:cover;border-radius:12px;background:#171717}.journal-date{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.journal-entry h3{margin:5px 0 6px;font:700 20px/1.1 Georgia,serif}.journal-birds{color:var(--muted);font-size:13px;line-height:1.45}.brief-block{margin:14px 0;padding:14px;background:var(--soft);border-radius:15px}.brief-block h4{margin:0 0 6px}.brief-block p{margin:0;color:var(--muted);line-height:1.5}.exhibition-panel{margin:18px 0;padding:18px;background:var(--card);border:1px solid var(--line);border-radius:20px}.exhibition-kicker{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800;color:var(--muted);margin:0 0 8px}.exhibition-panel h3{font:700 22px/1.15 Georgia,serif;margin:0 0 9px}.exhibition-panel p{margin:0;color:var(--muted);line-height:1.6}.exhibition-section{padding:16px 0;border-top:1px solid var(--line)}.exhibition-section:first-child{padding-top:0;border-top:0}.bird-groups{display:grid;gap:12px}.bird-group-label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--muted);margin-bottom:7px}.bird-role-list{display:flex;flex-wrap:wrap;gap:7px}.bird-role-list span{background:var(--soft);padding:7px 10px;border-radius:999px;font-size:13px}.bird-role-list.hero span{background:#e9dfc8}.exhibition-collection{font-weight:800;color:var(--ink)!important}.gallery-plaque{margin:14px 0 18px;padding:18px 18px 16px;background:#f1eee7;border-left:4px solid #9b8b70;border-radius:4px 16px 16px 4px}.gallery-plaque .detail-title{margin:0 0 7px}.gallery-plaque .detail-meta{margin:0 0 12px}.plaque-collection{font:italic 18px/1.3 Georgia,serif;color:var(--ink);margin:0 0 8px}.plaque-facts{display:flex;flex-wrap:wrap;gap:6px 10px;color:var(--muted);font-size:12px;line-height:1.45}.plaque-facts span+span:before{content:'·';margin-right:10px;color:#a49b8d}
-.bird-live-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.bird-live-head h3{font:700 25px/1.1 Georgia,serif;margin:4px 0 5px}.bird-live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#63806f;margin-right:7px;box-shadow:0 0 0 5px rgba(99,128,111,.12)}.bird-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}.bird-stat{background:var(--soft);border-radius:15px;padding:12px}.bird-stat strong{display:block;font-size:20px}.bird-stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}.bird-history-controls{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-bottom:12px}.bird-history-controls input{min-width:0;padding:11px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}.bird-grid{display:grid;gap:10px}.bird-card{display:grid;grid-template-columns:112px 1fr;min-height:112px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(33,38,35,.05)}.bird-illustration{width:112px;height:112px;object-fit:contain;object-position:center;background:#e8e1d3;display:block}.bird-fallback{width:112px;height:112px;background:#e7e2d7;display:grid;place-items:center;font:700 34px Georgia,serif;color:#817869}.bird-copy{padding:12px 13px;min-width:0}.bird-copy h3{font:700 19px/1.1 Georgia,serif;margin:0 0 4px}.bird-scientific{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:7px}.bird-meta{font-size:12px;color:var(--muted);line-height:1.5}.bird-excluded{display:inline-block;margin-top:7px;padding:4px 7px;border-radius:999px;background:#efe2dc;color:#794f42;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.bird-credit{margin-top:5px;font-size:10px;color:#96918a}.bird-session-note{color:var(--muted);font-size:12px;margin:5px 0 0}.bird-refresh{font-size:11px;color:var(--muted)}
+.bird-activity{display:grid;gap:8px;margin-top:10px}.bird-activity-item{background:var(--soft);border-radius:12px;padding:10px 12px}.bird-activity-item span{display:block;font-size:11px;font-weight:750;color:var(--muted)}.bird-activity-item strong{display:block;font-size:14px;margin-top:3px;line-height:1.35}.bird-activity-note{font-size:11px;color:var(--muted);margin:8px 0 0}.bird-live-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.bird-live-head h3{font:700 25px/1.1 Georgia,serif;margin:4px 0 5px}.bird-live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#63806f;margin-right:7px;box-shadow:0 0 0 5px rgba(99,128,111,.12)}.bird-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}.bird-stat{background:var(--soft);border-radius:15px;padding:12px}.bird-stat strong{display:block;font-size:20px}.bird-stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}.bird-history-controls{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-bottom:12px}.bird-history-controls input{min-width:0;padding:11px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}.bird-grid{display:grid;gap:10px}.bird-card{display:grid;grid-template-columns:112px 1fr;min-height:112px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(33,38,35,.05)}.bird-illustration{width:112px;height:112px;object-fit:contain;object-position:center;background:#e8e1d3;display:block}.bird-fallback{width:112px;height:112px;background:#e7e2d7;display:grid;place-items:center;font:700 34px Georgia,serif;color:#817869}.bird-copy{padding:12px 13px;min-width:0}.bird-copy h3{font:700 19px/1.1 Georgia,serif;margin:0 0 4px}.bird-scientific{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:7px}.bird-meta{font-size:12px;color:var(--muted);line-height:1.5}.bird-excluded{display:inline-block;margin-top:7px;padding:4px 7px;border-radius:999px;background:#efe2dc;color:#794f42;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.bird-credit{margin-top:5px;font-size:10px;color:#96918a}.bird-session-note{color:var(--muted);font-size:12px;margin:5px 0 0}.bird-refresh{font-size:11px;color:var(--muted)}
 .bird-name-line{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;margin-bottom:4px}.bird-name-line h3{margin:0}.bird-rarity{display:inline-flex;align-items:center;font-size:10px;line-height:1.25;font-weight:750;padding:3px 6px;border-radius:7px;background:#edf0ec;color:#465b4d;white-space:nowrap}.bird-rarity.rarity-uncommon{background:#f0e9da;color:#78603b}.bird-rarity.rarity-scarce,.bird-rarity.rarity-rare{background:#f3e0d7;color:#854933}.bird-rarity.rarity-unrated{background:#eeeae4;color:#74716c}.field-guide-rarity{margin:5px 0 2px}.field-guide-rarity .bird-rarity{font-size:9px}
 .field-guide-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.field-guide-head h2{margin:0}.field-guide-summary{font-size:12px;color:var(--muted);text-align:right}.field-guide-filters{display:flex;gap:7px;margin-bottom:11px}.field-guide-filter{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:750}.field-guide-filter.active{background:var(--accent);border-color:var(--accent);color:#fff}.field-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field-guide-tile{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;box-shadow:0 5px 16px rgba(33,38,35,.04)}.field-guide-tile img{width:100%;aspect-ratio:1;object-fit:cover;background:#e8e1d3;display:block}.field-guide-copy{padding:9px}.field-guide-name{font-weight:800;font-size:13px;line-height:1.15;min-height:30px}.field-guide-state{display:inline-block;margin-top:6px;padding:4px 6px;border-radius:999px;background:#e4ece6;color:#466252;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.field-guide-state.missing{background:#efe2dc;color:#794f42}.field-guide-credit{margin-top:5px;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-guide-problem{margin-top:4px;font-size:9px;color:#794f42;line-height:1.3}.field-guide-state.custom{background:#e6e4f1;color:#58506f}.field-guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:8px}.field-guide-action{border:1px solid var(--line);background:#f7f5ef;color:var(--ink);padding:6px 5px;border-radius:9px;font-size:9px;font-weight:800}.field-guide-action.restore{background:#fff}.field-guide-action:disabled{opacity:.55}.field-guide-override-status{margin:0 0 10px;font-size:11px;color:var(--muted)}
 @media(min-width:700px){.home-overview{grid-template-columns:340px minmax(0,1fr)}.hero{width:100%;margin:0}.art-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(3,1fr)}.field-guide-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.sheet{width:min(760px,100%);margin:0 auto;border-radius:28px 28px 0 0}}
@@ -279,6 +279,14 @@ CONTROL_HTML = r'''<!DOCTYPE html>
         <strong id="assurance-title">Checking BirdCanvas artwork…</strong>
         <p id="assurance-message" class="subtle">GalleryOS is checking the current BirdCanvas artwork.</p>
       </div>
+      <div class="card form-card">
+        <strong>BirdNET activity</strong>
+        <div class="bird-activity">
+          <div class="bird-activity-item"><span>Last accepted bird</span><strong class="activity-accepted">Checking…</strong></div>
+          <div class="bird-activity-item"><span>Latest BirdNET detection</span><strong class="activity-latest">Checking…</strong></div>
+        </div>
+        <p class="bird-activity-note activity-note">Checking BirdNET-Go…</p>
+      </div>
       <div class="card form-card"><strong>Portrait display</strong><div class="subtle">Artwork is prepared for the Frame in 9:16 portrait format.</div></div>
       <div class="card form-card"><strong>Next change</strong><div class="subtle" id="next-change">Loading…</div></div>
     </div>
@@ -293,6 +301,11 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   <div class="card form-card">
     <div class="bird-live-head"><div><div class="eyebrow"><span class="bird-live-dot"></span>Current collection</div><h3 id="bird-session-title">Listening…</h3><p id="bird-session-note" class="bird-session-note">Loading BirdNET-Go observations.</p></div><button id="bird-live-button" class="btn secondary" type="button">Current collection</button></div>
     <div class="bird-stats"><div class="bird-stat"><strong id="bird-species-count">—</strong><span>Species</span></div><div class="bird-stat"><strong id="bird-detection-count">—</strong><span>Detections</span></div><div class="bird-stat"><strong id="bird-last-heard">—</strong><span>Last heard</span></div></div>
+    <div class="bird-activity">
+      <div class="bird-activity-item"><span>Last accepted bird · current collection</span><strong class="activity-accepted">Checking…</strong></div>
+      <div class="bird-activity-item"><span>Latest BirdNET detection · current collection</span><strong class="activity-latest">Checking…</strong></div>
+    </div>
+    <p class="bird-activity-note activity-note">Checking BirdNET-Go…</p>
   </div>
   <div class="section"><h2>Daily birds</h2><p class="subtle">Calendar-day list used on the Magic Mirror · midnight to midnight.</p><div class="bird-history-controls"><button id="bird-prev-day" class="btn secondary" type="button">‹</button><input id="bird-date" type="date"><button id="bird-next-day" class="btn secondary" type="button">›</button></div></div>
   <div id="bird-grid" class="bird-grid"><div class="empty">Listening for birds…</div></div>
@@ -405,7 +418,7 @@ async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.js
 function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
 function formatDate(v){if(!v)return '';const d=new Date(`${String(v).slice(0,10)}T12:00:00`);return Number.isNaN(d.getTime())?v:d.toLocaleDateString([], {day:'numeric',month:'long',year:'numeric'})}
-function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds')refreshBirds()}
+function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshGeneration()}if(id==='library')renderLibrary();if(id==='journal')renderJournal()}
 qa('[data-go]').forEach(b=>b.onclick=()=>openPanel(b.dataset.go));qa('[data-filter]').forEach(b=>b.onclick=()=>{currentFilter=b.dataset.filter;openPanel('library');setFilter(currentFilter)});
 function controlImageUrl(artwork){
   if(!artwork||!artwork.image_url)return '';
@@ -416,18 +429,23 @@ function controlImageUrl(artwork){
 function renderHero(s){
   displayData=s;
   const box=$('#hero'),a=s.artwork;
-  box.replaceChildren();
-
   if(!a){
-    box.innerHTML='<div class="hero-empty">No valid BirdCanvas artwork is available.</div>';
+    if(!box.querySelector('.hero-empty'))box.innerHTML='<div class="hero-empty">No valid BirdCanvas artwork is available.</div>';
   }else{
-    const img=document.createElement('img');
-    img.src=controlImageUrl(a);
-    const grad=document.createElement('div');
-    grad.className='hero-gradient';
-    const label=document.createElement('div');
-    label.className='hero-label';
-
+    const url=controlImageUrl(a);
+    const existing=box.querySelector('img');
+    if(!existing||existing.getAttribute('src')!==url){
+      box.replaceChildren();
+      const img=document.createElement('img');
+      img.src=url;
+      img.decoding='async';
+      const grad=document.createElement('div');
+      grad.className='hero-gradient';
+      const label=document.createElement('div');
+      label.className='hero-label';
+      box.append(img,grad,label);
+    }
+    const label=box.querySelector('.hero-label');
     const modeLabel=
       s.mode==='automatic'?'Current BirdCanvas':
       s.mode==='fallback'?'BirdCanvas fallback':
@@ -435,7 +453,6 @@ function renderHero(s){
       'Temporary artwork';
 
     label.innerHTML=`<div class="eyebrow">${modeLabel}</div><h1>${escapeHtml(a.title||a.id)}</h1><p>${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom collection'}</p>`;
-    box.append(img,grad,label);
   }
 
   const modeText=
@@ -473,7 +490,7 @@ function renderNext(schedules){const future=schedules.filter(x=>new Date(x.start
 function setFilter(filter){currentFilter=filter;qa('.chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===filter));renderLibrary()}
 function filteredArtworks(){const q=$('#search').value.trim().toLowerCase();return libraryData.artworks.filter(a=>{const matchesFilter=currentFilter==='all'?!a.hidden:currentFilter==='favourites'?a.favourite&&!a.hidden:currentFilter==='hidden'?a.hidden:a.collection===currentFilter&&!a.hidden;const hay=[a.title,a.collection,...(a.species||[]),...(a.species_detected||[])].join(' ').toLowerCase();return matchesFilter&&(!q||hay.includes(q))})}
 function monthLabel(value){const d=new Date(`${value||''}T12:00:00`);return Number.isNaN(d.getTime())?'Undated':d.toLocaleDateString(undefined,{month:'long',year:'numeric'})}
-function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const featured=(a.species_used||a.species||[]),heard=(a.species_detected||featured);entry.innerHTML=`<img src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${heard.length?`${heard.length} heard · ${featured.length} featured${a.observation_ended_at?` · ${a.detections_total} detections`:''}${featured.length?` · ${escapeHtml(featured.slice(0,4).join(', '))}${featured.length>4?'…':''}`:''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
+function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const featured=(a.species_used||a.species||[]),heard=(a.species_detected||featured);entry.innerHTML=`<img loading="lazy" decoding="async" src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${heard.length?`${heard.length} heard · ${featured.length} featured${a.observation_ended_at?` · ${a.detections_total} detections`:''}${featured.length?` · ${escapeHtml(featured.slice(0,4).join(', '))}${featured.length>4?'…':''}`:''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
 function birdClock(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
 function rarityMarkup(bird){
   const info=bird&&bird.rarity||{};
@@ -581,7 +598,7 @@ async function refreshBirdCatalogue(){
   }
 }
 
-function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img src="${a.image_url}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
+function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img loading="lazy" decoding="async" src="${a.image_url}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
 function openDetail(a){
   selectedArtwork=a;
   $('#detail-img').src=controlImageUrl(a);
@@ -720,7 +737,31 @@ function renderDisplaySettings(settings){
   $('#display-poll-seconds').value=String(settings.poll_seconds||5);
   $('#display-hours-fields').classList.toggle('hidden',!settings.use_display_hours);
 }
-async function refresh(){try{const [display,library,schedules,settings]=await Promise.all([api('/api/display'),api('/api/library'),api('/api/schedules'),api('/api/display/settings')]);libraryData=library;renderDisplaySettings(settings);renderHero(display);fillScheduleOptions();renderLibrary();renderJournal();renderSchedules(schedules.schedules);renderNext(schedules.schedules);$('#library-count').textContent=`${library.artworks.length} artworks`;$('#fav-count').textContent=`${library.artworks.filter(a=>a.favourite).length} favourites`}catch(e){console.error(e)}}
+let fullRefreshBusy=false;
+async function refreshDisplayOnly(){
+  try{renderHero(await api('/api/display'))}catch(e){console.error('Display refresh:',e)}
+}
+async function refresh(){
+  if(fullRefreshBusy)return;
+  fullRefreshBusy=true;
+  try{
+    // Show the current artwork without waiting for slower library queries.
+    const displayTask=refreshDisplayOnly();
+    const dataTask=Promise.all([api('/api/library'),api('/api/schedules'),api('/api/display/settings')]);
+    const [library,schedules,settings]=await dataTask;
+    libraryData=library;
+    renderDisplaySettings(settings);
+    fillScheduleOptions();
+    if($('#library').classList.contains('active'))renderLibrary();
+    if($('#journal').classList.contains('active'))renderJournal();
+    renderSchedules(schedules.schedules);
+    await displayTask;
+    renderNext(schedules.schedules);
+    $('#library-count').textContent=`${library.artworks.length} artworks`;
+    $('#fav-count').textContent=`${library.artworks.filter(a=>a.favourite).length} favourites`;
+  }catch(e){console.error('Gallery refresh:',e)}
+  finally{fullRefreshBusy=false}
+}
 $('#end-override').onclick=async()=>{await post('/api/override/cancel');await refresh()};
 $('#upload-action').onchange=()=>{const v=$('#upload-action').value;$('#upload-now').classList.toggle('hidden',v!=='now');$('#upload-schedule').classList.toggle('hidden',v!=='schedule');$('#upload-button').textContent=v==='now'?'Upload and display':v==='schedule'?'Upload and schedule':'Save to library'};
 let previewUrl=null;$('#upload-image').onchange=e=>{const f=e.target.files[0];if(previewUrl)URL.revokeObjectURL(previewUrl);if(!f)return;previewUrl=URL.createObjectURL(f);$('#upload-preview').innerHTML=`<img src="${previewUrl}" alt="Preview">`;if(!$('#upload-title').value.trim())$('#upload-title').value=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ')};
@@ -739,13 +780,31 @@ async function refreshGeneration(){
       $('#excluded-birds').value=s.settings.excluded_birds.join('\n');
       generationSettingsLoaded=true;
     }
+    const confidence=v=>Math.round(Number(v||0)*100)+'%';
+    const last=s.last_accepted_bird,raw=s.latest_birdnet_detection;
+    const acceptedText=last?`${last.name} — ${fmt(last.timestamp)}`:'No accepted birds in this collection yet';
+    const rawText=raw?`${raw.name} — ${fmt(raw.timestamp)}`:'No detections in this collection yet';
+    const rawNote=!raw?'No BirdNET-Go detections in this collection yet.'
+      :raw.accepted?`Latest detection accepted · ${confidence(raw.confidence)} confidence`
+      :raw.filter_reason==='rejected'?'Latest detection filtered · marked as rejected'
+      :`Latest detection filtered · ${confidence(raw.confidence)} confidence (below ${confidence(s.minimum_confidence)} threshold)`;
+    qa('.activity-accepted').forEach(el=>el.textContent=s.birdnet_status==='ok'?acceptedText:'BirdNET-Go unavailable');
+    qa('.activity-latest').forEach(el=>el.textContent=s.birdnet_status==='ok'?rawText:'Unable to check detections');
+    qa('.activity-note').forEach(el=>el.textContent=s.birdnet_status==='ok'
+      ? `${rawNote} · Updated ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`
+      :`BirdNET-Go connection error: ${s.birdnet_error||'unknown'}`);
     const lines=[`Collecting since ${fmt(s.collecting_since)}`,`Next artwork: ${fmt(s.next_generation)}`,
       s.birdnet_status==='ok'?`${s.species_detected} species · ${s.detections_total} detections`: `BirdNET unavailable: ${s.birdnet_error}`,
       s.pending_delivery?`${s.pending_delivery} artwork(s) awaiting Frame delivery`:'Frame delivery queue clear'];
     if(s.last_result)lines.push(s.last_result);
     if(s.last_error)lines.push(`Last generation error: ${s.last_error}`);
     $('#generation-status').textContent=lines.join(' · ');
-  }catch(e){$('#generation-status').textContent=e.message}
+  }catch(e){
+    $('#generation-status').textContent=e.message;
+    qa('.activity-accepted').forEach(el=>el.textContent='Could not check BirdNET-Go');
+    qa('.activity-latest').forEach(el=>el.textContent='Could not check BirdNET-Go');
+    qa('.activity-note').forEach(el=>el.textContent=e.message);
+  }
 }
 $('#save-generation').onclick=async()=>{
   const msg=$('#generation-message');
@@ -792,7 +851,7 @@ $('#display-settings-form').onsubmit=async event=>{
   }
 };
 
-const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();setInterval(refresh,15000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);
 </script>
 </body></html>'''
 

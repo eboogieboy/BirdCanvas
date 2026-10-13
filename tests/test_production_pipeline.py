@@ -84,10 +84,50 @@ class ProductionTests(unittest.TestCase):
 
         self.assertEqual(result['species'], ['Robin'])
         self.assertEqual(result['detections_total'], 2)
+        self.assertEqual(result['last_accepted_bird']['name'], 'Robin')
+        self.assertEqual(result['latest_birdnet_detection']['name'], 'Blue Tit')
+        self.assertEqual(result['latest_birdnet_detection']['filter_reason'], 'low_confidence')
+        self.assertEqual(result['latest_birdnet_detection']['confidence'], 0.2)
+        self.assertEqual(result['minimum_confidence'], 0.5)
         self.assertEqual(
             requested_days,
             ['2026-09-21', '2026-09-22', '2026-09-23', '2026-09-24'],
         )
+
+    def test_live_activity_reports_rejected_and_empty_detections(self):
+        start = datetime(2026, 10, 13, 4, tzinfo=TZ)
+        end = datetime(2026, 10, 13, 15, tzinfo=TZ)
+        rows = [
+            {'timestamp': '2026-10-13T08:21:01+01:00',
+             'commonName': 'Common Magpie', 'confidence': .62},
+            {'timestamp': '2026-10-13T11:34:35+01:00',
+             'commonName': 'European Goldfinch', 'confidence': .25},
+            {'timestamp': '2026-10-13T11:36:00+01:00',
+             'commonName': 'European Robin', 'confidence': .91,
+             'verified': 'false_positive'},
+        ]
+        with patch.object(birdnet_go, '_daily_rows', return_value=rows):
+            result = birdnet_go.detections(start, end)
+        self.assertEqual(result['detections_total'], 1)
+        self.assertEqual(result['last_accepted_bird']['name'], 'Common Magpie')
+        self.assertEqual(result['latest_birdnet_detection']['name'], 'European Robin')
+        self.assertEqual(result['latest_birdnet_detection']['filter_reason'], 'rejected')
+        self.assertFalse(result['latest_birdnet_detection']['accepted'])
+        with patch.object(birdnet_go, '_daily_rows', return_value=[]):
+            empty = birdnet_go.detections(start, end)
+        self.assertIsNone(empty['last_accepted_bird'])
+        self.assertIsNone(empty['latest_birdnet_detection'])
+
+    def test_live_activity_when_latest_detection_is_accepted(self):
+        start = datetime(2026, 10, 13, 4, tzinfo=TZ)
+        end = datetime(2026, 10, 13, 15, tzinfo=TZ)
+        row = {'timestamp': '2026-10-13T11:34:35+01:00',
+               'commonName': 'European Goldfinch', 'confidence': .88}
+        with patch.object(birdnet_go, '_daily_rows', return_value=[row]):
+            result = birdnet_go.detections(start, end)
+        self.assertEqual(result['last_accepted_bird']['name'], 'European Goldfinch')
+        self.assertTrue(result['latest_birdnet_detection']['accepted'])
+        self.assertIsNone(result['latest_birdnet_detection']['filter_reason'])
 
     def test_send_gallery_artwork_uploads_once_then_reuses_frame_copy(self):
         with tempfile.TemporaryDirectory() as folder:

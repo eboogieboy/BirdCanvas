@@ -71,7 +71,15 @@ def status(now=None, include_birds=True):
     if include_birds:
         try:
             bird_data = detections(start, now)
-            result.update({"species_detected": len(bird_data['species']), "detections_total": bird_data['detections_total'], "last_detection": bird_data['last_detection'], "birdnet_status": "ok"})
+            result.update({
+                "species_detected": len(bird_data["species"]),
+                "detections_total": bird_data["detections_total"],
+                "last_detection": bird_data["last_detection"],
+                "last_accepted_bird": bird_data.get("last_accepted_bird"),
+                "latest_birdnet_detection": bird_data.get("latest_birdnet_detection"),
+                "minimum_confidence": bird_data.get("minimum_confidence"),
+                "birdnet_status": "ok",
+            })
         except Exception as error:
             result.update({"species_detected": None, "birdnet_status": "error", "birdnet_error": str(error)})
     return result

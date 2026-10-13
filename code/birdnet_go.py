@@ -69,53 +69,82 @@ def _daily_rows(day) -> list[dict]:
     return rows
 
 
-def detection_rows(start: datetime, end: datetime) -> list[dict]:
-    """Return accepted BirdNET-Go rows for the exact [start, end) window."""
+def _window_rows(start: datetime, end: datetime) -> list[dict]:
+    """Read all detections in [start, end) including below-threshold records."""
     if start.tzinfo is None or end.tzinfo is None or end <= start:
         raise ValueError("A valid timezone-aware collection window is required")
 
     start, end = start.astimezone(LOCAL), end.astimezone(LOCAL)
+    rows: list[dict] = []
+    day = start.date()
+    while day <= end.date():
+        for row in _daily_rows(day):
+            if start <= _timestamp(row) < end:
+                rows.append(row)
+        day += timedelta(days=1)
+
+    rows.sort(key=_timestamp)
+    return rows
+
+
+def _minimum_confidence() -> float:
     minimum = float(os.getenv("BIRDCANVAS_MIN_CONFIDENCE", "0.5"))
     if not 0 <= minimum <= 1:
         raise ValueError("BIRDCANVAS_MIN_CONFIDENCE must be between 0 and 1")
+    return minimum
 
-    accepted: list[dict] = []
-    day = start.date()
-    final_day = end.date()
-    while day <= final_day:
-        for row in _daily_rows(day):
-            when = _timestamp(row)
-            if not start <= when < end or float(row.get("confidence", 0)) < minimum:
-                continue
-            if str(row.get("verified", "")).casefold() in (
-                "false_positive",
-                "false positive",
-                "rejected",
-            ):
-                continue
-            accepted.append(row)
-        day += timedelta(days=1)
 
-    accepted.sort(key=_timestamp)
-    return accepted
+def _filter_reason(row: dict, minimum: float) -> str | None:
+    if str(row.get("verified", "")).casefold() in (
+        "false_positive", "false positive", "rejected"
+    ):
+        return "rejected"
+    if float(row.get("confidence", 0) or 0) < minimum:
+        return "low_confidence"
+    return None
+
+
+def _activity_record(row: dict, minimum: float) -> dict:
+    name = str(row.get("commonName") or row.get("scientificName") or "Unknown bird").strip()
+    if name.casefold().startswith("eurasian "):
+        name = name[len("Eurasian "):]
+    reason = _filter_reason(row, minimum)
+    return {
+        "name": name,
+        "timestamp": _timestamp(row).isoformat(timespec="seconds"),
+        "confidence": float(row.get("confidence", 0) or 0),
+        "filter_reason": reason,
+        "accepted": reason is None,
+    }
+
+
+def detection_rows(start: datetime, end: datetime) -> list[dict]:
+    """Return accepted BirdNET-Go rows for the exact [start, end) window."""
+    minimum = _minimum_confidence()
+    return [row for row in _window_rows(start, end)
+            if _filter_reason(row, minimum) is None]
 
 
 def detections(start: datetime, end: datetime) -> dict:
-    """Read [start, end), querying BirdNET-Go one calendar day at a time."""
-    rows = detection_rows(start, end)
+    """Read accepted birds and latest raw BirdNET-Go activity in one API pass."""
+    minimum = _minimum_confidence()
+    all_rows = _window_rows(start, end)
+    accepted = [row for row in all_rows if _filter_reason(row, minimum) is None]
     species: dict[str, str] = {}
-    latest = None
-
-    for row in rows:
-        when = _timestamp(row)
+    for row in accepted:
         name = str(row.get("commonName") or row.get("scientificName") or "").strip()
         if name:
             species.setdefault(name.casefold(), name)
-            if latest is None or when > latest:
-                latest = when
 
+    last_accepted = accepted[-1] if accepted else None
+    latest_raw = all_rows[-1] if all_rows else None
     return {
         "species": list(species.values()),
-        "detections_total": len(rows),
-        "last_detection": latest.isoformat() if latest else None,
+        "detections_total": len(accepted),
+        "last_detection": _timestamp(last_accepted).isoformat() if last_accepted else None,
+        "last_accepted_bird": _activity_record(last_accepted, minimum)
+                              if last_accepted else None,
+        "latest_birdnet_detection": _activity_record(latest_raw, minimum)
+                                    if latest_raw else None,
+        "minimum_confidence": minimum,
     }
