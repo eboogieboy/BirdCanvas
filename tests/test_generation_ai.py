@@ -153,6 +153,8 @@ class GenerationAITests(unittest.TestCase):
         self.assertIn("not photorealism", director_input.lower())
         self.assertIn("not posed", director_input)
         self.assertEqual(result["brief"]["art_style"], "Pop art")
+        self.assertEqual(result["brief"]["style"], "Pop art")
+        self.assertIn("Pop art", result["selected_movement"]["name"])
         self.assertEqual(result["brief"]["subject_balance"], "subtle-wildlife")
         self.assertIn("Pop art", result["image_prompt"])
         self.assertIn("postcard montage", result["image_prompt"])
