@@ -34,6 +34,7 @@ from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
+from visitor_leaderboard import leaderboard
 from bird_catalog import catalogue, record_birds
 from bird_images import (
     BIRD_OVERRIDE_MAX_BYTES,
@@ -121,6 +122,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
             except OSError as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+            return
+        if route == "/api/birds/leaderboard":
+            period = (parse_qs(parsed.query).get("period") or ["30"])[0]
+            try:
+                self.send_json(leaderboard(period))
+            except ValueError as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
             return
         if route == "/api/birds/catalog":
             try:
