@@ -161,13 +161,13 @@ runuser -u "$BIRDCANVAS_DEPLOY_USER" -- bash -lc     "cd '$PROJECT_DIR' && '$PRO
 systemctl restart canvasos.service
 
 for _ in $(seq 1 20); do
-    if curl --silent --fail --max-time 2         http://127.0.0.1:8000/api/health >/dev/null; then
+    if curl --silent --fail --max-time 2         http://127.0.0.1:8000/api/ping >/dev/null; then
         break
     fi
     sleep 1
 done
 
-curl --silent --fail --max-time 3     http://127.0.0.1:8000/api/health >/dev/null
+curl --silent --fail --max-time 3     http://127.0.0.1:8000/api/ping >/dev/null
 
 # Refresh installed helper scripts only after the candidate has passed its tests and
 # the live service has passed its health check. This means future changes to the

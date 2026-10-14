@@ -32,7 +32,7 @@ class DeploymentHardeningTests(unittest.TestCase):
             text,
         )
         self.assertLess(
-            text.index("http://127.0.0.1:8000/api/health >/dev/null"),
+            text.index("http://127.0.0.1:8000/api/ping >/dev/null"),
             text.index('refresh_installed_helper "$PROJECT_DIR/deployment/auto-deploy.sh"'),
         )
 
