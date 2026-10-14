@@ -4,6 +4,7 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 from typing import Any
 from paths import OUTPUT_DIR
 
@@ -157,9 +158,12 @@ def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str,
         presentation = {}
 
     try:
-        image_size_bytes = image_path.stat().st_size
+        image_stat = image_path.stat()
+        image_size_bytes = image_stat.st_size
+        image_revision = image_stat.st_mtime_ns
     except OSError:
         image_size_bytes = 0
+        image_revision = 0
 
     return {
         "id": artwork_id,
@@ -179,6 +183,7 @@ def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str,
         "updated_at": str(manifest.get("updated_at", created_at)),
         "image": image_name,
         "image_url": f"../archive/{folder_name}/{image_name}",
+        "thumbnail_url": f"/api/library/thumbnail?id={quote(artwork_id, safe='')}&v={image_revision}",
         "image_size_bytes": image_size_bytes,
         "species": [str(item) for item in species],
         "season": str(manifest.get("season", "")),

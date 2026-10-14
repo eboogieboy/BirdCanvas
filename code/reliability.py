@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 from paths import BACKUP_DIR
 from paths import DATA_DIR
 from paths import OUTPUT_DIR
+from system_health import delivery_checks
 
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
 
@@ -109,9 +110,17 @@ def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any
                         "message": "Configured" if os.getenv('OPENAI_API_KEY') else "API key missing"}
     checks['generation'] = {"status": "warning" if production.get('last_error') else "ok",
                             "message": production.get('last_error') or f"Next: {production['next_generation']}"}
-    checks['frame'] = {"status": "warning" if production['pending_delivery'] else "ok",
-                       "message": f"{production['pending_delivery']} pending; last delivered {production.get('last_delivery') or 'never'}"}
-    overall = "error" if any(c.get("status") == "error" for c in checks.values()) else ("warning" if any(c.get("status") == "warning" for c in checks.values()) else "ok")
+    from frame_upload import frame_enabled
+    if not frame_enabled():
+        checks['frame'] = {"status": "unknown", "message": "Samsung Frame delivery is disabled."}
+    elif production['pending_delivery']:
+        checks['frame'] = {"status": "warning", "message": f"{production['pending_delivery']} artwork(s) awaiting delivery."}
+    elif production.get('last_delivery'):
+        checks['frame'] = {"status": "ok", "message": f"Last delivered {production['last_delivery']}."}
+    else:
+        checks['frame'] = {"status": "warning", "message": "No successful Frame delivery recorded yet."}
+    checks.update(delivery_checks())
+    overall = "error" if any(c.get("status") == "error" for c in checks.values()) else ("warning" if any(c.get("status") in {"warning", "unknown"} for c in checks.values()) else "ok")
     return {"status": overall, "version": read_version(), "checked_at": now_iso(), "checks": checks}
 
 

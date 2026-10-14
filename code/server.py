@@ -24,6 +24,7 @@ from display_controller import (
     set_temporary_override,
 )
 from gallery_library import build_library, delete_artwork, update_artwork_metadata
+from gallery_thumbnails import thumbnail_path
 from presentation_manager import apply_presentation
 from display_settings import load_display_settings, save_display_settings
 from reliability import create_backup, create_diagnostics, health_report
@@ -66,6 +67,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/schedules":
             self.send_json({"schedules": list_schedules()})
+            return
+        if route == "/api/library/thumbnail":
+            artwork_id = (parse_qs(parsed.query).get("id") or [""])[0].strip()
+            if not artwork_id:
+                self.send_error(HTTPStatus.BAD_REQUEST, "Artwork ID is required")
+                return
+            try:
+                body = thumbnail_path(artwork_id).read_bytes()
+            except ValueError as error:
+                self.send_error(HTTPStatus.NOT_FOUND, str(error))
+                return
+            except OSError as error:
+                self.send_error(HTTPStatus.BAD_GATEWAY, str(error))
+                return
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "public, max-age=604800")
+            self.end_headers()
+            self.wfile.write(body)
             return
         if route == "/api/library":
             self.send_json(build_library())
