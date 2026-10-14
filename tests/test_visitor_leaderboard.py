@@ -27,7 +27,7 @@ class VisitorLeaderboardTests(unittest.TestCase):
         self.cache_patch.stop()
         self.tmp.cleanup()
 
-    def _save(self, day, rows, checked_at="2026-10-14T14:00:00+01:00", confidence=.5):
+    def _save(self, day, rows, checked_at="2026-10-14T14:59:00+01:00", confidence=.5):
         board._save_day(day, {
             "version": board.CACHE_VERSION,
             "date": day.isoformat(),
