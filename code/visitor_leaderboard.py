@@ -77,6 +77,10 @@ def _cached_day(day: date, now: datetime, minimum: float):
         checked = datetime.fromisoformat(value["checked_at"])
         if checked.tzinfo is None:
             return None
+        # A snapshot taken while a day was still in progress cannot be
+        # treated as a complete historical day after midnight.
+        if day < now.date() and checked.date() == day:
+            return None
         max_age = TODAY_TTL if day == now.date() else HISTORY_TTL
         if now - checked > max_age or now < checked - timedelta(minutes=5):
             return None
