@@ -1,3 +1,11 @@
+## 0.23.0 — System Health and Faster GalleryOS
+
+- Added a compact five-service health summary to the phone dashboard, with detailed BirdNET-Go, generation, Samsung Frame, Mirror sender and nightly backup checks.
+- Added bounded, read-only systemd status checks. Missing or unverified services are never reported as healthy.
+- Added on-demand 420 × 560 maximum JPEG previews, with versioned cache URLs and lazy loading for gallery and journal lists. Full-resolution artworks remain unchanged.
+- Separated 15-second live display polling from full-library refresh, preserving the current hero image unless it actually changes.
+- Added regression tests for thumbnail invalidation, path safety and system health reports.
+
 # Changelog
 
 ## 0.22.0 — Cost-Optimised Artwork Generation
