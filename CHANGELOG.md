@@ -1,3 +1,12 @@
+## 0.24.0 — Garden Visitor Leaderboard
+
+- Added an interactive Top 10 visitor-frequency chart under Daily Birds in Garden Visitors, with 7-, 30-, 90-day and all-time views.
+- Rank birds by the number of separate calendar days heard; report an indicative visitor score (percentage of successfully analysed days).
+- Use BirdNET-Go's existing confidence threshold and rejected-detection filter, independent of which birds are excluded from artwork.
+- Fetch historical data in one background worker and persist per-day counts under `data/visitor_leaderboard/days/` so remote GalleryOS loads remain responsive and repeated browsing does not rescan history.
+- Display backfill progress and provisional scores until all requested days have been analysed; refresh today's observations every five minutes and historical days periodically.
+- Never request AI generation or TV/Mirror uploads for the leaderboard.
+
 ## 0.23.1 — Generated Health Dashboard Fix
 
 - Corrected the authoritative `code/display.py` page generator to show the live health summary and request health checks when System Status opens. Previously, the unreferenced legacy HTML file had been updated instead, leaving the actual page at "Checking GalleryOS…".
