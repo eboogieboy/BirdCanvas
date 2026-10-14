@@ -4,6 +4,8 @@ import json
 import os
 import shutil
 import zipfile
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -82,6 +84,26 @@ def load_last_good() -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError): return None
 
 
+
+def _birdnet_health() -> dict[str, str]:
+    """Bounded, one-row API probe; never enumerate the complete detection ledger."""
+    from birdnet_go import base_url
+    today = datetime.now(LOCAL_TIMEZONE).date().isoformat()
+    query = urlencode({"start_date": today, "end_date": today, "limit": 1, "offset": 0})
+    request = Request(
+        f"{base_url()}/api/v2/detections?{query}",
+        headers={"Accept": "application/json"},
+    )
+    try:
+        with urlopen(request, timeout=3) as response:
+            payload = json.load(response)
+        if not isinstance(payload, dict) or not isinstance(payload.get("data"), list):
+            raise ValueError("Unexpected BirdNET-Go response")
+    except (OSError, ValueError, TimeoutError) as error:
+        return {"status": "warning", "message": f"BirdNET-Go not responding to a quick check: {error}"}
+    return {"status": "ok", "message": "BirdNET-Go detections API is responding."}
+
+
 def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any]:
     from production_pipeline import status as generation_status
     artwork = (current_status or {}).get("artwork") if current_status else None
@@ -102,10 +124,8 @@ def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any
         "display_settings": _json_file_health(DATA_DIR / "display_settings.json"),
         "disk": _disk_health(),
     }
-    production = generation_status()
-    checks['birdnet'] = {"status": production['birdnet_status'],
-                         "message": production.get('birdnet_error') or
-                         f"{production.get('species_detected', 0)} species in collection; last detection {production.get('last_detection') or 'none yet'}"}
+    production = generation_status(include_birds=False)
+    checks['birdnet'] = _birdnet_health()
     checks['openai'] = {"status": "ok" if os.getenv('OPENAI_API_KEY') else "warning",
                         "message": "Configured" if os.getenv('OPENAI_API_KEY') else "API key missing"}
     checks['generation'] = {"status": "warning" if production.get('last_error') else "ok",
