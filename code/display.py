@@ -267,6 +267,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 .field-guide-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.field-guide-head h2{margin:0}.field-guide-summary{font-size:12px;color:var(--muted);text-align:right}.field-guide-filters{display:flex;gap:7px;margin-bottom:11px}.field-guide-filter{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:750}.field-guide-filter.active{background:var(--accent);border-color:var(--accent);color:#fff}.field-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field-guide-tile{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;box-shadow:0 5px 16px rgba(33,38,35,.04)}.field-guide-tile img{width:100%;aspect-ratio:1;object-fit:cover;background:#e8e1d3;display:block}.field-guide-copy{padding:9px}.field-guide-name{font-weight:800;font-size:13px;line-height:1.15;min-height:30px}.field-guide-state{display:inline-block;margin-top:6px;padding:4px 6px;border-radius:999px;background:#e4ece6;color:#466252;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.field-guide-state.missing{background:#efe2dc;color:#794f42}.field-guide-credit{margin-top:5px;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-guide-problem{margin-top:4px;font-size:9px;color:#794f42;line-height:1.3}.field-guide-state.custom{background:#e6e4f1;color:#58506f}.field-guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:8px}.field-guide-action{border:1px solid var(--line);background:#f7f5ef;color:var(--ink);padding:6px 5px;border-radius:9px;font-size:9px;font-weight:800}.field-guide-action.restore{background:#fff}.field-guide-action:disabled{opacity:.55}.field-guide-override-status{margin:0 0 10px;font-size:11px;color:var(--muted)}
 .bird-card-link{color:inherit;text-decoration:none;cursor:pointer}.bird-card-link:hover,.bird-card-link:focus-visible{border-color:var(--accent)}.bird-card-link:focus-visible,.field-guide-species-link:focus-visible,.field-guide-rspb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.rspb-hint{display:block;margin-top:6px;font-size:11px;font-weight:800;color:var(--accent)}.field-guide-species-link{display:block;color:inherit;text-decoration:none}.field-guide-species-link:hover .field-guide-name{text-decoration:underline}.field-guide-rspb{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
 .health-overview{width:100%;display:flex;align-items:center;gap:11px;text-align:left;color:var(--ink);padding:14px 18px;cursor:pointer}.health-indicator{width:11px;height:11px;border-radius:50%;background:#a28c57;flex-shrink:0}.health-indicator.ok{background:#4b8263}.health-indicator.error{background:#bd5555}.health-indicator.warning{background:#bb9650}.health-overview .health-summary{flex:1;min-width:0}.health-overview .health-summary strong{display:block}.health-overview .health-summary small{display:block;color:var(--muted);margin-top:3px}.health-row{display:flex;gap:12px;justify-content:space-between;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}.health-row:last-child{border:0}.health-state{font-size:12px;font-weight:800;white-space:nowrap}.health-state.ok{color:#417556}.health-state.error{color:#ab3939}.health-state.warning,.health-state.unknown{color:#936d31}
+.visitor-leaderboard{margin-top:18px}.visitor-leaderboard .lb-title{font:700 22px/1.2 Georgia,serif;margin:0 0 7px}.lb-controls{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}.lb-period{flex:1;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:11px;padding:10px 7px;white-space:nowrap;font-size:12px;font-weight:750;min-width:60px}.lb-period.active{background:var(--accent);color:#fff;border-color:var(--accent)}.lb-progress{font-size:12px;color:var(--muted);line-height:1.45;padding:3px 0 11px}.lb-list{display:grid;gap:12px}.lb-entry{display:grid;gap:6px}.lb-line{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:13px}.lb-name{font-weight:750;min-width:0}.lb-numbers{color:var(--muted);font-variant-numeric:tabular-nums;flex-shrink:0}.lb-score{font-weight:850;color:var(--accent)}.lb-track{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}.lb-fill{background:#668878;height:100%;border-radius:999px;min-width:0;transition:width .3s ease}.lb-entry:first-child .lb-fill{background:#345b48}.lb-note{font-size:11px;line-height:1.5;color:var(--muted);margin:12px 0 0}
 @media(min-width:700px){.home-overview{grid-template-columns:340px minmax(0,1fr)}.hero{width:100%;margin:0}.art-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(3,1fr)}.field-guide-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.sheet{width:min(760px,100%);margin:0 auto;border-radius:28px 28px 0 0}}
 </style>
 </head>
@@ -313,6 +314,19 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   </div>
   <div class="section"><h2>Daily birds</h2><p class="subtle">Calendar-day list used on the Magic Mirror · midnight to midnight.</p><div class="bird-history-controls"><button id="bird-prev-day" class="btn secondary" type="button">‹</button><input id="bird-date" type="date"><button id="bird-next-day" class="btn secondary" type="button">›</button></div></div>
   <div id="bird-grid" class="bird-grid"><div class="empty">Listening for birds…</div></div>
+  <div class="card form-card visitor-leaderboard" id="visitor-leaderboard">
+    <h2 class="lb-title">Our most frequent visitors</h2>
+    <p class="subtle">Top 10 species ranked by how many different days we heard them.</p>
+    <div class="lb-controls" aria-label="Visitor ranking period">
+      <button class="lb-period" type="button" data-leaderboard-period="7">7 days</button>
+      <button class="lb-period active" type="button" data-leaderboard-period="30">30 days</button>
+      <button class="lb-period" type="button" data-leaderboard-period="90">90 days</button>
+      <button class="lb-period" type="button" data-leaderboard-period="all">All time</button>
+    </div>
+    <div id="lb-progress" class="lb-progress" role="status">Loading visitor history…</div>
+    <div id="lb-list" class="lb-list"></div>
+    <p class="lb-note">Visitor score is the percentage of days analysed when a species was heard, not the number of individual birds. Uses accepted detections at your current confidence threshold. Partial history is labelled while loading.</p>
+  </div>
   <p class="subtle">Local frequency labels are indicative for North Tyneside and the nearby North East coast, not UK conservation status. Unexpected BirdNET identifications need checking.</p><p class="subtle">Field-guide illustrations are curated public-domain plates. Birds without a plate yet remain in the written list and get a simple fallback tile.</p>
   <div class="section">
     <div class="field-guide-head"><div><h2>Field-guide library</h2><p class="subtle">A starter set of common birds, plus every new species BirdCanvas records.</p></div><div id="bird-catalog-summary" class="field-guide-summary">Loading…</div></div>
@@ -422,7 +436,7 @@ async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.js
 function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
 function formatDate(v){if(!v)return '';const d=new Date(`${String(v).slice(0,10)}T12:00:00`);return Number.isNaN(d.getTime())?v:d.toLocaleDateString([], {day:'numeric',month:'long',year:'numeric'})}
-function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshGeneration()}if(id==='system')refreshHealth();if(id==='library')renderLibrary();if(id==='journal')renderJournal()}
+function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshGeneration();refreshLeaderboard()}if(id==='system')refreshHealth();if(id==='library')renderLibrary();if(id==='journal')renderJournal()}
 qa('[data-go]').forEach(b=>b.onclick=()=>openPanel(b.dataset.go));qa('[data-filter]').forEach(b=>b.onclick=()=>{currentFilter=b.dataset.filter;openPanel('library');setFilter(currentFilter)});
 function controlImageUrl(artwork){
   if(!artwork||!artwork.image_url)return '';
@@ -701,6 +715,61 @@ $('#rename-button').onclick=async()=>{const title=$('#detail-rename').value.trim
 $('#apply-mount-button').onclick=async()=>{const button=$('#apply-mount-button'),mode=$('#detail-mount').value;button.disabled=true;button.textContent='Applying…';try{await post('/api/artwork/presentation',{artwork_id:selectedArtwork.id,mode});await refresh();openDetail(libraryData.artworks.find(a=>a.id===selectedArtwork.id))}catch(e){alert(e.message)}finally{button.disabled=false;button.textContent='Apply mount'}};
 $('#delete-button').onclick=async()=>{if(!confirm('Permanently delete this uploaded artwork?'))return;await post('/api/custom/delete',{artwork_id:selectedArtwork.id});closeDetail();await refresh()};
 $('#search').addEventListener('input',renderLibrary);qa('.chip').forEach(c=>c.onclick=()=>setFilter(c.dataset.filter));
+let leaderboardPeriod='30',leaderboardBusy=false,leaderboardPending=true,leaderboardRequest=0;
+function renderLeaderboard(result){
+  const analysed=result.analysed_days||0,total=result.total_days||0;
+  const status=result.complete?'Ready':result.retrying_days?'Waiting to retry interrupted history':'Reading BirdNET history';
+  $('#lb-progress').textContent=`${status} · ${analysed} of ${total} days analysed · ${result.from} to ${result.to}${result.complete?'':' · Scores provisional'}`;
+  const box=$('#lb-list');
+  box.replaceChildren();
+  if(!result.birds?.length){
+    const empty=document.createElement('p');empty.className='subtle';
+    empty.textContent=result.complete?'No accepted bird detections for this period yet.':'Loading the first recorded days…';
+    box.append(empty);
+    return;
+  }
+  result.birds.forEach((bird,index)=>{
+    const entry=document.createElement('div');entry.className='lb-entry';
+    const line=document.createElement('div');line.className='lb-line';
+    const name=document.createElement('span');name.className='lb-name';name.textContent=`${index+1}. ${bird.name}`;
+    const numbers=document.createElement('span');numbers.className='lb-numbers';
+    const score=document.createElement('strong');score.className='lb-score';score.textContent=`${bird.visitor_score}%`;
+    numbers.textContent=`${bird.days_heard}/${analysed} days · `;numbers.append(score);
+    const track=document.createElement('div');track.className='lb-track';track.setAttribute('role','progressbar');
+    track.setAttribute('aria-label',`${bird.name}: ${bird.days_heard} of ${analysed} analysed days`);
+    track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax','100');
+    track.setAttribute('aria-valuenow',String(bird.visitor_score));
+    const fill=document.createElement('div');fill.className='lb-fill';
+    fill.style.width=`${Math.max(0,Math.min(100,Number(bird.visitor_score)||0))}%`;
+    track.append(fill);line.append(name,numbers);entry.append(line,track);box.append(entry);
+  });
+}
+async function refreshLeaderboard(){
+  if(leaderboardBusy)return;
+  leaderboardBusy=true;
+  const requested=leaderboardPeriod;
+  const request=++leaderboardRequest;
+  try{
+    const result=await api('/api/birds/leaderboard?period='+encodeURIComponent(requested));
+    if(request===leaderboardRequest&&requested===leaderboardPeriod){
+      leaderboardPending=!result.complete;
+      renderLeaderboard(result);
+    }
+  }catch(error){
+    leaderboardPending=true;
+    $('#lb-progress').textContent='Visitor history unavailable: '+error.message;
+  }finally{leaderboardBusy=false}
+}
+qa('[data-leaderboard-period]').forEach(button=>button.onclick=()=>{
+  leaderboardPeriod=button.dataset.leaderboardPeriod;
+  qa('[data-leaderboard-period]').forEach(item=>item.classList.toggle('active',item===button));
+  // Allow an in-flight response to finish, but never render it for a different period.
+  if(leaderboardBusy){
+    leaderboardRequest++;
+    const wait=setInterval(()=>{if(!leaderboardBusy){clearInterval(wait);refreshLeaderboard()}},250);
+  }else refreshLeaderboard();
+});
+
 $('#bird-live-button').onclick=()=>{birdView='current';birdDate=null;$('#bird-date').value=localDateString();refreshBirds()};
 $('#bird-date').onchange=()=>{if(!$('#bird-date').value)return;birdDate=$('#bird-date').value;birdView='day';refreshBirds()};
 $('#bird-prev-day').onclick=()=>moveBirdDate(-1);
@@ -891,7 +960,7 @@ $('#display-settings-form').onsubmit=async event=>{
   }
 };
 
-const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();refreshHealth();setInterval(refreshHealth,90000);setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();refreshHealth();setInterval(refreshHealth,90000);setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);setInterval(()=>{if($('#birds').classList.contains('active')&&leaderboardPending)refreshLeaderboard()},6000);
 </script>
 </body></html>'''
 
