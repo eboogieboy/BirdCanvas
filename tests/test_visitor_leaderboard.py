@@ -132,7 +132,7 @@ class VisitorLeaderboardTests(unittest.TestCase):
             catalog.write_text(json.dumps({"birds": {
                 "scientific:erithacus rubecula": {"first_seen": "2026-10-03T08:00:00+01:00"}
             }}))
-            with patch.object(board, "DATA_DIR", base / "data"), \\
+            with patch.object(board, "DATA_DIR", base / "data"), \
                  patch.object(board, "OUTPUT_DIR", base / "output"):
                 self.assertEqual(board._observation_start(date(2026, 10, 14)), date(2026, 10, 3))
 
