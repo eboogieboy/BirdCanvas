@@ -62,6 +62,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
         route = parsed.path
+        if route == "/api/ping":
+            self.send_json({"ok": True})
+            return
         if route == "/api/display":
             self.send_json(resolve_display())
             return
