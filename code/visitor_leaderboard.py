@@ -27,6 +27,7 @@ _LOCK = threading.Lock()
 _REQUESTED: set[date] = set()
 _RETRY_AFTER: dict[date, float] = {}
 _RUNNING = False
+_ACTIVE_DAY: date | None = None
 
 
 def _read_json(path: Path):
@@ -40,8 +41,8 @@ def _observation_start(today: date) -> date:
     """Earliest evidenced BirdCanvas observation, not an invented install date."""
     candidates = []
     catalog = _read_json(DATA_DIR / "bird_catalog.json")
-    if isinstance(catalog, dict):
-        for item in (catalog.get("birds") or {}).values():
+    if isinstance(catalog, dict) and isinstance(catalog.get("birds"), dict):
+        for item in catalog["birds"].values():
             if isinstance(item, dict):
                 value = str(item.get("first_seen") or "")[:10]
                 try:
@@ -52,7 +53,10 @@ def _observation_start(today: date) -> date:
     if archive.is_dir():
         for path in archive.glob("*/manifest.json"):
             manifest = _read_json(path)
-            if isinstance(manifest, dict):
+            if isinstance(manifest, dict) and (
+                manifest.get("generation_frequency") or manifest.get("observation_started_at")
+            ):
+                # Earlier hand-made artwork is not evidence BirdNET was recording.
                 for field in ("observation_started_at", "observation_date"):
                     try:
                         candidates.append(date.fromisoformat(str(manifest.get(field) or "")[:10]))
@@ -126,14 +130,16 @@ def _save_day(day: date, value: dict) -> None:
 
 
 def _worker() -> None:
-    global _RUNNING
+    global _RUNNING, _ACTIVE_DAY
     while True:
         with _LOCK:
             if not _REQUESTED:
+                _ACTIVE_DAY = None
                 _RUNNING = False
                 return
             day = max(_REQUESTED)  # Most recent days first; prioritises the 7-day view.
             _REQUESTED.remove(day)
+            _ACTIVE_DAY = day
         try:
             minimum = birdnet_go._minimum_confidence()
             _save_day(day, _calculate_day(day, minimum, datetime.now(LOCAL)))
@@ -149,7 +155,7 @@ def _request_missing(days: list[date]) -> None:
     global _RUNNING
     with _LOCK:
         for day in days:
-            if time.monotonic() >= _RETRY_AFTER.get(day, 0):
+            if day != _ACTIVE_DAY and time.monotonic() >= _RETRY_AFTER.get(day, 0):
                 _REQUESTED.add(day)
         if _REQUESTED and not _RUNNING:
             _RUNNING = True
