@@ -1,3 +1,11 @@
+## 0.23.1 — Generated Health Dashboard Fix
+
+- Corrected the authoritative `code/display.py` page generator to show the live health summary and request health checks when System Status opens. Previously, the unreferenced legacy HTML file had been updated instead, leaving the actual page at "Checking GalleryOS…".
+- The generated page now uses the actual release number rather than hard-coding v0.21.6.
+- Applied cached gallery and journal thumbnails to the generated phone page, preserving existing bird pages and field-guide functionality.
+- Made health checks responsive with a bounded, one-row BirdNET-Go probe instead of a full detection-ledger scan. Failed or slow checks show a retryable warning rather than hanging.
+- Added dedicated regression tests for the generated page and BirdNET probe.
+
 ## 0.23.0 — System Health and Faster GalleryOS
 
 - Added a compact five-service health summary to the phone dashboard, with detailed BirdNET-Go, generation, Samsung Frame, Mirror sender and nightly backup checks.
