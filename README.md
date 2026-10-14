@@ -90,7 +90,11 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 
 ## Current release
 
-Version `0.21.6` — field-guide replacements now update the heard-bird cards immediately as well as the field-guide library and Magic Mirror, with adaptive Mirror bird-grid sizing and the existing safe deployment preflight.
+Version `0.23.0` — a clear five-service health overview on the phone control page and faster Tailscale browsing through lazy, cached JPEG thumbnails. Live display polling no longer reloads the full artwork library every 15 seconds.
+
+The system screen distinguishes healthy, attention required, failure and unverified conditions. BirdNET-Go, generation and Frame status come from existing production state; backup and Mirror sender status are read-only observations of systemd timers and their last completed jobs. These do not independently prove cloud backup restorability or delivery to a powered-off TV.
+
+Gallery artwork previews are built on demand and cached on disk under `output/gallery/thumbs/`. Full resolution originals stay in `output/archive/` and continue to be used for detail views and displays.
 
 
 ## Deployment safety
