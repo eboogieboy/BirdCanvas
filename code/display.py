@@ -12,7 +12,8 @@ def build_display_page() -> None:
     (OUTPUT_DIR / "index.html").write_text(DISPLAY_HTML, encoding="utf-8")
     control_dir = OUTPUT_DIR / "control"
     control_dir.mkdir(parents=True, exist_ok=True)
-    (control_dir / "index.html").write_text(CONTROL_HTML, encoding="utf-8")
+    release = (Path(__file__).resolve().parent.parent / "VERSION").read_text(encoding="utf-8").strip()
+    (control_dir / "index.html").write_text(CONTROL_HTML.replace("__BIRDCANVAS_VERSION__", release), encoding="utf-8")
     print("✓ Dumb display page saved to output/index.html")
     print("✓ Phone control page saved to output/control/index.html")
     print("✓ Gallery library remains at output/gallery/index.html")
@@ -265,12 +266,13 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 .bird-name-line{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;margin-bottom:4px}.bird-name-line h3{margin:0}.bird-rarity{display:inline-flex;align-items:center;font-size:10px;line-height:1.25;font-weight:750;padding:3px 6px;border-radius:7px;background:#edf0ec;color:#465b4d;white-space:nowrap}.bird-rarity.rarity-uncommon{background:#f0e9da;color:#78603b}.bird-rarity.rarity-scarce,.bird-rarity.rarity-rare{background:#f3e0d7;color:#854933}.bird-rarity.rarity-unrated{background:#eeeae4;color:#74716c}.field-guide-rarity{margin:5px 0 2px}.field-guide-rarity .bird-rarity{font-size:9px}
 .field-guide-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.field-guide-head h2{margin:0}.field-guide-summary{font-size:12px;color:var(--muted);text-align:right}.field-guide-filters{display:flex;gap:7px;margin-bottom:11px}.field-guide-filter{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:750}.field-guide-filter.active{background:var(--accent);border-color:var(--accent);color:#fff}.field-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field-guide-tile{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;box-shadow:0 5px 16px rgba(33,38,35,.04)}.field-guide-tile img{width:100%;aspect-ratio:1;object-fit:cover;background:#e8e1d3;display:block}.field-guide-copy{padding:9px}.field-guide-name{font-weight:800;font-size:13px;line-height:1.15;min-height:30px}.field-guide-state{display:inline-block;margin-top:6px;padding:4px 6px;border-radius:999px;background:#e4ece6;color:#466252;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.field-guide-state.missing{background:#efe2dc;color:#794f42}.field-guide-credit{margin-top:5px;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-guide-problem{margin-top:4px;font-size:9px;color:#794f42;line-height:1.3}.field-guide-state.custom{background:#e6e4f1;color:#58506f}.field-guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:8px}.field-guide-action{border:1px solid var(--line);background:#f7f5ef;color:var(--ink);padding:6px 5px;border-radius:9px;font-size:9px;font-weight:800}.field-guide-action.restore{background:#fff}.field-guide-action:disabled{opacity:.55}.field-guide-override-status{margin:0 0 10px;font-size:11px;color:var(--muted)}
 .bird-card-link{color:inherit;text-decoration:none;cursor:pointer}.bird-card-link:hover,.bird-card-link:focus-visible{border-color:var(--accent)}.bird-card-link:focus-visible,.field-guide-species-link:focus-visible,.field-guide-rspb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.rspb-hint{display:block;margin-top:6px;font-size:11px;font-weight:800;color:var(--accent)}.field-guide-species-link{display:block;color:inherit;text-decoration:none}.field-guide-species-link:hover .field-guide-name{text-decoration:underline}.field-guide-rspb{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.health-overview{width:100%;display:flex;align-items:center;gap:11px;text-align:left;color:var(--ink);padding:14px 18px;cursor:pointer}.health-indicator{width:11px;height:11px;border-radius:50%;background:#a28c57;flex-shrink:0}.health-indicator.ok{background:#4b8263}.health-indicator.error{background:#bd5555}.health-indicator.warning{background:#bb9650}.health-overview .health-summary{flex:1;min-width:0}.health-overview .health-summary strong{display:block}.health-overview .health-summary small{display:block;color:var(--muted);margin-top:3px}.health-row{display:flex;gap:12px;justify-content:space-between;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}.health-row:last-child{border:0}.health-state{font-size:12px;font-weight:800;white-space:nowrap}.health-state.ok{color:#417556}.health-state.error{color:#ab3939}.health-state.warning,.health-state.unknown{color:#936d31}
 @media(min-width:700px){.home-overview{grid-template-columns:340px minmax(0,1fr)}.hero{width:100%;margin:0}.art-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(3,1fr)}.field-guide-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.sheet{width:min(760px,100%);margin:0 auto;border-radius:28px 28px 0 0}}
 </style>
 </head>
 <body>
 <main class="app">
-<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v0.21.6</div></header>
+<header class="topbar"><div class="brand">BirdCanvas</div><div class="version">v__BIRDCANVAS_VERSION__</div></header>
 <section id="home" class="panel active">
   <div class="home-overview">
     <div class="card hero" id="hero"><div class="hero-empty">Loading portrait artwork…</div></div>
@@ -280,6 +282,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
         <strong id="assurance-title">Checking BirdCanvas artwork…</strong>
         <p id="assurance-message" class="subtle">GalleryOS is checking the current BirdCanvas artwork.</p>
       </div>
+      <button id="health-overview" class="card section health-overview" data-go="system" type="button"><span id="health-dot" class="health-indicator warning"></span><span class="health-summary"><strong id="health-headline">Checking BirdCanvas systems…</strong><small id="health-subtitle">Generation, displays and backups</small></span><span aria-hidden="true">›</span></button>
       <div class="card form-card">
         <strong>BirdNET activity</strong>
         <div class="bird-activity">
@@ -419,7 +422,7 @@ async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.js
 function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
 function formatDate(v){if(!v)return '';const d=new Date(`${String(v).slice(0,10)}T12:00:00`);return Number.isNaN(d.getTime())?v:d.toLocaleDateString([], {day:'numeric',month:'long',year:'numeric'})}
-function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshGeneration()}if(id==='library')renderLibrary();if(id==='journal')renderJournal()}
+function openPanel(id){qa('.panel').forEach(p=>p.classList.toggle('active',p.id===id));qa('.nav').forEach(n=>n.classList.toggle('active',n.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='birds'){refreshBirds();refreshGeneration()}if(id==='system')refreshHealth();if(id==='library')renderLibrary();if(id==='journal')renderJournal()}
 qa('[data-go]').forEach(b=>b.onclick=()=>openPanel(b.dataset.go));qa('[data-filter]').forEach(b=>b.onclick=()=>{currentFilter=b.dataset.filter;openPanel('library');setFilter(currentFilter)});
 function controlImageUrl(artwork){
   if(!artwork||!artwork.image_url)return '';
@@ -491,7 +494,7 @@ function renderNext(schedules){const future=schedules.filter(x=>new Date(x.start
 function setFilter(filter){currentFilter=filter;qa('.chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===filter));renderLibrary()}
 function filteredArtworks(){const q=$('#search').value.trim().toLowerCase();return libraryData.artworks.filter(a=>{const matchesFilter=currentFilter==='all'?!a.hidden:currentFilter==='favourites'?a.favourite&&!a.hidden:currentFilter==='hidden'?a.hidden:a.collection===currentFilter&&!a.hidden;const hay=[a.title,a.collection,...(a.species||[]),...(a.species_detected||[])].join(' ').toLowerCase();return matchesFilter&&(!q||hay.includes(q))})}
 function monthLabel(value){const d=new Date(`${value||''}T12:00:00`);return Number.isNaN(d.getTime())?'Undated':d.toLocaleDateString(undefined,{month:'long',year:'numeric'})}
-function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const featured=(a.species_used||a.species||[]),heard=(a.species_detected||featured);entry.innerHTML=`<img loading="lazy" decoding="async" src="${a.image_url}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${heard.length?`${heard.length} heard · ${featured.length} featured${a.observation_ended_at?` · ${a.detections_total} detections`:''}${featured.length?` · ${escapeHtml(featured.slice(0,4).join(', '))}${featured.length>4?'…':''}`:''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
+function renderJournal(){const box=$('#journal-content'),items=libraryData.artworks.filter(a=>a.collection==='birdcanvas'&&!a.hidden).sort((a,b)=>(b.observation_date||b.created_at).localeCompare(a.observation_date||a.created_at));box.replaceChildren();if(!items.length){box.innerHTML='<div class="empty">No BirdCanvas artwork has been archived yet.</div>';return}let activeMonth='';for(const a of items){const month=monthLabel(a.observation_date||a.created_at.slice(0,10));if(month!==activeMonth){activeMonth=month;const heading=document.createElement('h3');heading.className='journal-month';heading.textContent=month;box.append(heading)}const entry=document.createElement('button');entry.className='journal-entry';const featured=(a.species_used||a.species||[]),heard=(a.species_detected||featured);entry.innerHTML=`<img loading="lazy" decoding="async" src="${escapeHtml(a.thumbnail_url||a.image_url)}" alt=""><div><div class="journal-date">${escapeHtml(a.observation_date||a.created_at.slice(0,10))}</div><h3>${escapeHtml(a.title)}</h3><div class="journal-birds">${heard.length?`${heard.length} heard · ${featured.length} featured${a.observation_ended_at?` · ${a.detections_total} detections`:''}${featured.length?` · ${escapeHtml(featured.slice(0,4).join(', '))}${featured.length>4?'…':''}`:''}`:'No species recorded'}</div></div>`;entry.onclick=()=>openDetail(a);box.append(entry)}}
 function birdClock(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
 function rarityMarkup(bird){
   const info=bird&&bird.rarity||{};
@@ -608,7 +611,7 @@ async function refreshBirdCatalogue(){
   }
 }
 
-function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img loading="lazy" decoding="async" src="${a.image_url}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
+function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img loading="lazy" decoding="async" src="${escapeHtml(a.thumbnail_url||a.image_url)}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
 function openDetail(a){
   selectedArtwork=a;
   $('#detail-img').src=controlImageUrl(a);
@@ -778,9 +781,36 @@ let previewUrl=null;$('#upload-image').onchange=e=>{const f=e.target.files[0];if
 $('#upload-form').onsubmit=async e=>{e.preventDefault();const file=$('#upload-image').files[0],action=$('#upload-action').value,status=$('#upload-status');if(!file){status.textContent='Choose an image first.';return}const form=new FormData();form.append('image',file);form.append('title',$('#upload-title').value);form.append('show_now',action==='now'?'true':'false');form.append('duration_minutes',$('#upload-duration').value);try{status.textContent='Uploading…';const r=await fetch('/api/upload',{method:'POST',body:form}),d=await r.json();if(!r.ok)throw new Error(d.error||'Upload failed');if(action==='schedule')await post('/api/schedules',{artwork_id:d.artwork.id,starts_at:$('#upload-start').value,ends_at:$('#upload-end').value});status.textContent=action==='now'?'Artwork is now displayed.':action==='schedule'?'Artwork uploaded and scheduled.':'Artwork saved to library.';await refresh();setTimeout(()=>openPanel(action==='now'?'home':action==='schedule'?'schedule':'library'),700)}catch(err){status.textContent=err.message}};$('#schedule-button').onclick=async()=>{try{await post('/api/schedules',{artwork_id:$('#schedule-artwork').value,starts_at:$('#schedule-start').value,ends_at:$('#schedule-end').value});$('#schedule-status').textContent='Schedule added.';await refresh()}catch(e){$('#schedule-status').textContent=e.message}};
 
 
-function healthLabel(status){if(status==='ok')return 'Healthy';if(status==='warning')return 'Attention';return 'Problem';}
-function renderHealth(report){const checks=report.checks||{};const rows=Object.entries(checks).map(([name,value])=>`<div class="schedule-row"><div><strong>${escapeHtml(name.replace('_',' '))}</strong><p>${escapeHtml(healthLabel(value.status))}</p></div><span>${escapeHtml(value.message||'')}</span></div>`).join('');$('#health-card').innerHTML=`<strong>GalleryOS ${escapeHtml(report.version||'')}</strong><p class="subtle">Checked ${escapeHtml(formatDate(report.checked_at))}</p>${rows}`;}
-async function refreshHealth(){try{renderHealth(await api('/api/health'));}catch(error){$('#health-card').innerHTML=`<p>${escapeHtml(error.message)}</p>`;}}
+function healthLabel(status){return {ok:'Healthy',warning:'Attention',error:'Problem',unknown:'Not verified'}[status]||'Unknown';}
+const mainChecks=[['birdnet','BirdNET-Go'],['generation','Artwork generation'],['frame','Samsung Frame'],['mirror','Magic Mirror'],['backup','Nightly backup']];
+function renderHealth(report){
+  const checks=report.checks||{},overall=report.status||'unknown';
+  $('#health-dot').className='health-indicator '+(overall==='ok'?'ok':overall==='error'?'error':'warning');
+  $('#health-headline').textContent=overall==='ok'?'All BirdCanvas systems healthy':overall==='error'?'BirdCanvas needs attention':'Check BirdCanvas system status';
+  const summary=mainChecks.filter(([key])=>checks[key]?.status!=='ok').map(([key,label])=>label);
+  $('#health-subtitle').textContent=summary.length?summary.join(' · '):'Generation, displays and backups operational';
+  const ordered=[...mainChecks,...Object.keys(checks).filter(key=>!mainChecks.some(([id])=>id===key)).map(key=>[key,key.replaceAll('_',' ')])];
+  const rows=ordered.map(([key,label])=>{const v=checks[key]||{status:'unknown',message:'Not checked'};const state=v.status||'unknown';return `<div class="health-row"><div><strong>${escapeHtml(label)}</strong><p class="subtle">${escapeHtml(v.message||'No details available')}</p></div><span class="health-state ${escapeHtml(state)}">${escapeHtml(healthLabel(state))}</span></div>`}).join('');
+  $('#health-card').innerHTML=`<strong>GalleryOS ${escapeHtml(report.version||'')}</strong><p class="subtle">Checked ${escapeHtml(fmt(report.checked_at))}. Timer status shows the latest recorded run, not a live TV or cloud-restore test.</p>${rows}`;
+}
+let healthLoading=false;
+async function refreshHealth(){
+  if(healthLoading)return;
+  healthLoading=true;
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),18000);
+  try{
+    const response=await fetch('/api/health',{cache:'no-store',signal:controller.signal});
+    if(!response.ok)throw new Error('Health request failed ('+response.status+')');
+    renderHealth(await response.json());
+  }catch(error){
+    const detail=error.name==='AbortError'?'Status check timed out. Open System status again to retry.':error.message;
+    $('#health-dot').className='health-indicator warning';
+    $('#health-headline').textContent='System health unavailable';
+    $('#health-subtitle').textContent=detail;
+    $('#health-card').textContent=detail;
+  }finally{clearTimeout(timeout);healthLoading=false}
+}
 let generationSettingsLoaded=false;
 async function refreshGeneration(){
   try{
@@ -861,7 +891,7 @@ $('#display-settings-form').onsubmit=async event=>{
   }
 };
 
-const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();refreshHealth();setInterval(refreshHealth,90000);setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);
 </script>
 </body></html>'''
 
