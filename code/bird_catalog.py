@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from bird_images import mirror_tile_info
 from bird_rarity import rarity_for
+from rspb_links import rspb_species_url
 from paths import DATA_DIR
 
 LOCAL = ZoneInfo("Europe/London")
@@ -162,6 +163,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
                 "starter": key in starter_keys,
                 "heard": heard,
                 "rarity": rarity_for(name, scientific),
+                "rspb_url": rspb_species_url(name, scientific),
                 "image_url": f"/api/mirror/bird-image?{query}",
                 "image_status": tile["status"],
                 "image_ready": tile["status"] == "ready",

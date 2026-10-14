@@ -44,6 +44,17 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("Missing images", html)
         self.assertIn("/api/birds/catalog", html)
 
+    def test_bird_species_links_open_verified_rspb_profiles(self):
+        html = display.CONTROL_HTML
+        self.assertIn("bird.rspb_url", html)
+        self.assertIn("card.href=rspb", html)
+        self.assertIn("card.target='_blank'", html)
+        self.assertIn("card.rel='noopener noreferrer'", html)
+        self.assertIn('class=\"field-guide-species-link\"', html)
+        self.assertIn('class=\"field-guide-rspb\"', html)
+        self.assertIn('RSPB species guide', html)
+        self.assertIn("data-bird-replace", html)
+        self.assertIn("data-bird-restore", html)
     def test_heard_bird_thumbnail_shows_whole_illustration(self):
         html = display.CONTROL_HTML
         self.assertIn(
