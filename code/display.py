@@ -960,7 +960,7 @@ $('#display-settings-form').onsubmit=async event=>{
   }
 };
 
-const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();refreshHealth();setInterval(refreshHealth,90000);setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);setInterval(()=>{if($('#birds').classList.contains('active')&&leaderboardPending)refreshLeaderboard()},6000);
+const st=new Date(Date.now()+3600000),en=new Date(Date.now()+7200000);['schedule-start','upload-start'].forEach(id=>$('#'+id).value=localIso(st));['schedule-end','upload-end'].forEach(id=>$('#'+id).value=localIso(en));$('#bird-date').max=localDateString();$('#bird-date').value=localDateString();refresh();refreshGeneration();refreshHealth();setInterval(refreshHealth,90000);setInterval(refreshDisplayOnly,15000);setInterval(refresh,60000);setInterval(refreshGeneration,60000);setInterval(()=>{if($('#birds').classList.contains('active')&&birdView==='current')refreshBirds()},15000);setInterval(()=>{if($('#birds').classList.contains('active')&&leaderboardPending)refreshLeaderboard()},6000);setInterval(()=>{if($('#birds').classList.contains('active'))refreshLeaderboard()},300000);
 </script>
 </body></html>'''
 
