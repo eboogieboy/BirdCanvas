@@ -30,6 +30,7 @@ from display_settings import load_display_settings, save_display_settings
 from reliability import create_backup, create_diagnostics, health_report
 from import_birdnet import import_zip
 from compose import compose
+from art_style_rotation import get_style
 from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
@@ -231,6 +232,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 subprocess.Popen([sys.executable, str(PROJECT_ROOT / "code/production_job.py"), "--now"],
                                  cwd=PROJECT_ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 self.send_json({"ok": True, "message": "Generation requested. Check system status for completion."})
+                return
+            if route == "/api/generation/style-test":
+                payload = self.read_json_body()
+                chosen = get_style(str(payload.get("style", "Geometric abstraction")))
+                subprocess.Popen(
+                    [sys.executable, str(PROJECT_ROOT / "code/production_job.py"),
+                     "--style-test", chosen["name"]],
+                    cwd=PROJECT_ROOT,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                self.send_json({
+                    "ok": True,
+                    "style": chosen["name"],
+                    "message": "Style test requested. Existing bird observations will be reused; the daily schedule is unchanged.",
+                })
                 return
             if route == "/api/override":
                 payload = self.read_json_body()
