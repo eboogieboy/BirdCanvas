@@ -9,7 +9,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from artwork_store import ARCHIVE_DIR, artwork_id_for, publish_artwork
+from artwork_store import ARCHIVE_DIR, CURRENT_DIR, artwork_id_for, publish_artwork
+from art_style_rotation import get_style
 from birdnet_go import detections
 from compose import compose, filter_birds
 from display import build_display_page
@@ -202,6 +203,84 @@ def send_artwork_to_frame(artwork_id):
             "delivered_at": delivered_at,
             "reused": reused,
         }
+
+
+
+def run_style_test(style_name="Geometric abstraction", now=None):
+    """Generate a fresh artistic interpretation of existing, genuinely heard birds.
+
+    Unlike Generate now, this does NOT advance the observation cursor or affect
+    the next scheduled daily collection. It requires a recent BirdCanvas manifest
+    and never substitutes an invented species.
+    """
+    selected_style = get_style(style_name)
+    with exclusive():
+        now = now or _now()
+        settings = load_settings()
+        state = load_state()
+        current_manifest = CURRENT_DIR / "manifest.json"
+        if not current_manifest.is_file():
+            raise ValueError("A previous BirdCanvas artwork is needed for a style test.")
+        source = json.loads(current_manifest.read_text(encoding="utf-8"))
+        if source.get("collection") != "birdcanvas":
+            raise ValueError("Current artwork is not a BirdCanvas observation.")
+        observed_species = list(source.get("species_detected") or source.get("species_eligible") or source.get("species") or [])
+        eligible_species = filter_birds(observed_species, settings["excluded_birds"])
+        if not eligible_species:
+            raise ValueError("No eligible recorded birds are available for the style test.")
+
+        # Unique archive name even when multiple manually requested on one day.
+        edition = f"style-test-{now.strftime('%Y%m%d-%H%M%S-%f')}"
+        original_window = str(source.get("observation_window") or source.get("observation_date") or "")
+        try:
+            result = compose(
+                source="style_test",
+                birds=eligible_species,
+                edition="style_test",
+                observation_window=f"Style test; reusing heard species from {original_window}",
+                excluded_terms=settings["excluded_birds"],
+                style_override=selected_style["name"],
+            )
+            if not result:
+                raise RuntimeError("Style test returned no image.")
+            featured = list(result.get("birds") or eligible_species)
+            manifest = publish_artwork(
+                source_image=Path(result["output"]),
+                observation_date=now.date().isoformat(),
+                birds=featured,
+                brief=result["brief"],
+                edition=edition,
+                title=f"Style Test — {selected_style['name']} — {now:%-d %b %Y}",
+                observation_window=f"Style interpretation of existing detections: {original_window}",
+                observation_started_at=str(source.get("observation_started_at") or ""),
+                observation_ended_at=str(source.get("observation_ended_at") or ""),
+                detections_total=int(source.get("detections_total") or 0),
+                species_detected=observed_species,
+                species_eligible=eligible_species,
+                species_used=featured,
+                species_not_featured=[bird for bird in eligible_species if bird not in featured],
+                species_excluded=[bird for bird in observed_species if bird not in eligible_species],
+                generation_frequency="style_test",
+                generation=result.get("generation"),
+            )
+            build_display_page()
+            state.setdefault("deliveries", []).append({"id": manifest["id"]})
+            state["last_error"] = None
+            state["last_result"] = f"Published {manifest['id']} ({selected_style['name']} style test)"
+            # Intentionally preserve state['last_end'] and the normal schedule.
+            save_state(state)
+            retry_deliveries(state)
+            return {
+                "status": "published",
+                "artwork_id": manifest["id"],
+                "art_style": selected_style["name"],
+                "reused_observation_date": source.get("observation_date"),
+                "next_collection_unchanged": True,
+            }
+        except Exception as error:
+            state["last_error"] = str(error)
+            save_state(state)
+            raise
 
 
 def run(manual=False, now=None):
