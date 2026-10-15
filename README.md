@@ -100,6 +100,23 @@ The system screen distinguishes healthy, attention required, failure and unverif
 Gallery artwork previews are built on demand and cached on disk under `output/gallery/thumbs/`. Full resolution originals stay in `output/archive/` and continue to be used for detail views and displays.
 
 
+## Style rotation and manual test (v0.24.1)
+
+BirdCanvas rotates between atmospheric/painterly, modern/graphic and abstract/experimental
+styles, deliberately contrasting the artistic family of recent pictures. Storybook
+Illustration remains excluded. The authenticity guidance applies to believable
+representational settings without forcing abstract work into realistic scenery.
+
+To try a different style **without waiting for new detections**, open GalleryOS
+`/control/`, choose **BirdCanvas generation** from the Home quick actions,
+pick a **Creative style test** style and press **Generate style test**.
+The test reuses the species recorded for the current BirdCanvas image (applying
+current excluded-bird settings), publishes a new library artwork and sends it to
+the Frame. It **does not** advance the daily observation window, alter frequency,
+or change the automatic style rotation. Each test incurs the usual generation
+API cost. The existing **Generate now** button still uses the live collection and
+should not be used for a same-bird style test.
+
 ## Deployment safety
 
 Pull requests now run the same regression suite, Python compilation, generated-page build and deployment-shell syntax checks in GitHub Actions before merge. The Pi auto-deployer also runs the full candidate test suite and page generation from its clean deployment checkout before it copies anything into the live installation. A bad candidate therefore fails preflight while the current live BirdCanvas instance remains untouched.
