@@ -327,12 +327,13 @@ Season: {season}
 Subject balance for THIS artwork: {subject_balance}
 REQUIRED ARTISTIC MEDIUM: {art_style['name']}
 MEDIUM CHARACTERISTICS: {art_style['guidance']}
+ARTISTIC FAMILY: {art_style.get('family', 'contemporary')}
 Selected species: {json.dumps(birds)}
 Light identity cues: {json.dumps(art_cues, indent=2)}
 Recent creative history: {json.dumps(_compact_history(history), indent=2)}
 
 Do all creative planning in this ONE response:
-1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in setting and composition, not medium.
+1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in visual structure and composition, not medium.
 2. Select the strongest concept for today's birds, retaining the required artistic medium. Prefer a specific, internally convincing composition over the most ornate, picturesque or conventionally pretty concept.
 3. Develop it into a curator's brief.
 4. Extract concise Creative DNA for future anti-repetition memory.
@@ -343,17 +344,22 @@ Authenticity and restraint — mandatory in EVERY artistic medium:
   attractive stock motifs to create an idealised postcard.
 - Ordinary, imperfect and overlooked settings can be powerful: a modest back
   garden, fence, quiet street, shed, window view, allotment, harbour structure
-  or lived-in interior. These are options, not a compulsory subject checklist.
-- Let objects and structures have a believable spatial relationship and purpose.
+  or lived-in interior. These are options for representational styles, not a compulsory subject checklist.
+- In representational styles, let objects and structures have a believable spatial relationship and purpose.
   Do not pile on picturesque mansions, ornamental gardens, golden-hour glow,
   decorative clutter or romantic scenery simply because they look impressive.
 - Leave room for negative space, asymmetry, ordinary weather and quiet detail.
   A sparse scene is as valid as an elaborate one.
 - Birds should feel incidentally encountered, not posed or distributed as
   decorative ornaments solely to make every species obvious.
-- "Believable" means an intentional, coherent artistic world, NOT photorealism:
-  pop art may be exuberant, illustration whimsical, and surrealism impossible.
-  Preserve the selected medium's genuine colour, energy and boldness.
+- "Believable" means intentional artistic direction, NOT photorealism.
+  Graphic and abstract artworks need not depict literal settings, horizons or
+  realistic spatial relationships. Bold non-representational forms are welcome.
+- Pop art, geometric abstraction, abstract expressionism, collage and
+  constructivist modernism must use unmistakeably bold colour and expressive
+  shapes, not a conventional scenic painting with a superficial effect.
+- Birds can be recognisable stylised shapes, integrated into that visual
+  medium without a naturalistic anatomy checklist. Preserve expressive energy.
 - Preserve surprising artistic variety; do not solve this requirement by
   returning every day to muted concrete, coastal textures or stone architecture.
 
@@ -368,9 +374,10 @@ Creative principles:
 - in these art-first modes, birds normally occupy only a small portion of the canvas
   (roughly 5-15% of visual area in total); these are compositional guidelines,
   not rigid quotas or a reason to hide the selected species
-- use convincing environmental storytelling: a roofline, garden wall, chair,
-  window, fence, boat, harbour structure, shed, planting, shoreline or interior
-  may be the main visual subject; birds belong naturally within that world
+- in representational media, environmental storytelling may feature a window,
+  shed, garden wall, interior or any other convincing place
+- in abstract media, colour, rhythm, material, geometry, gesture and the
+  relationships between forms may entirely replace literal scenery
 - avoid large central bird portraits, oversized foreground birds, symmetrical
   species lineups or bird-first framing except when the selected balance is bird-led
 - shared mode makes birds and non-bird subjects genuinely coequal, not a bird
@@ -436,7 +443,7 @@ The image_prompt must be complete and ready for image generation. It must descri
 one collectible contemporary artwork, include all selected species once in an
 identifiable but transformed way, explicitly preserve crop safety/full bleed, and
 prioritise composition, atmosphere, material, light and beauty over ornithological
-micro-detail. Carry the authenticity-and-restraint direction into the actual image_prompt: believable spatial storytelling, unforced bird placement, intentional negative space, and no automatically picturesque perfection. Do not turn it into a checklist or repeat the whole brief verbatim.
+micro-detail. Carry the authenticity-and-restraint direction into the actual image_prompt: believable spatial storytelling, unforced bird placement, intentional negative space, and no automatically picturesque perfection in representational media; abstract and graphic media should be genuinely non-literal when appropriate. Do not turn it into a checklist or repeat the whole brief verbatim.
 """,
     )
 
@@ -462,6 +469,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 supporting.append(bird)
         brief["subject_balance"] = subject_balance
         brief["art_style"] = art_style["name"]
+        brief["art_family"] = art_style.get("family", "")
         brief["hero_birds"] = hero
         brief["supporting_birds"] = supporting
         return {
@@ -495,6 +503,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
             "composition": "portrait composition with strong vertical balance and generous negative space",
             "subject_balance": subject_balance,
             "art_style": art_style["name"],
+            "art_family": art_style.get("family", ""),
             "bird_integration": "Transform each bird into the material language while retaining a recognisable identity cue.",
             "materials": movement["materials"],
             "visual_focus": "material, light and spatial rhythm",
