@@ -1572,7 +1572,7 @@ def build_verification_correction(
 
 
 
-def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None):
+def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None, style_override=None):
 
     generation_ai.reset_usage()
 
@@ -1605,8 +1605,8 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     subject_balance = select_subject_balance()
     print("Subject balance:", subject_balance)
 
-    art_style = choose_style(history)
-    print("Artistic tradition:", art_style["name"])
+    art_style = choose_style(history, preferred_style=style_override)
+    print("Artistic tradition:", art_style["name"], "— family:", art_style["family"])
     print("Creating consolidated creative direction...")
     direction = generation_ai.create_art_direction(
         birds,
@@ -1626,6 +1626,7 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     creative_dna = direction.get("creative_dna", {})
     base_prompt = direction["image_prompt"]
     brief["art_style"] = art_style["name"]
+    brief["art_family"] = art_style["family"]
     base_prompt = (
         "MANDATORY CREATIVE DIRECTION FOR THIS EDITION: "
         + art_style["name"] + ". " + art_style["guidance"] + "\n"
