@@ -349,6 +349,19 @@ CONTROL_HTML = r'''<!DOCTYPE html>
       <p class="subtle">A name matches any species containing that text. BirdNET keeps recording them; only artwork omits them.</p></div>
     <button id="save-generation" class="btn">Save generation settings</button>
     <button id="generation-now" class="btn secondary" type="button">Generate now</button>
+    <div class="field section">
+      <label for="generation-test-style">Creative style test</label>
+      <select id="generation-test-style">
+        <option value="Geometric abstraction" selected>Geometric abstraction</option>
+        <option value="Pop art">Pop art</option>
+        <option value="Abstract expressionism">Abstract expressionism</option>
+        <option value="Constructivist modernism">Constructivist modernism</option>
+        <option value="Paper collage">Paper collage</option>
+        <option value="Cubism">Cubism</option>
+      </select>
+      <p class="subtle">Make another artwork using birds heard for the current image, even when none have been heard since. This does not reset the daily collection. The result is saved in Library and sent to the Frame.</p>
+      <button id="generation-style-test" class="btn secondary" type="button">Generate style test</button>
+    </div>
     <div id="generation-message" class="status"></div>
   </div>
   <div class="card form-card section"><strong>Current collection</strong><p id="generation-status" class="subtle">Checking BirdNET…</p></div>
@@ -928,6 +941,17 @@ $('#generation-now').onclick=async()=>{
   const msg=$('#generation-message');
   try{await post('/api/generation/now');msg.textContent='Generation requested. It may take several minutes.';setTimeout(refreshGeneration,10000)}
   catch(e){msg.textContent=e.message}
+};
+$('#generation-style-test').onclick=async()=>{
+  const msg=$('#generation-message'),button=$('#generation-style-test');
+  const style=$('#generation-test-style').value;
+  button.disabled=true;
+  try{
+    await post('/api/generation/style-test',{style});
+    msg.textContent=style+' test requested. Reusing birds from the current artwork without resetting the daily schedule. This may take several minutes.';
+    setTimeout(refreshGeneration,10000);
+  }catch(e){msg.textContent=e.message}
+  finally{button.disabled=false}
 };
 $('#create-backup').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating backup…';const result=await post('/api/backup',{});status.innerHTML=`Backup ready. <a href="${result.download_url}">Download backup</a>`;}catch(error){status.textContent=error.message;}};
 $('#download-diagnostics').onclick=async()=>{const status=$('#system-action-status');try{status.textContent='Creating diagnostics…';const result=await post('/api/diagnostics',{});window.location.href=result.download_url;status.textContent='Diagnostics download ready.';}catch(error){status.textContent=error.message;}};
