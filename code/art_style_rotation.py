@@ -40,7 +40,9 @@ STYLE_LOOKUP = {
     for family, styles in STYLE_FAMILIES.items()
     for name, guidance in styles
 }
-TARGET_WEIGHTS = {"atmospheric": 0.33, "modern_graphic": 0.37, "abstract_experimental": 0.30}
+# A rare atmospheric picture is a deliberate contrast, not a default return.
+# This cadence keeps approximately 6 of 7 automatic editions modern/abstract.
+AUTOMATIC_FAMILY_MIX = {"atmospheric": 1, "modern_graphic": 3, "abstract_experimental": 3}
 
 
 def get_style(name: str):
@@ -52,44 +54,48 @@ def get_style(name: str):
 
 
 def choose_style(history, preferred_style=None):
-    """Choose a contrasting family and avoid styles used in the previous five artworks.
+    """Prefer graphic/abstract art while retaining occasional atmospheric work.
 
-    Priority is avoiding either of the two preceding families. With three
-    families this gives a genuine painterly / graphic / abstract rotation.
-    Historical counts break ties toward the desired longer-term family mix.
-    An explicit style is only used for a user-requested manual style test.
+    Automatic editions alternate modern graphic and abstract experimental.
+    An atmospheric work becomes due only after six non-atmospheric editions,
+    preventing the previous every-third-image return to moody landscapes.
+    Explicit manual style tests do not consume a place in the rotation.
     """
     if preferred_style and preferred_style != "surprise":
         return get_style(preferred_style)
 
-    used = [
-        str(item.get("art_style", "")).strip()
-        for item in history
-        if isinstance(item, dict) and item.get("art_style")
+    normal_editions = [
+        item for item in history
+        if isinstance(item, dict)
+        and item.get("art_style") in STYLE_LOOKUP
+        and item.get("edition") != "style_test"
     ]
-    families = [STYLE_LOOKUP[name]["family"] for name in used if name in STYLE_LOOKUP]
-    recent_families = set(families[-2:])
+    used = [item["art_style"] for item in normal_editions]
+    families = [STYLE_LOOKUP[name]["family"] for name in used]
     recent_styles = set(used[-5:])
-    family_counts = {family: families.count(family) for family in STYLE_FAMILIES}
-    length = len(families) + 1
 
-    ranked = sorted(
-        STYLE_FAMILIES,
-        key=lambda family: (
-            family in recent_families,
-            family == "atmospheric" and families[-6:].count("atmospheric") >= 2,
-            -(TARGET_WEIGHTS[family] * length - family_counts[family]),
-            list(STYLE_FAMILIES).index(family),
+    atmospheric_due = (
+        len(families) >= 6
+        and "atmospheric" not in families[-6:]
+    )
+    if atmospheric_due:
+        family = "atmospheric"
+    elif families and families[-1] == "modern_graphic":
+        family = "abstract_experimental"
+    else:
+        family = "modern_graphic"
+
+    candidates = [
+        item for item in STYLE_FAMILIES[family]
+        if item[0] not in recent_styles
+    ]
+    if not candidates:
+        candidates = STYLE_FAMILIES[family]
+    name, guidance = min(
+        candidates,
+        key=lambda item: (
+            used.count(item[0]),
+            STYLE_FAMILIES[family].index(item),
         ),
     )
-    for family in ranked:
-        choices = [item for item in STYLE_FAMILIES[family] if item[0] not in recent_styles]
-        if not choices:
-            choices = STYLE_FAMILIES[family]
-        # Pick the least-used specific medium for meaningful variety within a family.
-        name, guidance = min(
-            choices,
-            key=lambda item: (used.count(item[0]), STYLE_FAMILIES[family].index(item)),
-        )
-        return {"name": name, "guidance": guidance, "family": family}
-    raise RuntimeError("Artistic-style collection is empty.")
+    return {"name": name, "guidance": guidance, "family": family}
