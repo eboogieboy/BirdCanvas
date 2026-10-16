@@ -22,17 +22,28 @@ class ArtStyleRotationTests(unittest.TestCase):
         ]
         self.assertNotEqual(choose_style(history)["name"], "Storybook illustration")
 
-    def test_rotates_art_families_and_includes_abstract_and_graphic_art(self):
+    def test_automatic_mix_is_six_bold_to_one_atmospheric(self):
         history = []
         families = []
-        for _ in range(15):
-            choice = choose_style(history)
-            self.assertNotIn(choice["family"], families[-2:])
+        for _ in range(28):
+            choice = choose_style(history[-10:])
+            self.assertNotIn(choice["family"], families[-1:])
             families.append(choice["family"])
-            history.append({"art_style": choice["name"]})
+            history.append({"art_style": choice["name"], "edition": "daily"})
         self.assertIn("modern_graphic", families)
         self.assertIn("abstract_experimental", families)
-        self.assertIn("atmospheric", families)
+        self.assertEqual(families.count("atmospheric"), 4)
+        self.assertEqual(families[:7], [
+            "modern_graphic", "abstract_experimental", "modern_graphic",
+            "abstract_experimental", "modern_graphic", "abstract_experimental",
+            "atmospheric",
+        ])
+
+    def test_manual_style_previews_do_not_change_automatic_selection(self):
+        daily = [{"art_style": "Pop art", "edition": "daily"}]
+        test = daily + [{"art_style": "Geometric abstraction", "edition": "style_test"}]
+        self.assertEqual(choose_style(daily)["family"], "abstract_experimental")
+        self.assertEqual(choose_style(test)["family"], "abstract_experimental")
 
     def test_explicit_pop_art_and_geometric_abstraction(self):
         self.assertEqual(choose_style([], preferred_style="Pop art")["family"], "modern_graphic")
