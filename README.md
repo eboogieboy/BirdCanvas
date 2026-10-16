@@ -100,6 +100,21 @@ The system screen distinguishes healthy, attention required, failure and unverif
 Gallery artwork previews are built on demand and cached on disk under `output/gallery/thumbs/`. Full resolution originals stay in `output/archive/` and continue to be used for detail views and displays.
 
 
+## Visual variety tuning (v0.24.2)
+
+Automatic BirdCanvas generation now alternates predominantly **modern/graphic**
+and **abstract/experimental** art treatments. Atmospheric/painterly work is a
+rarer deliberate contrast, at roughly one in seven automatic editions.
+The selected artistic medium is specified in the Creative Director instructions
+and reinforced in the final image prompt. Abstract editions should not drift
+into realistic coastal, architectural or sports-ground scenes.
+
+Manual **Creative style test** generations retain explicit style choice and
+archive the resulting art without changing the daily collection boundary.
+From this version forward, manual tests are marked in creative history and no
+longer advance the automatic style rotation. Bird selection, image model,
+resolution, Frame delivery and artwork archive remain unchanged.
+
 ## Style rotation and manual test (v0.24.1)
 
 BirdCanvas rotates between atmospheric/painterly, modern/graphic and abstract/experimental
