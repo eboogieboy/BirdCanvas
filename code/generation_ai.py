@@ -286,6 +286,8 @@ def _compact_history(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "palette": item.get("palette"),
                 "composition": item.get("composition"),
                 "featured_birds": item.get("featured_birds", []),
+                "art_style": item.get("art_style"),
+                "art_family": item.get("art_family"),
                 "creative_dna": item.get("creative_dna", {}),
             }
         )
@@ -305,6 +307,30 @@ def create_art_direction(
 ) -> dict[str, Any]:
     """One strong call replaces movement, selection, brief, DNA and prompt calls."""
     art_style = art_style or {"name": "Contemporary gallery art", "guidance": "Create original gallery-quality artwork."}
+    family = art_style.get("family", "atmospheric")
+    family_contracts = {
+        "modern_graphic": (
+            "Produce unmistakable print, graphic-design or drawn artwork, not a "
+            "realistic scene with a thin graphic filter. Flat colour, inventive "
+            "shapes, strong outlines and intentionally designed negative space "
+            "should define the image from across the room. The bird forms "
+            "share that medium. Avoid photographic light and realistic skies."
+        ),
+        "abstract_experimental": (
+            "Make an artwork dominated by NON-REPRESENTATIONAL colour, geometry, "
+            "gesture, material and rhythm, with 2-4 recognisable stylised bird "
+            "forms integrated into the abstraction. Do not organise the picture "
+            "as a literal landscape, outdoor photograph, building, roofline, "
+            "garden or sports ground. Composition should read as modern art "
+            "before the viewer notices the birds."
+        ),
+        "atmospheric": (
+            "Use the named painterly medium confidently, but avoid endlessly "
+            "repeating murky skies, empty yards, sheds and weathered architecture. "
+            "This is a rare contrast within a mostly graphic/abstract collection."
+        ),
+    }
+    family_contract = family_contracts.get(family, family_contracts["atmospheric"])
     art_cues = [
         {"species": item["species"], "art_cue": item["art_cue"]}
         for item in bird_plan
@@ -327,12 +353,16 @@ Season: {season}
 Subject balance for THIS artwork: {subject_balance}
 REQUIRED ARTISTIC MEDIUM: {art_style['name']}
 MEDIUM CHARACTERISTICS: {art_style['guidance']}
-ARTISTIC FAMILY: {art_style.get('family', 'contemporary')}
+ARTISTIC FAMILY: {family}
+MANDATORY FAMILY VISUAL CONTRACT: {family_contract}
 Selected species: {json.dumps(birds)}
 Light identity cues: {json.dumps(art_cues, indent=2)}
 Recent creative history: {json.dumps(_compact_history(history), indent=2)}
 
 Do all creative planning in this ONE response:
+The family visual contract outranks default scenery, coastal ambience and
+conventional prettiness. If the artwork could pass for a realistic painted
+landscape despite a graphic or abstract selection, it fails the brief.
 1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in visual structure and composition, not medium.
 2. Select the strongest concept for today's birds, retaining the required artistic medium. Prefer a specific, internally convincing composition over the most ornate, picturesque or conventionally pretty concept.
 3. Develop it into a curator's brief.
@@ -384,19 +414,24 @@ Creative principles:
   portrait with a decorative background
 - bird-led mode is an occasional deliberate contrast, not the default
 - a viewer should appreciate the artwork before discovering its birds
-- beautiful, original, premium contemporary-home aesthetics; bold, lively and playful colour is welcome when the required medium calls for it
+- beautiful, original, premium contemporary-home aesthetics; bold, lively
+  and playful colour should DOMINATE when the required medium calls for it
 - one bird may be the hero; others can be quieter or discovered later
 - every selected species should remain recognisable using only its light identity cue
 - birds must inherit the chosen medium/material language rather than appear as
   conventional naturalistic birds pasted into an abstract scene
 - buildings, furniture, architecture, landscape structure and other non-bird
   elements are welcome when artistically useful; birds need not be the main feature
-- North Sea light, sandstone, sea-glass colour, weathered material and coastal
-  atmosphere may influence the work subtly; avoid literal seaside clichés
+- north-east England is context for which birds were heard, NOT a required
+  visual setting. Do not routinely insert North Sea skies, sandstone, moody
+  coastal atmosphere, night-time sports facilities or weathered architecture
 - keep important forms safely inside the central 80% width for the 9:16 crop
 - full bleed; no borders, mats, text, labels, signatures, watermarks or humans
 - avoid wildlife-calendar art, field-guide plates, greeting cards, stock illustration,
   children's illustration, AI clichés and overly busy scenes
+- the image must convincingly look like the chosen artistic medium WITHOUT
+  the title: abstract means genuinely non-representational, graphic means
+  visibly drawn/printed/flat-colour, not filtered photographic scenery
 - do not imitate a living artist
 - the required artistic medium is non-negotiable across the movement, creative brief, creative DNA and final image prompt
 - do not return to muted stone, scagliola, distressed plaster, architectural aquatint or weathered mixed media unless required by this edition's medium
@@ -469,7 +504,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 supporting.append(bird)
         brief["subject_balance"] = subject_balance
         brief["art_style"] = art_style["name"]
-        brief["art_family"] = art_style.get("family", "")
+        brief["art_family"] = family
         brief["hero_birds"] = hero
         brief["supporting_birds"] = supporting
         return {
@@ -489,7 +524,11 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 "scene with ordinary detail, room to breathe and natural bird integration."
             ),
             "materials": f"Authentic mark-making and material language of {art_style['name']}",
-            "composition": "purposeful portrait composition with believable space and calm negative space",
+            "composition": ("purposeful portrait composition, abstract colour/form rhythm"
+                            if family == "abstract_experimental"
+                            else "strong graphic design and clear spatial rhythm"
+                            if family == "modern_graphic"
+                            else "purposeful portrait composition with believable space"),
             "why_it_is_distinct": "fallback",
         }
         brief = {
@@ -498,7 +537,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
             "style_guidance": art_style["guidance"],
             "curator_notes": "Birds are incidental discoveries in a deliberately composed, imperfect and believable setting; avoid picturesque staging.",
             "mood": "calm",
-            "visual_language": f"Consistent {art_style['name']} treatment across scene and birds",
+            "visual_language": f"Consistent {art_style['name']} treatment across scene and birds; {family_contract}",
             "palette": "A considered palette true to the medium; no automatic muted coastal default",
             "composition": "portrait composition with strong vertical balance and generous negative space",
             "subject_balance": subject_balance,
@@ -531,10 +570,9 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 f"In the REQUIRED ARTISTIC MEDIUM of {art_style['name']}: {art_style['guidance']} "
                 "Create a museum-quality artwork in portrait format, full bleed, "
                 "using materials, palette and mark-making true to the specified medium. "
-                "Choose an internally believable, unforced setting with ordinary imperfections, "
-                "convincing spatial relationships and deliberate negative space, never an idealised "
-                "postcard montage or decorative fantasy garden. Whimsy and abstraction remain welcome "
-                "when the artistic world feels intentional. "
+                f"MANDATORY FAMILY CONTRACT: {family_contract} "
+                "Composition must be deliberate, not a postcard montage or decorative fantasy garden. "
+                "In non-representational media, no literal environment is necessary. "
                 f"Integrate these selected birds as transformed but recognisable motifs: {cues}. "
                 "Keep the birds secondary to a fully realised environment unless this edition is explicitly bird-led. " 
                 "Do not use a field-guide layout or oversized central bird portraits. Buildings, "
