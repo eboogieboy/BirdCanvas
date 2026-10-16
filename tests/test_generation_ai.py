@@ -144,6 +144,7 @@ class GenerationAITests(unittest.TestCase):
                 art_style={
                     "name": "Pop art",
                     "guidance": "Strong graphic shapes and exuberant print colour.",
+                    "family": "modern_graphic",
                 },
             )
 
@@ -152,6 +153,9 @@ class GenerationAITests(unittest.TestCase):
         self.assertIn("Authenticity and restraint", director_input)
         self.assertIn("not photorealism", director_input.lower())
         self.assertIn("not posed", director_input)
+        self.assertIn("MANDATORY FAMILY VISUAL CONTRACT", director_input)
+        self.assertIn("realistic skies", director_input)
+        self.assertIn("graphic", result["brief"]["art_family"])
         self.assertEqual(result["brief"]["art_style"], "Pop art")
         self.assertEqual(result["brief"]["style"], "Pop art")
         self.assertIn("Pop art", result["selected_movement"]["name"])
