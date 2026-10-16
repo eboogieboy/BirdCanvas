@@ -148,6 +148,7 @@ def save_creative_history(
     featured_birds=None,
     creative_dna=None,
     art_style=None,
+    edition="daily",
 ):
     """Persist creative memory without making another paid API call."""
     HISTORY_FILE.parent.mkdir(exist_ok=True)
@@ -181,6 +182,8 @@ def save_creative_history(
         "date": str(date.today()),
         "movement": movement.get("name", ""),
         "art_style": art_style or brief.get("art_style", ""),
+        "art_family": brief.get("art_family", ""),
+        "edition": edition,
         "materials": brief.get("materials", ""),
         "palette": brief.get("palette", ""),
         "composition": brief.get("composition", ""),
@@ -1625,11 +1628,32 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     brief = direction["brief"]
     creative_dna = direction.get("creative_dna", {})
     base_prompt = direction["image_prompt"]
+    # Reinforce distinctive media in the actual image-model call, not just
+    # the Creative Director planning step.
+    family = art_style["family"]
+    image_family_contract = {
+        "modern_graphic": (
+            "FINAL VISUAL RULE: This must read as flat-colour printed or drawn "
+            "design, with vivid intentional graphic structure—not a dark "
+            "photographic scene, realistic sky or painterly landscape. "
+        ),
+        "abstract_experimental": (
+            "FINAL VISUAL RULE: Predominantly abstract colour, shape, gesture "
+            "or geometry. Do not build a literal landscape, shed, building, "
+            "football ground or atmospheric coastal scene; the birds become "
+            "readable stylised components in the abstract design. "
+        ),
+        "atmospheric": (
+            "FINAL VISUAL RULE: Commit to the actual selected painterly "
+            "medium and fresh subject matter rather than generic moody scenery. "
+        ),
+    }[family]
     brief["art_style"] = art_style["name"]
     brief["art_family"] = art_style["family"]
     base_prompt = (
         "MANDATORY CREATIVE DIRECTION FOR THIS EDITION: "
         + art_style["name"] + ". " + art_style["guidance"] + "\n"
+        + image_family_contract + "\n"
         "Interpret the ENTIRE artwork, birds and environment alike, through this "
         "distinct artistic tradition. Do not drift back to the previous muted, "
         "weathered mixed-media house style unless it is this edition\x27s selected medium. "
@@ -1732,6 +1756,7 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
                 featured_birds=birds,
                 creative_dna=creative_dna,
                 art_style=art_style["name"],
+                edition=edition,
             )
 
             return {
