@@ -42,7 +42,7 @@ STYLE_LOOKUP = {
 }
 # A rare atmospheric picture is a deliberate contrast, not a default return.
 # This cadence keeps approximately 6 of 7 automatic editions modern/abstract.
-AUTOMATIC_FAMILY_MIX = {"atmospheric": 1, "modern_graphic": 3, "abstract_experimental": 3}
+NON_ATMOSPHERIC_RUN = 6
 
 
 def get_style(name: str):
@@ -75,8 +75,8 @@ def choose_style(history, preferred_style=None):
     recent_styles = set(used[-5:])
 
     atmospheric_due = (
-        len(families) >= 6
-        and "atmospheric" not in families[-6:]
+        len(families) >= NON_ATMOSPHERIC_RUN
+        and "atmospheric" not in families[-NON_ATMOSPHERIC_RUN:]
     )
     if atmospheric_due:
         family = "atmospheric"
