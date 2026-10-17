@@ -101,6 +101,15 @@ class ControlPageTests(unittest.TestCase):
         self.assertIn("species_detected", html)
         self.assertIn("species_used", html)
 
+    def test_gallery_featured_bird_chips_do_not_inherit_home_hero_layout(self):
+        html = display.CONTROL_HTML
+        # The homepage .hero class has a 9:16 aspect ratio; never reuse it on
+        # the featured-species chip group in the exhibition detail sheet.
+        self.assertIn(".bird-role-list.featured span{background:#e9dfc8}", html)
+        self.assertIn("['Featured in artwork',featured,'featured']", html)
+        self.assertNotIn(".bird-role-list.hero span", html)
+        self.assertNotIn("['Featured in artwork',featured,'hero']", html)
+
     def test_gallery_detail_has_send_to_tv_action(self):
         html = display.CONTROL_HTML
         self.assertIn('id="send-tv-button"', html)
