@@ -31,6 +31,7 @@ STYLE_FAMILIES = {
         ("Linocut", "Expressive carved gouges, black-and-colour relief ink, bold positive/negative forms and tactile print edges."),
     ],
     "material_sculptural": [
+        ("Stained glass", "Contemporary stained-glass art with true translucent jewel-colour panes, lead cames and stylised bird forms within the glass."),
         ("Paper collage", "Torn and cut paper planes, visible handmade fibres, layered edges and sophisticated graphic juxtaposition."),
         ("Cut-paper relief", "Dimensional hand-cut stacked paper, real cast shadows, sculptural layering and elegantly formed bird silhouettes."),
         ("Ceramic mural", "Contemporary ceramic tile relief, individual glazed tiles, geometric joints and integrated stylised bird forms."),
