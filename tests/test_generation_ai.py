@@ -154,7 +154,7 @@ class GenerationAITests(unittest.TestCase):
         self.assertIn("not photorealism", director_input.lower())
         self.assertIn("not posed", director_input)
         self.assertIn("MANDATORY FAMILY VISUAL CONTRACT", director_input)
-        self.assertIn("realistic skies", director_input)
+        self.assertIn("photographic sky", director_input)
         self.assertIn("graphic", result["brief"]["art_family"])
         self.assertEqual(result["brief"]["art_style"], "Pop art")
         self.assertEqual(result["brief"]["style"], "Pop art")
