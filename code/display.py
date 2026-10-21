@@ -352,12 +352,77 @@ CONTROL_HTML = r'''<!DOCTYPE html>
     <div class="field section">
       <label for="generation-test-style">Creative style test</label>
       <select id="generation-test-style">
-        <option value="Geometric abstraction" selected>Geometric abstraction</option>
-        <option value="Pop art">Pop art</option>
-        <option value="Abstract expressionism">Abstract expressionism</option>
-        <option value="Constructivist modernism">Constructivist modernism</option>
-        <option value="Paper collage">Paper collage</option>
-        <option value="Cubism">Cubism</option>
+        <optgroup label="Modern / graphic">
+          <option value="Pop art">Pop art</option>
+          <option value="Constructivist modernism">Constructivist modernism</option>
+          <option value="Mid-century modern">Mid-century modern</option>
+          <option value="Bauhaus geometric design">Bauhaus geometric design</option>
+          <option value="Swiss graphic modernism">Swiss graphic modernism</option>
+        </optgroup>
+        <optgroup label="Abstract / experimental">
+          <option value="Abstract expressionism">Abstract expressionism</option>
+          <option value="Geometric abstraction" selected>Geometric abstraction</option>
+          <option value="Cubism">Cubism</option>
+          <option value="Minimalism">Minimalism</option>
+          <option value="Surrealism">Surrealism</option>
+          <option value="Colour-field abstraction">Colour-field abstraction</option>
+        </optgroup>
+        <optgroup label="Illustration / print">
+          <option value="Japanese woodblock">Japanese woodblock</option>
+          <option value="Folk art">Folk art</option>
+          <option value="Graphic novel">Graphic novel</option>
+          <option value="Editorial illustration">Editorial illustration</option>
+          <option value="Screenprint">Screenprint</option>
+          <option value="Risograph">Risograph</option>
+          <option value="Linocut">Linocut</option>
+        </optgroup>
+        <optgroup label="Material / sculptural">
+          <option value="Stained glass">Stained glass</option>
+          <option value="Paper collage">Paper collage</option>
+          <option value="Cut-paper relief">Cut-paper relief</option>
+          <option value="Ceramic mural">Ceramic mural</option>
+          <option value="Mosaic mural">Mosaic mural</option>
+        </optgroup>
+        <optgroup label="Textile / fibre">
+          <option value="Textile tapestry">Textile tapestry</option>
+          <option value="Contemporary embroidery">Contemporary embroidery</option>
+          <option value="Modern art quilt">Modern art quilt</option>
+          <option value="Batik fabric artwork">Batik fabric artwork</option>
+          <option value="Woven fibre abstraction">Woven fibre abstraction</option>
+        </optgroup>
+        <optgroup label="Photographic process">
+          <option value="Cyanotype">Cyanotype</option>
+          <option value="Photogram">Photogram</option>
+          <option value="Solarised darkroom print">Solarised darkroom print</option>
+          <option value="Lumen print">Lumen print</option>
+          <option value="Gum bichromate print">Gum bichromate print</option>
+        </optgroup>
+        <optgroup label="Kinetic / optical">
+          <option value="Op art">Op art</option>
+          <option value="Moiré optical print">Moiré optical print</option>
+          <option value="Kinetic sculpture study">Kinetic sculpture study</option>
+          <option value="Optical stripe abstraction">Optical stripe abstraction</option>
+        </optgroup>
+        <optgroup label="Digital / new media">
+          <option value="Generative algorithmic art">Generative algorithmic art</option>
+          <option value="Pixel mosaic art">Pixel mosaic art</option>
+          <option value="Glitch collage">Glitch collage</option>
+          <option value="Low-poly digital sculpture">Low-poly digital sculpture</option>
+          <option value="Vector isometric design">Vector isometric design</option>
+        </optgroup>
+        <optgroup label="Decorative / heritage">
+          <option value="Art Deco">Art Deco</option>
+          <option value="Art Nouveau">Art Nouveau</option>
+          <option value="Arts and Crafts print">Arts and Crafts print</option>
+          <option value="Cloisonné enamel">Cloisonné enamel</option>
+        </optgroup>
+        <optgroup label="Painterly / atmospheric">
+          <option value="Oil painting">Oil painting</option>
+          <option value="Impressionism">Impressionism</option>
+          <option value="Watercolour">Watercolour</option>
+          <option value="Pastel">Pastel</option>
+          <option value="Atmospheric mixed media">Atmospheric mixed media</option>
+        </optgroup>
       </select>
       <p class="subtle">Make another artwork using birds heard for the current image, even when none have been heard since. This does not reset the daily collection. The result is saved in Library and sent to the Frame.</p>
       <button id="generation-style-test" class="btn secondary" type="button">Generate style test</button>

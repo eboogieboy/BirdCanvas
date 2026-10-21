@@ -1589,7 +1589,9 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         print(f"No birds recorded in {source}.")
         return None
 
-    history = load_creative_history(limit=10)
+    # Keep enough locally stored style history to rotate individual media
+    # across all ten families; only eight entries enter the model's prompt.
+    history = load_creative_history(limit=100)
 
     birds, curation_reason = generation_ai.select_featured_birds(
         eligible_birds,
@@ -1633,19 +1635,44 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
     family = art_style["family"]
     image_family_contract = {
         "modern_graphic": (
-            "FINAL VISUAL RULE: This must read as flat-colour printed or drawn "
-            "design, with vivid intentional graphic structure—not a dark "
-            "photographic scene, realistic sky or painterly landscape. "
+            "FINAL VISUAL RULE: Flat-colour graphic design, emphatic silhouettes "
+            "and designed geometry must dominate, not realistic photography."
         ),
         "abstract_experimental": (
-            "FINAL VISUAL RULE: Predominantly abstract colour, shape, gesture "
-            "or geometry. Do not build a literal landscape, shed, building, "
-            "football ground or atmospheric coastal scene; the birds become "
-            "readable stylised components in the abstract design. "
+            "FINAL VISUAL RULE: Primarily non-representational marks, planes "
+            "and forms; no standard scenic garden, harbour or building."
+        ),
+        "illustration_print": (
+            "FINAL VISUAL RULE: Unmistakable illustration or hand-printed "
+            "mark-making throughout, including the birds; visibly not a photo."
+        ),
+        "material_sculptural": (
+            "FINAL VISUAL RULE: Show an actual constructed physical artwork "
+            "in its selected paper, ceramic, collage or mosaic material."
+        ),
+        "textile_fibre": (
+            "FINAL VISUAL RULE: Entire artwork is visibly made of yarn, "
+            "stitches, textile pieces or dyed fabric; birds share that material."
+        ),
+        "photographic_process": (
+            "FINAL VISUAL RULE: Historic experimental photographic process "
+            "art, with chemical exposure/print marks; not a normal digital photo."
+        ),
+        "kinetic_optical": (
+            "FINAL VISUAL RULE: Dominant optical rhythm, repetitive geometry "
+            "or kinetic forms, with birds discovered within the pattern."
+        ),
+        "digital_new_media": (
+            "FINAL VISUAL RULE: Clearly computational/algorithmic/digital "
+            "gallery art; birds must emerge from the same digital language."
+        ),
+        "decorative_heritage": (
+            "FINAL VISUAL RULE: Entire image follows unmistakable Art Deco, "
+            "Art Nouveau, Arts-and-Crafts or enamel ornament as selected."
         ),
         "atmospheric": (
-            "FINAL VISUAL RULE: Commit to the actual selected painterly "
-            "medium and fresh subject matter rather than generic moody scenery. "
+            "FINAL VISUAL RULE: Expressive specific painterly medium with "
+            "surprising subject matter; avoid recycled moody architecture."
         ),
     }[family]
     brief["art_style"] = art_style["name"]

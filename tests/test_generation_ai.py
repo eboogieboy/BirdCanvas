@@ -154,7 +154,7 @@ class GenerationAITests(unittest.TestCase):
         self.assertIn("not photorealism", director_input.lower())
         self.assertIn("not posed", director_input)
         self.assertIn("MANDATORY FAMILY VISUAL CONTRACT", director_input)
-        self.assertIn("realistic skies", director_input)
+        self.assertIn("photographic sky", director_input)
         self.assertIn("graphic", result["brief"]["art_family"])
         self.assertEqual(result["brief"]["art_style"], "Pop art")
         self.assertEqual(result["brief"]["style"], "Pop art")
@@ -163,6 +163,39 @@ class GenerationAITests(unittest.TestCase):
         self.assertIn("Pop art", result["image_prompt"])
         self.assertIn("postcard montage", result["image_prompt"])
         self.assertIn("Blackbird", result["image_prompt"])
+
+    def test_all_new_medium_families_reach_director_and_fallback(self):
+        plan = [{"species": "Robin", "art_cue": "compact warm-breasted form"}]
+        for family, name, required_term in (
+            ("illustration_print", "Risograph", "PRINTMAKING"),
+            ("material_sculptural", "Ceramic mural", "MATERIAL ART OBJECT"),
+            ("textile_fibre", "Textile tapestry", "FIBRE ART"),
+            ("photographic_process", "Cyanotype", "PHOTOGRAPHIC PROCESS"),
+            ("kinetic_optical", "Op art", "OPTICAL/KINETIC"),
+            ("digital_new_media", "Glitch collage", "COMPUTATIONAL ARTWORK"),
+            ("decorative_heritage", "Art Nouveau", "HERITAGE DECORATIVE"),
+        ):
+            with self.subTest(family=family):
+                with patch.object(
+                    generation_ai,
+                    "_responses_create",
+                    return_value=SimpleNamespace(output_text="{}"),
+                ) as mocked:
+                    result = generation_ai.create_art_direction(
+                        ["Robin"], plan, history=[], season="autumn",
+                        edition="daily", observation_window="test",
+                        subject_balance="subtle-wildlife",
+                        art_style={
+                            "name": name,
+                            "guidance": "Distinct premium art medium.",
+                            "family": family,
+                        },
+                    )
+                director_input = mocked.call_args.kwargs["input"]
+                self.assertIn(required_term, director_input)
+                self.assertEqual(result["brief"]["art_family"], family)
+                self.assertEqual(result["brief"]["art_style"], name)
+                self.assertIn(name, result["image_prompt"])
 
     def test_retry_reuses_original_art_direction(self):
         base = "Original art direction."

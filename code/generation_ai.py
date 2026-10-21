@@ -310,24 +310,55 @@ def create_art_direction(
     family = art_style.get("family", "atmospheric")
     family_contracts = {
         "modern_graphic": (
-            "Produce unmistakable print, graphic-design or drawn artwork, not a "
-            "realistic scene with a thin graphic filter. Flat colour, inventive "
-            "shapes, strong outlines and intentionally designed negative space "
-            "should define the image from across the room. The bird forms "
-            "share that medium. Avoid photographic light and realistic skies."
+            "Unmistakable modern GRAPHIC DESIGN: decisive flat colour, "
+            "confident outlines, stylised bird shapes and strong grid/shape "
+            "rhythm. No cinematic realism or photographic sky."
         ),
         "abstract_experimental": (
-            "Make an artwork dominated by NON-REPRESENTATIONAL colour, geometry, "
-            "gesture, material and rhythm, with 2-4 recognisable stylised bird "
-            "forms integrated into the abstraction. Do not organise the picture "
-            "as a literal landscape, outdoor photograph, building, roofline, "
-            "garden or sports ground. Composition should read as modern art "
-            "before the viewer notices the birds."
+            "Predominantly NON-REPRESENTATIONAL colour, geometries, paint "
+            "gestures and visual tension. Readable bird silhouettes are integrated "
+            "as abstract motifs, not realistic birds pasted onto a landscape."
+        ),
+        "illustration_print": (
+            "Unmistakable PRINTMAKING/ILLUSTRATION: carved marks, screen inks, "
+            "editorial linework or risograph overprints, as the chosen style "
+            "demands. The whole artwork, including birds, inherits this process. "
+            "No photographs with an effect, no children's-book art."
+        ),
+        "material_sculptural": (
+            "This is a physical MATERIAL ART OBJECT, collage, ceramic, mosaic "
+            "or stacked relief according to the selected style. Show tactile "
+            "construction, joined edges, physical depth and material bird forms."
+        ),
+        "textile_fibre": (
+            "Genuine FIBRE ART: conspicuous woven threads, embroidered lines, "
+            "fabric joins or wax-dyed cloth according to the style. Large "
+            "forms and birds must look woven, stitched or dyed, not painted."
+        ),
+        "photographic_process": (
+            "An EXPERIMENTAL PHOTOGRAPHIC PROCESS rather than digital photo: "
+            "chemical contact marks, print silhouettes, solarisation, "
+            "lumen or pigment printing. Distinctive process textures dominate."
+        ),
+        "kinetic_optical": (
+            "Powerful OPTICAL/KINETIC geometry: moire, waves of lines, repeated "
+            "stripes, op-art contrast or hanging abstract forms. Readable bird "
+            "shapes emerge through rhythmic pattern and negative space."
+        ),
+        "digital_new_media": (
+            "A boldly COMPUTATIONAL ARTWORK: procedural marks, pixel geometry, "
+            "algorithmic networks or deliberate digital abstractions. Avoid "
+            "game clip art, normal scenic photographs or superficial glitch filters."
+        ),
+        "decorative_heritage": (
+            "A clearly identifiable HERITAGE DECORATIVE ART medium: original "
+            "ornament, strong stylised curves, enamel cells or refined decorative "
+            "graphics. All birds are incorporated into the authentic ornament."
         ),
         "atmospheric": (
-            "Use the named painterly medium confidently, but avoid endlessly "
-            "repeating murky skies, empty yards, sheds and weathered architecture. "
-            "This is a rare contrast within a mostly graphic/abstract collection."
+            "An occasional PAINTERLY contrast with unmistakable medium-specific "
+            "brushwork or pigment. Avoid the generic muted weathered coastal "
+            "architecture and murky-sky looks of previous editions."
         ),
     }
     family_contract = family_contracts.get(family, family_contracts["atmospheric"])
@@ -361,8 +392,9 @@ Recent creative history: {json.dumps(_compact_history(history), indent=2)}
 
 Do all creative planning in this ONE response:
 The family visual contract outranks default scenery, coastal ambience and
-conventional prettiness. If the artwork could pass for a realistic painted
-landscape despite a graphic or abstract selection, it fails the brief.
+conventional prettiness. The chosen process must be identifiable without
+the artwork title. Do not paint a familiar landscape and apply a cosmetic
+filter. Invent the whole image in the specified visual medium.
 1. Consider FIVE different concepts within the REQUIRED ARTISTIC MEDIUM. They should differ in visual structure and composition, not medium.
 2. Select the strongest concept for today's birds, retaining the required artistic medium. Prefer a specific, internally convincing composition over the most ornate, picturesque or conventionally pretty concept.
 3. Develop it into a curator's brief.
@@ -419,9 +451,13 @@ Creative principles:
 - one bird may be the hero; others can be quieter or discovered later
 - every selected species should remain recognisable using only its light identity cue
 - birds must inherit the chosen medium/material language rather than appear as
-  conventional naturalistic birds pasted into an abstract scene
-- buildings, furniture, architecture, landscape structure and other non-bird
-  elements are welcome when artistically useful; birds need not be the main feature
+  conventional naturalistic birds pasted onto a different kind of picture
+- printmaking, sculpture, textile, photographic, optical, digital and
+  heritage-decorative arts are fundamentally different image media,
+  not alternative decoration on the same realistic garden scene
+- buildings, furniture, architecture and landscapes are merely optional
+  when appropriate to the medium; there is no default expectation of
+  recognisable scenery or horizons
 - north-east England is context for which birds were heard, NOT a required
   visual setting. Do not routinely insert North Sea skies, sandstone, moody
   coastal atmosphere, night-time sports facilities or weathered architecture
@@ -521,7 +557,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
             "name": f"Everyday Encounters — {art_style['name']}",
             "creative_direction": (
                 f"{art_style['guidance']} Create an unforced, compositionally convincing "
-                "scene with ordinary detail, room to breathe and natural bird integration."
+                "artwork with characteristic materials, clear composition and naturally integrated bird forms."
             ),
             "materials": f"Authentic mark-making and material language of {art_style['name']}",
             "composition": ("purposeful portrait composition, abstract colour/form rhythm"
@@ -535,11 +571,11 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
             "collection": f"Everyday Encounters — {art_style['name']}",
             "style": art_style["name"],
             "style_guidance": art_style["guidance"],
-            "curator_notes": "Birds are incidental discoveries in a deliberately composed, imperfect and believable setting; avoid picturesque staging.",
-            "mood": "calm",
+            "curator_notes": "Birds are visual discoveries fully integrated into the selected artistic process; avoid conventional scenic illustration.",
+            "mood": "inventive and visually coherent",
             "visual_language": f"Consistent {art_style['name']} treatment across scene and birds; {family_contract}",
             "palette": "A considered palette true to the medium; no automatic muted coastal default",
-            "composition": "portrait composition with strong vertical balance and generous negative space",
+            "composition": "portrait art composition with strong medium identity and purposeful negative space",
             "subject_balance": subject_balance,
             "art_style": art_style["name"],
             "art_family": art_style.get("family", ""),
@@ -560,11 +596,11 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 "dominant_family": art_style["name"],
                 "materials": [movement["materials"]],
                 "palette_type": "palette led by the selected artistic medium",
-                "energy": "calm",
+                "energy": "appropriate to the medium",
                 "complexity": "low",
                 "surface": "layered",
                 "geometry": "open vertical",
-                "overall_character": "quiet northern contemporary",
+                "overall_character": f"collectible art in {art_style['name']}",
             },
             "image_prompt": (
                 f"In the REQUIRED ARTISTIC MEDIUM of {art_style['name']}: {art_style['guidance']} "
@@ -574,7 +610,7 @@ micro-detail. Carry the authenticity-and-restraint direction into the actual ima
                 "Composition must be deliberate, not a postcard montage or decorative fantasy garden. "
                 "In non-representational media, no literal environment is necessary. "
                 f"Integrate these selected birds as transformed but recognisable motifs: {cues}. "
-                "Keep the birds secondary to a fully realised environment unless this edition is explicitly bird-led. " 
+                "Keep birds integrated into the artwork itself, not isolated as conventional wildlife subjects. " 
                 "Do not use a field-guide layout or oversized central bird portraits. Buildings, "
                 "architectural forms or objects may share the composition. Keep important forms in the central "
                 "80% width for a final 9:16 crop. No text, border, mat, signature, watermark or humans."

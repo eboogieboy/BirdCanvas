@@ -100,6 +100,29 @@ The system screen distinguishes healthy, attention required, failure and unverif
 Gallery artwork previews are built on demand and cached on disk under `output/gallery/thumbs/`. Full resolution originals stay in `output/archive/` and continue to be used for detail views and displays.
 
 
+## Ten-family creative collection (v0.25.0)
+
+Automatic artwork now rotates through **10 artistic families / 51 styles**:
+modern graphic, abstract experimental, illustration and printmaking,
+material/sculptural, textile/fibre, photographic process, kinetic/optical,
+digital/new media, decorative heritage and atmospheric/painterly. One
+atmospheric edition appears as a deliberate contrast in roughly every
+ten automatic generations. The previous three families cannot repeat
+within the automatic rotation.
+
+Individual styles rotate across the local creative history rather than
+restarting after each ten artworks. The model's creative direction and
+final image prompt both receive a specific, medium-sensitive visual contract,
+so cyanotypes, tapestries, prints, mosaics, digital pieces and abstractions
+do not all turn into similar scenic paintings.
+
+GalleryOS's **Creative style test** selector now offers every available
+style, grouped by family. A manual test reuses the birds from the current
+artwork and preserves the regular daily observation cursor. All previous
+artwork, exclusions, bird verification, image generation parameters, Samsung
+Frame delivery and Mirror delivery remain unchanged. Storybook Illustration
+remains retired. No new model calls or external dependencies are introduced.
+
 ## Visual variety tuning (v0.24.2)
 
 Automatic BirdCanvas generation now alternates predominantly **modern/graphic**
