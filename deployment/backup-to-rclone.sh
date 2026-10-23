@@ -107,7 +107,7 @@ copy_etc_file() {
 copy_etc_file /etc/modprobe.d/alsa-birdnet.conf
 copy_etc_file /etc/default/birdcanvas-auto-deploy
 copy_etc_file /etc/default/birdcanvas-backup
-for path in   /etc/systemd/system/canvasos.service   /etc/systemd/system/birdcanvas-production.service   /etc/systemd/system/birdcanvas-production.timer   /etc/systemd/system/birdcanvas-auto-deploy.service   /etc/systemd/system/birdcanvas-auto-deploy.timer   /etc/systemd/system/birdcanvas-backup.service   /etc/systemd/system/birdcanvas-backup.timer   /etc/systemd/system/birdcanvas-mirror-delivery.service   /etc/systemd/system/birdcanvas-mirror-delivery.timer   "/etc/systemd/system/$BIRDCANVAS_BIRDNET_SERVICE"
+for path in   /etc/systemd/system/canvasos.service   /etc/systemd/system/birdcanvas-production.service   /etc/systemd/system/birdcanvas-production.timer   /etc/systemd/system/birdcanvas-auto-deploy.service   /etc/systemd/system/birdcanvas-auto-deploy.timer   /etc/systemd/system/birdcanvas-backup.service   /etc/systemd/system/birdcanvas-backup.timer   /etc/systemd/system/birdcanvas-mirror-delivery.service   /etc/systemd/system/birdcanvas-mirror-delivery.timer   /etc/systemd/system/birdcanvas-wifi-recovery.service   /etc/systemd/system/birdcanvas-wifi-recovery.timer   "/etc/systemd/system/$BIRDCANVAS_BIRDNET_SERVICE"
 do
   copy_etc_file "$path"
 done
@@ -130,7 +130,7 @@ done
   arecord -l 2>/dev/null || true
   echo
   echo "Enabled BirdCanvas units:"
-  systemctl is-enabled canvasos.service birdcanvas-production.timer birdcanvas-auto-deploy.timer birdcanvas-backup.timer birdcanvas-mirror-delivery.timer 2>/dev/null || true
+  systemctl is-enabled canvasos.service birdcanvas-production.timer birdcanvas-auto-deploy.timer birdcanvas-backup.timer birdcanvas-mirror-delivery.timer birdcanvas-wifi-recovery.timer 2>/dev/null || true
 } > "$STAGE/metadata/system.txt"
 
 cat > "$STAGE/SECRETS_NOT_INCLUDED.txt" <<'EOF'
