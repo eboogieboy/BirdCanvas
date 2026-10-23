@@ -1,0 +1,11 @@
+[Unit]
+Description=Check BirdCanvas Wi-Fi connectivity periodically
+
+[Timer]
+OnBootSec=3min
+OnUnitInactiveSec=3min
+AccuracySec=30s
+Unit=birdcanvas-wifi-recovery.service
+
+[Install]
+WantedBy=timers.target
