@@ -1,0 +1,10 @@
+[Unit]
+Description=BirdCanvas local Wi-Fi recovery check
+After=NetworkManager.service
+ConditionPathExists=/usr/bin/nmcli
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/birdcanvas-wifi-recovery
+StateDirectory=birdcanvas-wifi-recovery
+TimeoutStartSec=120s
