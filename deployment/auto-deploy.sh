@@ -197,6 +197,14 @@ if [[ -e /usr/local/sbin/birdcanvas-backup ]]; then
     refresh_installed_helper "$PROJECT_DIR/deployment/backup-to-rclone.sh" /usr/local/sbin/birdcanvas-backup
 fi
 
+# Network watchdog is a separate system service: install only after the
+# candidate passed tests and the live HTTP health check. Idempotent on updates.
+# Existing deployed runners install it on the *next* candidate after they first
+# receive this updated auto-deployer. A one-time manual install also works.
+if [[ -f "$PROJECT_DIR/deployment/install-wifi-recovery.sh" ]]; then
+    bash "$PROJECT_DIR/deployment/install-wifi-recovery.sh"
+fi
+
 # Keep the live checkout's branch metadata aligned with the deployed commit without
 # overwriting runtime data that BirdCanvas legitimately changes in the working tree.
 runuser -u "$BIRDCANVAS_DEPLOY_USER" --     git -C "$PROJECT_DIR" fetch origin "$BIRDCANVAS_DEPLOY_BRANCH"
