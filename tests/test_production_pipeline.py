@@ -222,6 +222,51 @@ class ProductionTests(unittest.TestCase):
             self.assertEqual(publisher.call_args.kwargs["species_eligible"],
                              ["Robin", "Blue Tit"])
 
+    def test_manual_only_birds_drive_the_next_artwork_without_fake_detections(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            image = root / "art.png"
+            image.write_bytes(b"test")
+            now = datetime(2026, 10, 24, 4, tzinfo=TZ)
+            sightings = [{"id": "test", "name": "Kingfisher",
+                          "seen_at": "2026-10-23T15:00:00+01:00"}]
+            with patch.object(pipeline, "STATE_FILE", root / "state.json"),                  patch.object(pipeline, "LOCK_FILE", root / "lock"),                  patch.object(pipeline, "DATA_DIR", root),                  patch.object(pipeline, "ARCHIVE_DIR", root / "archive"),                  patch.object(pipeline, "load_settings", return_value={"frequency": "daily", "excluded_birds": ["gull"]}),                  patch.object(pipeline, "detections", return_value={"species": [], "detections_total": 0}),                  patch.object(pipeline, "sightings_between", return_value=sightings),                  patch.object(pipeline, "compose", return_value={"output": str(image), "birds": ["Kingfisher"], "brief": {}}) as composer,                  patch.object(pipeline, "publish_artwork", return_value={"id": "test"}) as publisher,                  patch.object(pipeline, "build_display_page"),                  patch.object(pipeline, "retry_deliveries"):
+                result = pipeline.run(now=now)
+            self.assertEqual(result["status"], "published")
+            self.assertEqual(composer.call_args.kwargs["birds"], ["Kingfisher"])
+            self.assertEqual(composer.call_args.kwargs["priority_birds"], ["Kingfisher"])
+            self.assertEqual(publisher.call_args.kwargs["species_detected"], [])
+            self.assertEqual(publisher.call_args.kwargs["species_sighted"], ["Kingfisher"])
+            self.assertEqual(publisher.call_args.kwargs["detections_total"], 0)
+            self.assertEqual(publisher.call_args.kwargs["sightings_total"], 1)
+
+    def test_style_test_preserves_visual_and_acoustic_sources(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            current = root / "current"
+            current.mkdir()
+            (current / "manifest.json").write_text(__import__("json").dumps({
+                "collection": "birdcanvas",
+                "species_detected": ["Robin"],
+                "species_sighted": ["Kingfisher"],
+                "species_observed": ["Robin", "Kingfisher"],
+                "sightings_total": 1, "detections_total": 3,
+            }))
+            image = root / "generated.png"
+            image.write_bytes(b"test")
+            with patch.object(pipeline, "CURRENT_DIR", current),                  patch.object(pipeline, "STATE_FILE", root / "state.json"),                  patch.object(pipeline, "LOCK_FILE", root / "lock"),                  patch.object(pipeline, "DATA_DIR", root),                  patch.object(pipeline, "load_settings", return_value={"frequency": "daily", "excluded_birds": []}),                  patch.object(pipeline, "compose", return_value={"output": str(image), "birds": ["Kingfisher"], "brief": {}}) as composer,                  patch.object(pipeline, "publish_artwork", return_value={"id": "test"}) as publisher,                  patch.object(pipeline, "build_display_page"),                  patch.object(pipeline, "retry_deliveries"):
+                pipeline.run_style_test("Pop art", now=datetime(2026, 10, 24, 11, tzinfo=TZ))
+            self.assertEqual(composer.call_args.kwargs["birds"], ["Robin", "Kingfisher"])
+            self.assertEqual(composer.call_args.kwargs["priority_birds"], ["Kingfisher"])
+            self.assertEqual(publisher.call_args.kwargs["species_detected"], ["Robin"])
+            self.assertEqual(publisher.call_args.kwargs["species_sighted"], ["Kingfisher"])
+
+    def test_combining_heard_and_sighted_deduplicates_matching_species(self):
+        observed, seen = pipeline._observed_species(
+            ["Robin", "Blue Tit"], [{"name": "robin"}, {"name": "Kingfisher"}])
+        self.assertEqual(observed, ["Robin", "Blue Tit", "Kingfisher"])
+        self.assertEqual(seen, ["Robin", "Kingfisher"])
+
     def test_one_publication_and_retry_same_artwork_after_frame_failure(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -252,6 +297,7 @@ class ProductionTests(unittest.TestCase):
                 patch.object(pipeline, 'ARCHIVE_DIR', archive),
                 patch.object(pipeline, 'load_settings', return_value={'frequency': 'twice_weekly', 'excluded_birds': ['pigeon']}),
                 patch.object(pipeline, 'detections', return_value=observations),
+                patch.object(pipeline, 'sightings_between', return_value=[]),
                 patch('compose.excluded_birds', return_value=['pigeon']),
                 patch.object(pipeline, 'compose', return_value={'output': str(image), 'birds': ['Robin'], 'brief': {}, 'generation': {'eligible_birds': ['Robin', 'Blue Tit'], 'featured_birds': ['Robin'], 'attempts_used': 1}}),
                 patch.object(pipeline, 'publish_artwork', side_effect=publish),
