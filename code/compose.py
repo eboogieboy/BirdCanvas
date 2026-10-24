@@ -1575,7 +1575,18 @@ def build_verification_correction(
 
 
 
-def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None, style_override=None):
+def _prefer_manual_sighting(selected, eligible, priority):
+    """Ensure at least one eligible, visually confirmed species affects the artwork."""
+    possible = {str(name).casefold(): name for name in eligible}
+    choices = [possible[name.casefold()] for name in (priority or []) if name.casefold() in possible]
+    if not choices or any(name in selected for name in choices):
+        return selected
+    if not selected:
+        return choices[:1]
+    return selected[:-1] + [choices[0]]
+
+
+def compose(source="today", birds=None, edition="daily", observation_window="", excluded_terms=None, style_override=None, priority_birds=None):
 
     generation_ai.reset_usage()
 
@@ -1599,6 +1610,10 @@ def compose(source="today", birds=None, edition="daily", observation_window="", 
         minimum=MIN_FEATURED_BIRDS,
         maximum=MAX_FEATURED_BIRDS,
     )
+    chosen_before = list(birds)
+    birds = _prefer_manual_sighting(birds, eligible_birds, priority_birds)
+    if birds != chosen_before:
+        curation_reason = (curation_reason + " " if curation_reason else "") + "Included a visually confirmed species."
     print(f"Curated {len(birds)} featured birds from {len(eligible_birds)} eligible species")
     print("Featured birds:", ", ".join(birds))
     if curation_reason:

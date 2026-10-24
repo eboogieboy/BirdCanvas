@@ -35,6 +35,7 @@ from artwork_store import publish_artwork
 from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
+from manual_sightings import add_sighting, delete_sighting
 from visitor_leaderboard import leaderboard
 from bird_catalog import catalogue, record_birds
 from bird_images import (
@@ -255,6 +256,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 return
             if route == "/api/override/cancel":
                 self.send_json(cancel_override())
+                return
+            if route == "/api/birds/sightings":
+                payload = self.read_json_body()
+                result = add_sighting(str(payload.get("name", "")), str(payload.get("scientific_name", "")))
+                self.send_json({"ok": True, **result}, HTTPStatus.CREATED if not result["duplicate"] else HTTPStatus.OK)
+                return
+            if route == "/api/birds/sightings/delete":
+                payload = self.read_json_body()
+                delete_sighting(str(payload.get("id", "")))
+                self.send_json({"ok": True})
                 return
             if route == "/api/birds/illustration":
                 self.handle_bird_illustration_upload()
