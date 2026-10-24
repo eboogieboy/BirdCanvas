@@ -314,7 +314,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   </div>
   <form id="bird-sighting-form" class="card form-card section">
     <h2>Seen a bird BirdNET missed?</h2>
-    <p class="subtle sighting-help">Record a bird you saw today. It will be marked as seen manually, not counted as a BirdNET detection, and will appear on the Magic Mirror.</p>
+    <p class="subtle sighting-help">Record a bird you saw today. It is saved separately from BirdNET detections, appears on the Magic Mirror, and is considered for your next AI artwork (unless excluded).</p>
     <div class="field"><label for="bird-sighting-name">Bird species</label><input id="bird-sighting-name" list="bird-sighting-options" placeholder="e.g. Kingfisher" autocomplete="off" maxlength="90" required><datalist id="bird-sighting-options"></datalist></div>
     <button id="bird-sighting-save" class="btn" type="submit">+ Add sighting</button>
     <div id="bird-sighting-status" class="status" role="status"></div>
@@ -739,7 +739,7 @@ function openDetail(a){
   selectedArtwork=a;
   $('#detail-img').src=controlImageUrl(a);
   $('#detail-title').textContent=a.title;
-  const detailDate=a.observation_started_at?`${formatDate(a.observation_started_at)}–${formatDate(a.observation_ended_at)} · ${a.detections_total} detections`:a.observation_date?formatDate(a.observation_date):fmt(a.created_at);
+  const detailDate=a.observation_started_at?`${formatDate(a.observation_started_at)}–${formatDate(a.observation_ended_at)} · ${a.detections_total} detections${a.sightings_total?` · ${a.sightings_total} manual sighting${a.sightings_total===1?'':'s'}`:''}`:a.observation_date?formatDate(a.observation_date):fmt(a.created_at);
   $('#detail-meta').textContent=detailDate;
   const exhibition=a.exhibition||{};
   const brief=a.creative_brief||{};
@@ -771,10 +771,13 @@ function openDetail(a){
   groups.replaceChildren();
   const featured=(a.species_used||a.species||[]).filter(Boolean);
   const heard=(a.species_detected||featured).filter(Boolean);
+  const seen=(a.species_sighted||[]).filter(Boolean);
   const alsoHeard=heard.filter(name=>!featured.includes(name));
+  const alsoSeen=seen.filter(name=>!featured.includes(name)&&!heard.includes(name));
   const birdGroups=[
     ['Featured in artwork',featured,'featured'],
-    ['Also heard',alsoHeard,'']
+    ['Also heard',alsoHeard,''],
+    ['Also seen',alsoSeen,'']
   ];
   for(const [label,birds,kind] of birdGroups){
     if(!birds.length)continue;
