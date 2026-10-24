@@ -50,6 +50,9 @@ def publish_artwork(
     observation_ended_at: str = "",
     detections_total: int = 0,
     species_detected: list[str] | None = None,
+    species_sighted: list[str] | None = None,
+    species_observed: list[str] | None = None,
+    sightings_total: int = 0,
     species_eligible: list[str] | None = None,
     species_used: list[str] | None = None,
     species_not_featured: list[str] | None = None,
@@ -84,6 +87,8 @@ def publish_artwork(
     default_title = f"{edition_names.get(edition_slug, 'Garden Birds')} — {date_text}"
 
     detected_species = [str(item) for item in (species_detected if species_detected is not None else birds)]
+    seen_species = [str(item) for item in (species_sighted or [])]
+    observed_species = [str(item) for item in (species_observed if species_observed is not None else detected_species + seen_species)]
     featured_species = [str(item) for item in (species_used if species_used is not None else birds)]
     eligible_species = [str(item) for item in (species_eligible if species_eligible is not None else featured_species)]
     not_featured_species = [
@@ -108,6 +113,9 @@ def publish_artwork(
         "observation_ended_at": observation_ended_at,
         "detections_total": detections_total,
         "species_detected": detected_species,
+        "species_sighted": seen_species,
+        "species_observed": observed_species,
+        "sightings_total": int(sightings_total),
         "species_eligible": eligible_species,
         "species_used": featured_species,
         "species_not_featured": not_featured_species,
