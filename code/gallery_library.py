@@ -88,6 +88,11 @@ def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], 
         for item in manifest.get("species_detected", featured)
         if str(item).strip()
     ]
+    sighted = [
+        str(item) for item in manifest.get("species_sighted", [])
+        if str(item).strip()
+    ]
+    observed = list(dict.fromkeys(manifest.get("species_observed") or (heard + sighted)))
     hero = [
         str(item)
         for item in creative_brief.get("hero_birds", [])
@@ -99,7 +104,17 @@ def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], 
         if str(item).strip() and str(item) in featured and str(item) not in hero
     ]
 
-    if heard:
+    if sighted:
+        sources = []
+        if heard:
+            sources.append(f"BirdNET heard {len(heard)} species")
+        sources.append(f"you spotted {len(sighted)} species")
+        opening = (
+            f"During this collection, {' and '.join(sources)}. "
+            f"The artwork features {len(featured)} of the garden visitors"
+            + (f": {', '.join(featured)}." if featured else ".")
+        )
+    elif heard:
         opening = (
             f"BirdNET heard {len(heard)} species during this collection. "
             f"The artwork curates {len(featured)} of them"
@@ -133,7 +148,8 @@ def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], 
         "supporting_birds": supporting,
         "featured_birds": featured,
         "heard_birds": heard,
-        "visitor_count": len(heard or featured),
+        "seen_birds": sighted,
+        "visitor_count": len(observed or featured),
         "featured_count": len(featured),
         "observation_date": observation_date,
     }
@@ -174,6 +190,9 @@ def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str,
         "observation_ended_at": str(manifest.get("observation_ended_at", "")),
         "detections_total": manifest.get("detections_total", 0),
         "species_detected": manifest.get("species_detected", species),
+        "species_sighted": manifest.get("species_sighted", []),
+        "species_observed": manifest.get("species_observed", manifest.get("species_detected", species)),
+        "sightings_total": manifest.get("sightings_total", 0),
         "species_eligible": manifest.get("species_eligible", manifest.get("species_used", species)),
         "species_used": manifest.get("species_used", species),
         "species_not_featured": manifest.get("species_not_featured", []),
