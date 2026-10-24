@@ -8,6 +8,7 @@ from bird_images import display_illustration_for
 from bird_rarity import rarity_for
 from rspb_links import rspb_species_url
 from birdnet_go import _timestamp, detection_rows
+from manual_sightings import sightings_between
 from generation_settings import load_settings
 from production_pipeline import status as production_status
 
@@ -29,6 +30,7 @@ def _display_name(name: str) -> str:
 
 def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
     rows = detection_rows(start, end)
+    manual = sightings_between(start, end)
     excluded_terms = load_settings()["excluded_birds"]
     grouped: dict[str, dict] = {}
 
@@ -44,18 +46,37 @@ def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
         item = grouped.setdefault(
             key,
             {
-                "name": common,
-                "scientific_name": scientific,
-                "detections": 0,
-                "first_heard": when,
-                "last_heard": when,
-                "max_confidence": confidence,
+                "name": common, "scientific_name": scientific,
+                "detections": 0, "first_heard": when, "last_heard": when,
+                "last_observed": when, "max_confidence": confidence,
+                "sighting_ids": [], "last_seen_manually": None,
             },
         )
         item["detections"] += 1
         item["first_heard"] = min(item["first_heard"], when)
         item["last_heard"] = max(item["last_heard"], when)
+        item["last_observed"] = max(item["last_observed"], when)
         item["max_confidence"] = max(item["max_confidence"], confidence)
+
+    for sighting in manual:
+        common = _display_name(str(sighting.get("name") or "").strip())
+        scientific = str(sighting.get("scientific_name") or "").strip()
+        if not common:
+            continue
+        key = scientific.casefold() or common.casefold()
+        when = datetime.fromisoformat(sighting["seen_at"]).astimezone(LOCAL)
+        item = grouped.setdefault(
+            key,
+            {
+                "name": common, "scientific_name": scientific,
+                "detections": 0, "first_heard": None, "last_heard": None,
+                "last_observed": when, "max_confidence": 0,
+                "sighting_ids": [], "last_seen_manually": None,
+            },
+        )
+        item["last_observed"] = max(item["last_observed"], when)
+        item["last_seen_manually"] = max(item["last_seen_manually"] or when, when)
+        item["sighting_ids"].append(sighting["id"])
 
     birds = []
     for item in grouped.values():
@@ -65,8 +86,12 @@ def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
                 "name": item["name"],
                 "scientific_name": item["scientific_name"],
                 "detections": item["detections"],
-                "first_heard": item["first_heard"].isoformat(timespec="seconds"),
-                "last_heard": item["last_heard"].isoformat(timespec="seconds"),
+                "first_heard": item["first_heard"].isoformat(timespec="seconds") if item["first_heard"] else None,
+                "last_heard": item["last_heard"].isoformat(timespec="seconds") if item["last_heard"] else None,
+                "last_observed": item["last_observed"].isoformat(timespec="seconds"),
+                "manually_seen": bool(item["sighting_ids"]),
+                "sighting_ids": item["sighting_ids"],
+                "last_seen_manually": item["last_seen_manually"].isoformat(timespec="seconds") if item["last_seen_manually"] else None,
                 "max_confidence": round(item["max_confidence"], 3),
                 "rarity": rarity_for(item["name"], item["scientific_name"]),
                 "rspb_url": rspb_species_url(item["name"], item["scientific_name"]),
@@ -75,8 +100,8 @@ def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
             }
         )
 
-    birds.sort(key=lambda item: item["last_heard"], reverse=True)
-
+    birds.sort(key=lambda item: item["last_observed"], reverse=True)
+    last_heard = max((bird["last_heard"] for bird in birds if bird["last_heard"]), default=None)
     return {
         "kind": kind,
         "label": label,
@@ -84,7 +109,8 @@ def _summary(start: datetime, end: datetime, *, label: str, kind: str) -> dict:
         "end": end.isoformat(timespec="seconds"),
         "species_count": len(birds),
         "detections_total": len(rows),
-        "last_detection": birds[0]["last_heard"] if birds else None,
+        "sightings_total": len(manual),
+        "last_detection": last_heard,
         "birds": birds,
     }
 

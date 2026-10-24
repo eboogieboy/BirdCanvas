@@ -11,6 +11,7 @@ from bird_images import mirror_tile_info
 from bird_rarity import rarity_for
 from rspb_links import rspb_species_url
 from paths import DATA_DIR
+from manual_sightings import list_sightings
 
 LOCAL = ZoneInfo("Europe/London")
 CATALOG_PATH = DATA_DIR / "bird_catalog.json"
@@ -83,6 +84,9 @@ def record_birds(birds: list[dict], *, path: Path = CATALOG_PATH) -> None:
 
         first_seen = str(bird.get("first_heard") or bird.get("last_heard") or "").strip()
         last_seen = str(bird.get("last_heard") or bird.get("first_heard") or "").strip()
+        # A sighting-only bird must not become a fake BirdNET catalogue record.
+        if not first_seen and not last_seen:
+            continue
         key = _key(name, scientific)
         existing = entries.get(key) if isinstance(entries.get(key), dict) else {}
 
@@ -134,6 +138,21 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
     # species are added automatically as BirdNET encounters them.
     combined.update(observed)
 
+    manually_seen_keys = set()
+    for sighting in list_sightings():
+        name = str(sighting.get("name") or "").strip()
+        scientific = str(sighting.get("scientific_name") or "").strip()
+        if not name:
+            continue
+        key = _key(name, scientific)
+        manually_seen_keys.add(key)
+        combined.setdefault(key, {
+            "name": name,
+            "scientific_name": scientific,
+            "first_seen": sighting.get("seen_at") or "",
+            "last_seen": sighting.get("seen_at") or "",
+        })
+
     birds = []
     for key, item in combined.items():
         name = str(item.get("name", "")).strip()
@@ -162,6 +181,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
                 "last_seen": item.get("last_seen") or None,
                 "starter": key in starter_keys,
                 "heard": heard,
+                "sighted": key in manually_seen_keys,
                 "rarity": rarity_for(name, scientific),
                 "rspb_url": rspb_species_url(name, scientific),
                 "image_url": f"/api/mirror/bird-image?{query}",
@@ -182,6 +202,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
         "species_count": len(birds),
         "starter_count": len(STARTER_BIRDS),
         "heard_count": heard,
+        "sighted_count": sum(1 for bird in birds if bird["sighted"]),
         "ready_count": len(birds) - missing,
         "missing_count": missing,
         "birds": birds,
