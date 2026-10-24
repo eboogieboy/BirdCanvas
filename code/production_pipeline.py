@@ -16,6 +16,7 @@ from compose import compose, filter_birds
 from display import build_display_page
 from frame_upload import frame_enabled, upload_to_frame, _run_samsungtv
 from generation_settings import load_settings, next_boundary, scheduled_boundary
+from manual_sightings import sightings_between
 from gallery_library import artwork_image_path
 from paths import DATA_DIR
 
@@ -84,6 +85,25 @@ def status(now=None, include_birds=True):
         except Exception as error:
             result.update({"species_detected": None, "birdnet_status": "error", "birdnet_error": str(error)})
     return result
+
+
+def _observed_species(heard, sightings):
+    """Keep detection counts separate and merge visual observations by species name."""
+    observed = list(heard)
+    seen = []
+    keys = {name.casefold() for name in observed}
+    for entry in sightings:
+        name = str(entry.get("name") or "").strip()
+        if not name:
+            continue
+        equivalent = next((bird for bird in observed if bird.casefold() == name.casefold()), None)
+        seen_name = equivalent or name
+        if seen_name.casefold() not in {bird.casefold() for bird in seen}:
+            seen.append(seen_name)
+        if name.casefold() not in keys:
+            observed.append(name)
+            keys.add(name.casefold())
+    return observed, seen
 
 
 def _remember_frame_content(state, artwork_id, content_id):
@@ -224,8 +244,12 @@ def run_style_test(style_name="Geometric abstraction", now=None):
         source = json.loads(current_manifest.read_text(encoding="utf-8"))
         if source.get("collection") != "birdcanvas":
             raise ValueError("Current artwork is not a BirdCanvas observation.")
-        observed_species = list(source.get("species_detected") or source.get("species_eligible") or source.get("species") or [])
+        heard_species = list(source.get("species_detected") or [])
+        seen_species = list(source.get("species_sighted") or [])
+        original = source.get("species_observed") or (heard_species + seen_species) or source.get("species_eligible") or source.get("species") or []
+        observed_species, priorities = _observed_species(original, [{"name": name} for name in seen_species])
         eligible_species = filter_birds(observed_species, settings["excluded_birds"])
+        priorities = [name for name in priorities if name in eligible_species]
         if not eligible_species:
             raise ValueError("No eligible recorded birds are available for the style test.")
 
@@ -237,8 +261,9 @@ def run_style_test(style_name="Geometric abstraction", now=None):
                 source="style_test",
                 birds=eligible_species,
                 edition="style_test",
-                observation_window=f"Style test; reusing heard species from {original_window}",
+                observation_window=f"Style test; reusing heard and seen species from {original_window}",
                 excluded_terms=settings["excluded_birds"],
+                priority_birds=priorities,
                 style_override=selected_style["name"],
             )
             if not result:
@@ -255,7 +280,10 @@ def run_style_test(style_name="Geometric abstraction", now=None):
                 observation_started_at=str(source.get("observation_started_at") or ""),
                 observation_ended_at=str(source.get("observation_ended_at") or ""),
                 detections_total=int(source.get("detections_total") or 0),
-                species_detected=observed_species,
+                species_detected=heard_species if seen_species else (heard_species or observed_species),
+                species_sighted=seen_species,
+                species_observed=observed_species,
+                sightings_total=int(source.get("sightings_total") or 0),
                 species_eligible=eligible_species,
                 species_used=featured,
                 species_not_featured=[bird for bird in eligible_species if bird not in featured],
@@ -309,14 +337,18 @@ def run(manual=False, now=None):
             try:
                 observed = detections(start, end)
                 species = observed['species']
-                used = filter_birds(species, settings['excluded_birds'])
+                sightings = sightings_between(start, end)
+                combined, seen = _observed_species(species, sightings)
+                used = filter_birds(combined, settings['excluded_birds'])
+                priority = [name for name in seen if name in used]
                 if not used:
                     state["last_result"] = f"No eligible birds in collection ending {_iso(end)}"
                     save_state(state)
                     return {"status": "no_birds", "window_start": _iso(start), "window_end": _iso(end)}
                 result = compose(source='birdnet_go', birds=used, edition=frequency,
                                  observation_window=f"{_iso(start)} to {_iso(end)}",
-                                 excluded_terms=settings['excluded_birds'])
+                                 excluded_terms=settings['excluded_birds'],
+                                 priority_birds=priority)
                 if not result:
                     raise RuntimeError("Artwork generation returned no image")
                 featured = list(result.get('birds') or used)
@@ -328,9 +360,11 @@ def run(manual=False, now=None):
                     generation=result.get('generation'),
                     observation_started_at=_iso(start), observation_ended_at=_iso(end),
                     detections_total=observed['detections_total'], species_detected=species,
+                    species_sighted=seen, species_observed=combined,
+                    sightings_total=len(sightings),
                     species_eligible=used, species_used=featured,
                     species_not_featured=[s for s in used if s not in featured],
-                    species_excluded=[s for s in species if s not in used],
+                    species_excluded=[s for s in combined if s not in used],
                     generation_frequency=frequency)
                 build_display_page()
             except Exception as error:
