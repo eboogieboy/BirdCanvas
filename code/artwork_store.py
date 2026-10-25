@@ -58,6 +58,7 @@ def publish_artwork(
     species_not_featured: list[str] | None = None,
     species_excluded: list[str] | None = None,
     generation_frequency: str = "",
+    observation_fallback: dict | None = None,
 ) -> dict:
     if not source_image.exists():
         raise FileNotFoundError(f"Artwork image not found: {source_image}")
@@ -121,6 +122,7 @@ def publish_artwork(
         "species_not_featured": not_featured_species,
         "species_excluded": excluded_species,
         "generation_frequency": generation_frequency,
+        "observation_fallback": observation_fallback,
         "edition": edition_slug,
         "created_at": created_at,
         "image": "artwork.png",

@@ -261,6 +261,111 @@ class ProductionTests(unittest.TestCase):
             self.assertEqual(publisher.call_args.kwargs["species_detected"], ["Robin"])
             self.assertEqual(publisher.call_args.kwargs["species_sighted"], ["Kingfisher"])
 
+
+    def test_daily_empty_collection_reuses_real_birds_without_falsifying_today(self):
+        import json
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            archive = root / "archive"
+            previous = archive / "previous"
+            previous.mkdir(parents=True)
+            (previous / "manifest.json").write_text(json.dumps({
+                "id": "previous",
+                "collection": "birdcanvas",
+                "generation_frequency": "daily",
+                "observation_date": "2026-10-24",
+                "observation_ended_at": "2026-10-24T04:00:00+01:00",
+                "species_detected": ["Robin", "Woodpigeon"],
+                "species_sighted": ["Kingfisher"],
+            }))
+            image = root / "art.png"
+            image.write_bytes(b"image")
+            with patch.object(pipeline, "DATA_DIR", root), \
+                 patch.object(pipeline, "ARCHIVE_DIR", archive), \
+                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \
+                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \
+                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \
+                 patch.object(pipeline, "load_settings", return_value={
+                     "frequency": "daily", "excluded_birds": ["pigeon"]}), \
+                 patch.object(pipeline, "detections", return_value={
+                     "species": [], "detections_total": 0}), \
+                 patch.object(pipeline, "sightings_between", return_value=[]), \
+                 patch.object(pipeline, "compose", return_value={
+                     "output": str(image), "birds": ["Robin"], "brief": {}}) as composer, \
+                 patch.object(pipeline, "publish_artwork", return_value={"id": "fresh"}) as publisher, \
+                 patch.object(pipeline, "build_display_page"), \
+                 patch.object(pipeline, "retry_deliveries"):
+                now = datetime(2026, 10, 25, 4, tzinfo=TZ)
+                result = pipeline.run(now=now)
+                self.assertEqual(result["status"], "published")
+                self.assertEqual(pipeline.load_state()["last_end"], now.isoformat(timespec="seconds"))
+            self.assertEqual(composer.call_args.kwargs["birds"], ["Robin", "Kingfisher"])
+            self.assertEqual(composer.call_args.kwargs["priority_birds"], ["Kingfisher"])
+            self.assertEqual(publisher.call_args.kwargs["detections_total"], 0)
+            self.assertEqual(publisher.call_args.kwargs["species_detected"], [])
+            self.assertEqual(publisher.call_args.kwargs["species_sighted"], [])
+            self.assertEqual(publisher.call_args.kwargs["species_observed"], [])
+            self.assertEqual(publisher.call_args.kwargs["species_eligible"], ["Robin", "Kingfisher"])
+            self.assertEqual(publisher.call_args.kwargs["observation_fallback"]["source_artwork_id"], "previous")
+            self.assertIn("previous observations", publisher.call_args.kwargs["title"])
+
+    def test_fallback_does_not_recycle_previous_fallback_or_old_observations(self):
+        import json
+        with tempfile.TemporaryDirectory() as folder:
+            archive = Path(folder)
+            yesterday = archive / "yesterday"
+            yesterday.mkdir()
+            (yesterday / "manifest.json").write_text(json.dumps({
+                "id": "yesterday",
+                "collection": "birdcanvas",
+                "observation_date": "2026-10-24",
+                "observation_ended_at": "2026-10-24T04:00:00+01:00",
+                "species_detected": [],
+                "species_sighted": [],
+                "observation_fallback": {"source_artwork_id": "very-old"},
+                "species_eligible": ["Robin"],
+            }))
+            older = archive / "older"
+            older.mkdir()
+            (older / "manifest.json").write_text(json.dumps({
+                "id": "older",
+                "collection": "birdcanvas",
+                "observation_date": "2026-10-22",
+                "observation_ended_at": "2026-10-22T04:00:00+01:00",
+                "species_detected": ["Blue Tit"],
+                "species_sighted": [],
+            }))
+            with patch.object(pipeline, "ARCHIVE_DIR", archive), \
+                 patch.object(pipeline, "CURRENT_DIR", archive / "current"):
+                result = pipeline._previous_observations(
+                    datetime(2026, 10, 25, 4, tzinfo=TZ), [])
+                self.assertEqual(result["species"], ["Blue Tit"])
+                self.assertEqual(result["source_artwork_id"], "older")
+                stale = pipeline._previous_observations(
+                    datetime(2026, 11, 15, 4, tzinfo=TZ), [])
+                self.assertIsNone(stale)
+
+    def test_non_daily_collection_with_no_birds_does_not_fallback(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            with patch.object(pipeline, "DATA_DIR", root), \
+                 patch.object(pipeline, "ARCHIVE_DIR", root / "archive"), \
+                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \
+                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \
+                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \
+                 patch.object(pipeline, "load_settings", return_value={
+                     "frequency": "weekly", "excluded_birds": []}), \
+                 patch.object(pipeline, "detections", return_value={
+                     "species": [], "detections_total": 0}), \
+                 patch.object(pipeline, "sightings_between", return_value=[]), \
+                 patch.object(pipeline, "compose") as composer, \
+                 patch.object(pipeline, "retry_deliveries"):
+                result = pipeline.run(
+                    now=datetime(2026, 10, 26, 4, tzinfo=TZ))
+                self.assertEqual(result["status"], "no_birds")
+                self.assertIsNone(pipeline.load_state().get("last_end"))
+                composer.assert_not_called()
+
     def test_combining_heard_and_sighted_deduplicates_matching_species(self):
         observed, seen = pipeline._observed_species(
             ["Robin", "Blue Tit"], [{"name": "robin"}, {"name": "Kingfisher"}])
