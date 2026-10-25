@@ -311,6 +311,65 @@ def run_style_test(style_name="Geometric abstraction", now=None):
             raise
 
 
+
+# Do not hide a prolonged BirdNET outage by recycling old birds indefinitely.
+FALLBACK_MAX_AGE = timedelta(days=7)
+
+
+def _previous_observations(cutoff, excluded_terms):
+    """Find recent, genuinely heard/seen species in a prior BirdCanvas edition.
+
+    Never mistake a style test, another fallback, or an uploaded image for
+    fresh observations. Archive history takes precedence over the current
+    display selection, which may be unrelated artwork.
+    """
+    candidates = list(ARCHIVE_DIR.glob("*/manifest.json"))
+    current = CURRENT_DIR / "manifest.json"
+    if current.is_file():
+        candidates.append(current)
+    best = None
+    for path in candidates:
+        try:
+            source = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(source, dict) or source.get("collection") != "birdcanvas":
+            continue
+        if source.get("observation_fallback") or source.get("generation_frequency") == "style_test":
+            continue
+        heard = source.get("species_detected") or []
+        seen = source.get("species_sighted") or []
+        if not isinstance(heard, list) or not isinstance(seen, list):
+            continue
+        combined, original_seen = _observed_species(heard, [{"name": name} for name in seen])
+        eligible = filter_birds(combined, excluded_terms)
+        if not eligible:
+            continue
+        try:
+            if source.get("observation_ended_at"):
+                observed_at = datetime.fromisoformat(source["observation_ended_at"])
+            else:
+                # Older manifests only identify the edition's observation date.
+                observed_at = datetime.fromisoformat(source["observation_date"] + "T04:00:00")
+            if observed_at.tzinfo is None:
+                observed_at = observed_at.replace(tzinfo=LOCAL)
+            observed_at = observed_at.astimezone(LOCAL)
+        except (TypeError, ValueError, KeyError):
+            continue
+        if observed_at > cutoff or cutoff - observed_at > FALLBACK_MAX_AGE:
+            continue
+        if best is None or observed_at > best["observed_at"]:
+            best = {
+                "observed_at": observed_at,
+                "source_observation_date": source.get("observation_date") or observed_at.date().isoformat(),
+                "source_artwork_id": source.get("id") or "",
+                "source_observation_window": source.get("observation_window") or "",
+                "species": eligible,
+                "priority": [name for name in original_seen if name in eligible],
+            }
+    return best
+
+
 def run(manual=False, now=None):
     with exclusive():
         now = now or _now()
@@ -341,12 +400,29 @@ def run(manual=False, now=None):
                 combined, seen = _observed_species(species, sightings)
                 used = filter_birds(combined, settings['excluded_birds'])
                 priority = [name for name in seen if name in used]
+                observation_window = f"{_iso(start)} to {_iso(end)}"
+                observation_fallback = None
+                if not used and frequency == "daily":
+                    previous = _previous_observations(start, settings["excluded_birds"])
+                    if previous:
+                        used = previous["species"]
+                        priority = previous["priority"]
+                        observation_fallback = {
+                            "reason": "no_eligible_birds_in_collection",
+                            "source_artwork_id": previous["source_artwork_id"],
+                            "source_observation_date": previous["source_observation_date"],
+                            "source_observation_window": previous["source_observation_window"],
+                        }
+                        observation_window += (
+                            f"; no eligible species this collection; reusing real observations"
+                            f" from {previous['source_observation_date']}"
+                        )
                 if not used:
                     state["last_result"] = f"No eligible birds in collection ending {_iso(end)}"
                     save_state(state)
                     return {"status": "no_birds", "window_start": _iso(start), "window_end": _iso(end)}
                 result = compose(source='birdnet_go', birds=used, edition=frequency,
-                                 observation_window=f"{_iso(start)} to {_iso(end)}",
+                                 observation_window=observation_window,
                                  excluded_terms=settings['excluded_birds'],
                                  priority_birds=priority)
                 if not result:
@@ -355,8 +431,11 @@ def run(manual=False, now=None):
                 manifest = publish_artwork(
                     source_image=Path(result['output']), observation_date=end.date().isoformat(),
                     birds=featured, brief=result['brief'], edition=edition,
-                    title=f"Garden Birds — {start:%-d %b}–{end:%-d %b %Y}",
-                    observation_window=f"{_iso(start)} to {_iso(end)}",
+                    title=(f"Garden Birds — {end:%-d %b %Y} (previous observations)"
+                           if observation_fallback else
+                           f"Garden Birds — {start:%-d %b}–{end:%-d %b %Y}"),
+                    observation_window=observation_window,
+                    observation_fallback=observation_fallback,
                     generation=result.get('generation'),
                     observation_started_at=_iso(start), observation_ended_at=_iso(end),
                     detections_total=observed['detections_total'], species_detected=species,

@@ -158,3 +158,7 @@ should not be used for a same-bird style test.
 ## Deployment safety
 
 Pull requests now run the same regression suite, Python compilation, generated-page build and deployment-shell syntax checks in GitHub Actions before merge. The Pi auto-deployer also runs the full candidate test suite and page generation from its clean deployment checkout before it copies anything into the live installation. A bad candidate therefore fails preflight while the current live BirdCanvas instance remains untouched.
+
+## Quiet-day artwork fallback (v0.25.1)
+
+For **daily** artwork only, when the observation window contains no species eligible for artwork (neither accepted BirdNET species nor manually seen species), BirdCanvas generates a **new** artwork using the most recent genuinely observed eligible species from a prior archived BirdCanvas edition, up to seven days old. Excluded species stay excluded. Fallback artwork is titled “previous observations”, and the archive manifest and GalleryOS exhibition notes identify the original source date rather than claiming the birds were detected today. The new edition records the current window's true detection and manual sighting totals, and advances the normal collection cursor once published; next day's schedule and the 10-family art rotation are unchanged. Style tests and earlier fallback images are never mistaken for fresh bird sightings. If no qualifying observations exist within seven days, generation reports `no_birds` as before. The Pi's auto-deploy timer picks up this change after it reaches `main`.

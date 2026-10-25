@@ -104,7 +104,15 @@ def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], 
         if str(item).strip() and str(item) in featured and str(item) not in hero
     ]
 
-    if sighted:
+    fallback = manifest.get("observation_fallback")
+    if isinstance(fallback, dict):
+        source_date = str(fallback.get("source_observation_date") or "an earlier collection")
+        opening = (
+            f"No eligible birds were recorded for this collection. "
+            f"This new artwork reinterprets birds genuinely observed in the earlier "
+            f"BirdCanvas collection of {source_date}: {', '.join(featured)}."
+        )
+    elif sighted:
         sources = []
         if heard:
             sources.append(f"BirdNET heard {len(heard)} species")
@@ -149,7 +157,7 @@ def _exhibition_story(manifest: dict[str, Any], creative_brief: dict[str, Any], 
         "featured_birds": featured,
         "heard_birds": heard,
         "seen_birds": sighted,
-        "visitor_count": len(observed or featured),
+        "visitor_count": len(featured) if isinstance(fallback, dict) else len(observed or featured),
         "featured_count": len(featured),
         "observation_date": observation_date,
     }
@@ -198,6 +206,7 @@ def _normalise_manifest(manifest: dict[str, Any], folder_name: str) -> dict[str,
         "species_not_featured": manifest.get("species_not_featured", []),
         "species_excluded": manifest.get("species_excluded", []),
         "generation_frequency": str(manifest.get("generation_frequency", "")),
+        "observation_fallback": manifest.get("observation_fallback"),
         "created_at": created_at,
         "updated_at": str(manifest.get("updated_at", created_at)),
         "image": image_name,
