@@ -280,20 +280,20 @@ class ProductionTests(unittest.TestCase):
             }))
             image = root / "art.png"
             image.write_bytes(b"image")
-            with patch.object(pipeline, "DATA_DIR", root), \\
-                 patch.object(pipeline, "ARCHIVE_DIR", archive), \\
-                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \\
-                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \\
-                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \\
+            with patch.object(pipeline, "DATA_DIR", root), \
+                 patch.object(pipeline, "ARCHIVE_DIR", archive), \
+                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \
+                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \
+                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \
                  patch.object(pipeline, "load_settings", return_value={
-                     "frequency": "daily", "excluded_birds": ["pigeon"]}), \\
+                     "frequency": "daily", "excluded_birds": ["pigeon"]}), \
                  patch.object(pipeline, "detections", return_value={
-                     "species": [], "detections_total": 0}), \\
-                 patch.object(pipeline, "sightings_between", return_value=[]), \\
+                     "species": [], "detections_total": 0}), \
+                 patch.object(pipeline, "sightings_between", return_value=[]), \
                  patch.object(pipeline, "compose", return_value={
-                     "output": str(image), "birds": ["Robin"], "brief": {}}) as composer, \\
-                 patch.object(pipeline, "publish_artwork", return_value={"id": "fresh"}) as publisher, \\
-                 patch.object(pipeline, "build_display_page"), \\
+                     "output": str(image), "birds": ["Robin"], "brief": {}}) as composer, \
+                 patch.object(pipeline, "publish_artwork", return_value={"id": "fresh"}) as publisher, \
+                 patch.object(pipeline, "build_display_page"), \
                  patch.object(pipeline, "retry_deliveries"):
                 now = datetime(2026, 10, 25, 4, tzinfo=TZ)
                 result = pipeline.run(now=now)
@@ -335,7 +335,7 @@ class ProductionTests(unittest.TestCase):
                 "species_detected": ["Blue Tit"],
                 "species_sighted": [],
             }))
-            with patch.object(pipeline, "ARCHIVE_DIR", archive), \\
+            with patch.object(pipeline, "ARCHIVE_DIR", archive), \
                  patch.object(pipeline, "CURRENT_DIR", archive / "current"):
                 result = pipeline._previous_observations(
                     datetime(2026, 10, 25, 4, tzinfo=TZ), [])
@@ -348,17 +348,17 @@ class ProductionTests(unittest.TestCase):
     def test_non_daily_collection_with_no_birds_does_not_fallback(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
-            with patch.object(pipeline, "DATA_DIR", root), \\
-                 patch.object(pipeline, "ARCHIVE_DIR", root / "archive"), \\
-                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \\
-                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \\
-                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \\
+            with patch.object(pipeline, "DATA_DIR", root), \
+                 patch.object(pipeline, "ARCHIVE_DIR", root / "archive"), \
+                 patch.object(pipeline, "CURRENT_DIR", root / "current"), \
+                 patch.object(pipeline, "STATE_FILE", root / "state.json"), \
+                 patch.object(pipeline, "LOCK_FILE", root / "lock"), \
                  patch.object(pipeline, "load_settings", return_value={
-                     "frequency": "weekly", "excluded_birds": []}), \\
+                     "frequency": "weekly", "excluded_birds": []}), \
                  patch.object(pipeline, "detections", return_value={
-                     "species": [], "detections_total": 0}), \\
-                 patch.object(pipeline, "sightings_between", return_value=[]), \\
-                 patch.object(pipeline, "compose") as composer, \\
+                     "species": [], "detections_total": 0}), \
+                 patch.object(pipeline, "sightings_between", return_value=[]), \
+                 patch.object(pipeline, "compose") as composer, \
                  patch.object(pipeline, "retry_deliveries"):
                 result = pipeline.run(
                     now=datetime(2026, 10, 26, 4, tzinfo=TZ))
