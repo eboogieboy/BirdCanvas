@@ -217,3 +217,66 @@ def leaderboard(period: str = "30", now: datetime | None = None) -> dict:
         "birds": birds[:10],
         "total_species": len(birds),
     }
+
+
+def species_history(name: str, scientific_name: str = "", now: datetime | None = None) -> dict:
+    """Read cached, accepted BirdNET detections without blocking on remote history.
+
+    Missing days are queued for the existing single background backfill worker.
+    No missing day is interpreted as a day with zero detections.
+    Manual sightings are counted separately and never reported as audio.
+    """
+    from manual_sightings import list_sightings
+
+    now = (now or datetime.now(LOCAL)).astimezone(LOCAL)
+    today = now.date()
+    first = _observation_start(today)
+    minimum = birdnet_go._minimum_confidence()
+    scientific = str(scientific_name or "").strip().casefold()
+    common = str(name or "").strip().casefold()
+    months = {}
+    missing = []
+    analysed = 0
+    days_heard = 0
+    detections = 0
+    for offset in range((today - first).days + 1):
+        day = first + timedelta(days=offset)
+        label = day.strftime("%Y-%m")
+        bucket = months.setdefault(label, {"month": label, "days_heard": 0, "detections": 0})
+        cached = _cached_day(day, now, minimum)
+        if cached is None:
+            missing.append(day)
+            continue
+        analysed += 1
+        for bird in cached["species"]:
+            key = str(bird.get("scientific_name") or "").strip().casefold()
+            other = str(bird.get("name") or "").strip().casefold()
+            if not ((scientific and key == scientific) or (not scientific and other == common)):
+                continue
+            bucket["days_heard"] += 1
+            days_heard += 1
+            count = max(0, int(bird.get("detections") or 0))
+            bucket["detections"] += count
+            detections += count
+            break
+    if missing:
+        _request_missing(missing)
+
+    sightings = []
+    for sighting in list_sightings():
+        key = str(sighting.get("scientific_name") or "").strip().casefold()
+        other = str(sighting.get("name") or "").strip().casefold()
+        if ((scientific and key == scientific) or (not scientific and other == common)):
+            stamp = str(sighting.get("seen_at") or "")
+            if stamp:
+                sightings.append(stamp)
+    sightings.sort()
+    return {
+        "from": first.isoformat(), "to": today.isoformat(),
+        "analysed_days": analysed, "total_days": (today - first).days + 1,
+        "complete": not missing, "days_heard": days_heard,
+        "detections": detections, "months": list(months.values()),
+        "manual_sightings": len(sightings),
+        "first_manually_seen": sightings[0] if sightings else None,
+        "last_manually_seen": sightings[-1] if sightings else None,
+    }

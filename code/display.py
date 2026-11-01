@@ -266,6 +266,8 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 .bird-name-line{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;margin-bottom:4px}.bird-name-line h3{margin:0}.bird-rarity{display:inline-flex;align-items:center;font-size:10px;line-height:1.25;font-weight:750;padding:3px 6px;border-radius:7px;background:#edf0ec;color:#465b4d;white-space:nowrap}.bird-rarity.rarity-uncommon{background:#f0e9da;color:#78603b}.bird-rarity.rarity-scarce,.bird-rarity.rarity-rare{background:#f3e0d7;color:#854933}.bird-rarity.rarity-unrated{background:#eeeae4;color:#74716c}.field-guide-rarity{margin:5px 0 2px}.field-guide-rarity .bird-rarity{font-size:9px}
 .field-guide-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.field-guide-head h2{margin:0}.field-guide-summary{font-size:12px;color:var(--muted);text-align:right}.field-guide-filters{display:flex;gap:7px;margin-bottom:11px}.field-guide-filter{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:750}.field-guide-filter.active{background:var(--accent);border-color:var(--accent);color:#fff}.field-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field-guide-tile{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;box-shadow:0 5px 16px rgba(33,38,35,.04)}.field-guide-tile img{width:100%;aspect-ratio:1;object-fit:cover;background:#e8e1d3;display:block}.field-guide-copy{padding:9px}.field-guide-name{font-weight:800;font-size:13px;line-height:1.15;min-height:30px}.field-guide-state{display:inline-block;margin-top:6px;padding:4px 6px;border-radius:999px;background:#e4ece6;color:#466252;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.field-guide-state.missing{background:#efe2dc;color:#794f42}.field-guide-credit{margin-top:5px;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-guide-problem{margin-top:4px;font-size:9px;color:#794f42;line-height:1.3}.field-guide-state.custom{background:#e6e4f1;color:#58506f}.field-guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:8px}.field-guide-action{border:1px solid var(--line);background:#f7f5ef;color:var(--ink);padding:6px 5px;border-radius:9px;font-size:9px;font-weight:800}.field-guide-action.restore{background:#fff}.field-guide-action:disabled{opacity:.55}.field-guide-override-status{margin:0 0 10px;font-size:11px;color:var(--muted)}
 .bird-card-link{color:inherit;text-decoration:none;cursor:pointer}.bird-card-link:hover,.bird-card-link:focus-visible{border-color:var(--accent)}.bird-card-link:focus-visible,.field-guide-species-link:focus-visible,.field-guide-rspb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.rspb-hint{display:block;margin-top:6px;font-size:11px;font-weight:800;color:var(--accent)}.field-guide-species-link{display:block;color:inherit;text-decoration:none}.field-guide-species-link:hover .field-guide-name{text-decoration:underline}.field-guide-rspb{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+
+.field-guide-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.field-guide-controls input{grid-column:1/-1}.field-guide-controls input,.field-guide-controls select{width:100%;min-width:0;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}.field-guide-open{display:block;width:100%;border:0;padding:0;background:transparent;text-align:left;color:inherit;cursor:pointer}.field-guide-open:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.field-guide-open .field-guide-name{margin:0}.field-guide-open:hover .field-guide-name{text-decoration:underline}.bird-profile-image{width:min(100%,260px);aspect-ratio:1;object-fit:contain;display:block;margin:auto;background:#eee9dd;border-radius:16px}.bird-profile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}.bird-profile-fact{padding:12px;background:var(--soft);border-radius:12px;line-height:1.4}.bird-profile-fact span{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}.bird-profile-fact strong{font-size:13px}.bird-profile-history{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.bird-profile-months{display:grid;gap:7px;margin:12px 0}.bird-profile-month{display:grid;grid-template-columns:57px 1fr 35px;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.bird-profile-track{background:var(--soft);height:11px;border-radius:12px;overflow:hidden}.bird-profile-bar{height:100%;background:#658574;border-radius:12px}.bird-profile-link{display:inline-block;margin:12px 0;color:var(--accent);font-weight:750}.bird-profile-note{color:var(--muted);font-size:12px;line-height:1.5}
 .health-overview{width:100%;display:flex;align-items:center;gap:11px;text-align:left;color:var(--ink);padding:14px 18px;cursor:pointer}.health-indicator{width:11px;height:11px;border-radius:50%;background:#a28c57;flex-shrink:0}.health-indicator.ok{background:#4b8263}.health-indicator.error{background:#bd5555}.health-indicator.warning{background:#bb9650}.health-overview .health-summary{flex:1;min-width:0}.health-overview .health-summary strong{display:block}.health-overview .health-summary small{display:block;color:var(--muted);margin-top:3px}.health-row{display:flex;gap:12px;justify-content:space-between;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}.health-row:last-child{border:0}.health-state{font-size:12px;font-weight:800;white-space:nowrap}.health-state.ok{color:#417556}.health-state.error{color:#ab3939}.health-state.warning,.health-state.unknown{color:#936d31}
 .visitor-leaderboard{margin-top:18px}.visitor-leaderboard .lb-title{font:700 22px/1.2 Georgia,serif;margin:0 0 7px}.lb-controls{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}.lb-period{flex:1;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:11px;padding:10px 7px;white-space:nowrap;font-size:12px;font-weight:750;min-width:60px}.lb-period.active{background:var(--accent);color:#fff;border-color:var(--accent)}.lb-progress{font-size:12px;color:var(--muted);line-height:1.45;padding:3px 0 11px}.lb-list{display:grid;gap:12px}.lb-entry{display:grid;gap:6px}.lb-line{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:13px}.lb-name{font-weight:750;min-width:0}.lb-numbers{color:var(--muted);font-variant-numeric:tabular-nums;flex-shrink:0}.lb-score{font-weight:850;color:var(--accent)}.lb-track{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}.lb-fill{background:#668878;height:100%;border-radius:999px;min-width:0;transition:width .3s ease}.lb-entry:first-child .lb-fill{background:#345b48}.lb-note{font-size:11px;line-height:1.5;color:var(--muted);margin:12px 0 0}
 @media(min-width:700px){.home-overview{grid-template-columns:340px minmax(0,1fr)}.hero{width:100%;margin:0}.art-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(3,1fr)}.field-guide-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.sheet{width:min(760px,100%);margin:0 auto;border-radius:28px 28px 0 0}}
@@ -338,6 +340,7 @@ CONTROL_HTML = r'''<!DOCTYPE html>
   <div class="section">
     <div class="field-guide-head"><div><h2>Field-guide library</h2><p class="subtle">A starter set of common birds, plus every new species BirdCanvas records.</p></div><div id="bird-catalog-summary" class="field-guide-summary">Loading…</div></div>
     <div class="field-guide-filters"><button class="field-guide-filter active" type="button" data-bird-catalog-filter="all">All</button><button class="field-guide-filter" type="button" data-bird-catalog-filter="notable">Uncommon +</button><button class="field-guide-filter" type="button" data-bird-catalog-filter="missing">Missing images</button></div>
+    <div class="field-guide-controls"><input id="bird-catalog-search" type="search" placeholder="Search birds or scientific names" aria-label="Search field guide"><select id="bird-catalog-group" aria-label="Bird family"><option value="all">All bird families</option></select><select id="bird-catalog-sort" aria-label="Sort field guide"><option value="az">Name A–Z</option><option value="recent">Most recently heard</option><option value="observed">Observed first</option></select></div>
     <input id="bird-override-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
     <div id="bird-override-status" class="field-guide-override-status">Replace any illustration from your phone; custom choices are kept across updates and used on the Magic Mirror too.</div>
     <div id="bird-catalog-grid" class="field-guide-grid"><div class="empty" style="grid-column:1/-1">Building field-guide library…</div></div>
@@ -514,9 +517,10 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 
 </main>
 <nav class="bottom-nav"><button class="nav active" data-go="home"><strong>⌂</strong>Home</button><button class="nav" data-go="birds"><strong>♩</strong>Birds</button><button class="nav" data-go="add"><strong>＋</strong>Add</button><button class="nav" data-go="schedule"><strong>◷</strong>Schedule</button><button class="nav" data-go="library"><strong>▦</strong>Library</button></nav>
+<div id="bird-profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Bird field guide profile"><div class="sheet"><div class="sheet-head"><strong>Bird field guide</strong><button id="bird-profile-close" class="close" type="button" aria-label="Close profile">×</button></div><div id="bird-profile-content" aria-live="polite">Loading profile…</div></div></div>
 <div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Exhibition</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><div id="detail-plaque" class="gallery-plaque"><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-plaque-collection" class="plaque-collection"></p><div class="plaque-facts"><span id="detail-plaque-medium"></span><span id="detail-plaque-origin"></span></div></div><div id="detail-species" class="species"></div><div id="detail-exhibition" class="exhibition-panel hidden"><div class="exhibition-section"><p class="exhibition-kicker">Curator's Notes</p><p id="detail-narrative"></p></div><div id="detail-bird-groups" class="exhibition-section bird-groups"></div><div class="exhibition-section"><p class="exhibition-kicker">Collection</p><h3 id="detail-collection"></h3><p id="detail-mood"></p></div><div class="exhibition-section"><p class="exhibition-kicker">Composition</p><p id="detail-composition"></p></div></div><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="send-tv-button" class="btn">Send to TV</button><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn secondary">Display in GalleryOS</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div><div id="send-tv-status" class="status"></div></div></div>
 <script>
-const $=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let libraryData={artworks:[]},displayData=null,currentFilter='all',selectedArtwork=null,birdView='current',birdDate=null,birdLoading=false,birdCatalogData={birds:[]},birdCatalogFilter='all',birdOverrideTarget=null;
+const $=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let libraryData={artworks:[]},displayData=null,currentFilter='all',selectedArtwork=null,birdView='current',birdDate=null,birdLoading=false,birdCatalogData={birds:[]},birdCatalogFilter='all',birdCatalogQuery='',birdCatalogGroup='all',birdCatalogSort='az',birdProfileRequest=0,birdOverrideTarget=null;
 async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}async function post(url,p={}){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}
 function localIso(d){const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function fmt(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
@@ -669,7 +673,12 @@ async function refreshBirds(){
 function renderBirdCatalogue(){
   const grid=$('#bird-catalog-grid');
   const all=Array.isArray(birdCatalogData.birds)?birdCatalogData.birds:[];
-  const birds=birdCatalogFilter==='missing'?all.filter(b=>!b.image_ready):birdCatalogFilter==='notable'?all.filter(b=>['uncommon','scarce','rare'].includes(b.rarity?.level)):all;
+  let birds=birdCatalogFilter==='missing'?all.filter(b=>!b.image_ready):birdCatalogFilter==='notable'?all.filter(b=>['uncommon','scarce','rare'].includes(b.rarity?.level)):all;
+  if(birdCatalogQuery)birds=birds.filter(b=>(b.name+' '+(b.scientific_name||'')).toLowerCase().includes(birdCatalogQuery));
+  if(birdCatalogGroup!=='all')birds=birds.filter(b=>(b.profile?.group||'Other / not yet profiled')===birdCatalogGroup);
+  birds=[...birds].sort((a,b)=>birdCatalogSort==='recent'||birdCatalogSort==='observed'?
+    (Number(!!(b.heard||b.sighted))-Number(!!(a.heard||a.sighted))) || (birdCatalogSort==='recent'?String(b.last_seen||'').localeCompare(String(a.last_seen||'')):String(a.first_seen||'').localeCompare(String(b.first_seen||''))) || a.name.localeCompare(b.name):
+    a.name.localeCompare(b.name));
   const customCount=all.filter(b=>b.overridden).length;
   $('#bird-catalog-summary').textContent=`${birdCatalogData.species_count||0} species · ${birdCatalogData.heard_count||0} heard · ${birdCatalogData.sighted_count||0} seen · ${birdCatalogData.missing_count||0} missing${customCount?` · ${customCount} custom`:''}`;
   qa('[data-bird-catalog-filter]').forEach(button=>button.classList.toggle('active',button.dataset.birdCatalogFilter===birdCatalogFilter));
@@ -690,12 +699,13 @@ function renderBirdCatalogue(){
     const rspb=typeof bird.rspb_url==='string'&&bird.rspb_url.startsWith('https://www.rspb.org.uk/birds-and-wildlife/')?bird.rspb_url:'';
     const rspbAttrs=rspb?`href="${escapeHtml(rspb)}" target="_blank" rel="noopener noreferrer"`:'';
     const photo=`<img src="${escapeHtml(bird.image_url)}" alt="${escapeHtml(bird.name)} field-guide tile" loading="lazy">`;
-    const linkedPhoto=rspb?`<a class="field-guide-species-link" ${rspbAttrs} aria-label="Open RSPB species guide for ${escapeHtml(bird.name)} (new tab)">${photo}</a>`:photo;
+    const linkedPhoto='<button class="field-guide-open" type="button" data-bird-profile aria-label="Open profile for '+escapeHtml(bird.name)+'">'+photo+'</button>';
     const name=`<div class="field-guide-name">${escapeHtml(bird.name)}</div>`;
-    const linkedName=rspb?`<a class="field-guide-species-link" ${rspbAttrs}>${name}</a>`:name;
+    const linkedName='<button class="field-guide-open" type="button" data-bird-profile>'+name+'</button>';
     const rspbHint=rspb?`<a class="field-guide-rspb" ${rspbAttrs}>RSPB species guide ↗</a>`:'';
     tile.innerHTML=`${linkedPhoto}<div class="field-guide-copy">${linkedName}<div class="field-guide-rarity">${rarityMarkup(bird)}</div><div class="field-guide-credit">${heard}</div><span class="field-guide-state ${stateClass}">${state}</span>${credit}${problem}${rspbHint}<div class="field-guide-actions"><button class="field-guide-action" type="button" data-bird-replace>Replace</button>${restore}</div></div>`;
 
+    tile.querySelectorAll('[data-bird-profile]').forEach(button=>button.onclick=()=>openBirdProfile(bird));
     tile.querySelector('[data-bird-replace]').onclick=()=>{
       birdOverrideTarget=bird;
       const input=$('#bird-override-file');
@@ -727,6 +737,10 @@ async function refreshBirdCatalogue(){
     birdCatalogData=await api('/api/birds/catalog');
     const options=$('#bird-sighting-options');options.replaceChildren();
     (birdCatalogData.birds||[]).forEach(b=>{const opt=document.createElement('option');opt.value=b.name;options.append(opt)});
+    const family=$('#bird-catalog-group'),groups=[...new Set((birdCatalogData.birds||[]).map(b=>b.profile?.group||'Other / not yet profiled'))].sort();
+    family.replaceChildren(new Option('All bird families','all'),...groups.map(g=>new Option(g,g)));
+    family.value=birdCatalogGroup;
+    if(family.selectedIndex<0){birdCatalogGroup='all';family.value='all';}
     renderBirdCatalogue();
   }catch(error){
     $('#bird-catalog-summary').textContent='Unable to load';
@@ -887,6 +901,57 @@ $('#bird-date').onchange=()=>{if(!$('#bird-date').value)return;birdDate=$('#bird
 $('#bird-prev-day').onclick=()=>moveBirdDate(-1);
 $('#bird-next-day').onclick=()=>moveBirdDate(1);
 qa('[data-bird-catalog-filter]').forEach(button=>button.onclick=()=>{birdCatalogFilter=button.dataset.birdCatalogFilter;renderBirdCatalogue()});
+$('#bird-catalog-search').oninput=e=>{birdCatalogQuery=e.target.value.trim().toLowerCase();renderBirdCatalogue()};
+$('#bird-catalog-group').onchange=e=>{birdCatalogGroup=e.target.value;renderBirdCatalogue()};
+$('#bird-catalog-sort').onchange=e=>{birdCatalogSort=e.target.value;renderBirdCatalogue()};
+
+function closeBirdProfile(){birdProfileRequest++;$('#bird-profile-modal').classList.add('hidden')}
+$('#bird-profile-close').onclick=closeBirdProfile;
+$('#bird-profile-modal').onclick=e=>{if(e.target.id==='bird-profile-modal')closeBirdProfile()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#bird-profile-modal').classList.contains('hidden'))closeBirdProfile()});
+function birdProfileFact(label,value){
+  return value?'<div class="bird-profile-fact"><span>'+escapeHtml(label)+'</span><strong>'+escapeHtml(value)+'</strong></div>':'';
+}
+async function openBirdProfile(bird){
+  const request=++birdProfileRequest;
+  $('#bird-profile-modal').classList.remove('hidden');
+  $('#bird-profile-content').innerHTML='<div class="empty">Loading bird profile and observation history…</div>';
+  try{
+    const data=await api('/api/birds/profile?name='+encodeURIComponent(bird.name)+'&scientific='+encodeURIComponent(bird.scientific_name||''));
+    if(request!==birdProfileRequest)return;
+    const b=data.bird,p=b.profile||{},h=data.history||{},months=(h.months||[]).slice(-12);
+    const peak=Math.max(1,...months.map(m=>Number(m.days_heard)||0));
+    const chart=months.map(m=>'<div class="bird-profile-month"><span>'+escapeHtml(m.month)+'</span><div class="bird-profile-track"><div class="bird-profile-bar" style="width:'+Math.max(0,Math.min(100,100*(Number(m.days_heard)||0)/peak))+'%"></div></div><strong>'+Number(m.days_heard||0)+'</strong></div>').join('');
+    const pstats=birdProfileFact('First heard by BirdNET',b.heard?fmt(b.first_seen):'')
+      +birdProfileFact('Last heard by BirdNET',b.heard?fmt(b.last_seen):'')
+      +birdProfileFact('Days heard (analysed)',String(h.days_heard??0))
+      +birdProfileFact('Accepted detections (analysed)',String(h.detections??0))
+      +birdProfileFact('Manually logged sightings',String(h.manual_sightings??0))
+      +birdProfileFact('Last seen manually',h.last_manually_seen?fmt(h.last_manually_seen):'');
+    const facts=birdProfileFact('Family',p.group)
+      +birdProfileFact('Typical length',p.length_cm?p.length_cm+' cm':'')
+      +birdProfileFact('Habitat',p.habitat)+birdProfileFact('Diet',p.diet)
+      +birdProfileFact('UK seasonality',p.season)
+      +birdProfileFact('UK conservation (BoCC5)',p.conservation||'Not yet verified');
+    const rspb=(b.rspb_url||'').startsWith('https://www.rspb.org.uk/birds-and-wildlife/')?b.rspb_url:'';
+    $('#bird-profile-content').innerHTML=
+      '<img class="bird-profile-image" alt="'+escapeHtml(b.name)+' field guide illustration" src="'+escapeHtml(b.image_url)+'">'
+      +'<h2 class="detail-title">'+escapeHtml(b.name)+'</h2><p class="bird-scientific">'+escapeHtml(b.scientific_name||'')+'</p>'
+      +'<div class="field-guide-rarity">'+rarityMarkup(b)+'</div>'
+      +(p.identification?'<p>'+escapeHtml(p.identification)+'</p>':'<p class="bird-profile-note">Detailed identification notes for this species have not yet been reviewed.</p>')
+      +'<div class="bird-profile-facts">'+facts+'</div>'
+      +'<p class="bird-profile-note">Local rarity measures regional encounter frequency; UK conservation reflects national population concern. Neither confirms a BirdNET identification.</p>'
+      +(rspb?'<a class="bird-profile-link" target="_blank" rel="noopener noreferrer" href="'+escapeHtml(rspb)+'">Read the RSPB bird guide ↗</a>':'')
+      +'<div class="bird-profile-history"><h3>Our BirdCanvas history</h3><div class="bird-profile-facts">'+pstats+'</div><strong>Monthly days heard</strong>'
+      +'<div class="bird-profile-months">'+(chart||'<p class="bird-profile-note">No history to show yet.</p>')+'</div>'
+      +'<p class="bird-profile-note">'+Number(h.analysed_days||0)+' of '+Number(h.total_days||0)+' recording days analysed. '
+      +(h.complete?'History complete for this window.':'History still backfilling; incomplete months cannot be treated as zero activity.')
+      +' Only accepted BirdNET detections count towards the chart; manually seen birds are recorded separately.</p></div>';
+  }catch(error){
+    if(request===birdProfileRequest)$('#bird-profile-content').innerHTML='<div class="empty">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
 $('#bird-override-file').onchange=async event=>{
   const file=event.target.files&&event.target.files[0];
   const bird=birdOverrideTarget;

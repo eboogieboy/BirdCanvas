@@ -162,3 +162,20 @@ Pull requests now run the same regression suite, Python compilation, generated-p
 ## Quiet-day artwork fallback (v0.25.1)
 
 For **daily** artwork only, when the observation window contains no species eligible for artwork (neither accepted BirdNET species nor manually seen species), BirdCanvas generates a **new** artwork using the most recent genuinely observed eligible species from a prior archived BirdCanvas edition, up to seven days old. Excluded species stay excluded. Fallback artwork is titled “previous observations”, and the archive manifest and GalleryOS exhibition notes identify the original source date rather than claiming the birds were detected today. The new edition records the current window's true detection and manual sighting totals, and advances the normal collection cursor once published; next day's schedule and the 10-family art rotation are unchanged. Style tests and earlier fallback images are never mistaken for fresh bird sightings. If no qualifying observations exist within seven days, generation reports `no_birds` as before. The Pi's auto-deploy timer picks up this change after it reaches `main`.
+
+## Expanded GalleryOS field guide
+
+The Garden visitors field guide now provides searchable, sortable species cards,
+family filters, and in-app profiles opened by tapping the bird. Curated facts
+are keyed by scientific name in `code/bird_profiles.py`; unfamiliar species
+show an explicitly unreviewed profile rather than invented identification or
+conservation labels. UK BoCC5 conservation status (where verified) is independent
+of existing indicative North Tyneside rarity ratings. Existing bird plates,
+custom replacements, RSPB links, manual sightings and generated art are unchanged.
+
+Each profile includes first/last BirdNET dates and read-only monthly detection
+history from the leaderboard's existing cached accepted BirdNET days. Uncached
+days are fetched asynchronously using the same single background worker; the
+profile explicitly shows how many days have been analysed, and manual sightings
+are counted separately from audio. No stickers or licensed illustrations were
+copied and no new external service, runtime dependency or API credit is needed.

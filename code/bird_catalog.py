@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from bird_images import mirror_tile_info
 from bird_rarity import rarity_for
+from bird_profiles import profile_for
 from rspb_links import rspb_species_url
 from paths import DATA_DIR
 from manual_sightings import list_sightings
@@ -183,6 +184,7 @@ def catalogue(*, path: Path = CATALOG_PATH) -> dict:
                 "heard": heard,
                 "sighted": key in manually_seen_keys,
                 "rarity": rarity_for(name, scientific),
+                "profile": profile_for(name, scientific),
                 "rspb_url": rspb_species_url(name, scientific),
                 "image_url": f"/api/mirror/bird-image?{query}",
                 "image_status": tile["status"],

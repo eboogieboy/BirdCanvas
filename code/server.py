@@ -36,7 +36,7 @@ from generation_settings import load_settings, save_settings
 from production_pipeline import status as generation_status, send_artwork_to_frame
 from bird_sessions import current_session, day_session
 from manual_sightings import add_sighting, delete_sighting
-from visitor_leaderboard import leaderboard
+from visitor_leaderboard import leaderboard, species_history
 from bird_catalog import catalogue, record_birds
 from bird_images import (
     BIRD_OVERRIDE_MAX_BYTES,
@@ -135,6 +135,25 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if route == "/api/birds/catalog":
             try:
                 self.send_json(catalogue())
+            except (ValueError, OSError) as error:
+                self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
+            return
+        if route == "/api/birds/profile":
+            query = parse_qs(parsed.query)
+            name = (query.get("name") or [""])[0].strip()
+            scientific = (query.get("scientific") or [""])[0].strip()
+            if not name or len(name) > 90 or len(scientific) > 120:
+                self.send_json({"error": "A valid bird name is required."}, HTTPStatus.BAD_REQUEST)
+                return
+            try:
+                birds = catalogue()["birds"]
+                bird = next((item for item in birds if
+                             ((scientific and item["scientific_name"].casefold() == scientific.casefold())
+                              or (not scientific and item["name"].casefold() == name.casefold()))), None)
+                if bird is None:
+                    self.send_json({"error": "Bird not found in the field guide."}, HTTPStatus.NOT_FOUND)
+                    return
+                self.send_json({"bird": bird, "history": species_history(bird["name"], bird["scientific_name"])})
             except (ValueError, OSError) as error:
                 self.send_json({"error": str(error)}, HTTPStatus.BAD_GATEWAY)
             return
