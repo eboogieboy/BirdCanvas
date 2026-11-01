@@ -1,3 +1,10 @@
+## 0.25.2 — Expanded GalleryOS Field Guide
+
+- Added tap-to-open bird profiles with identification, habitat, diet, UK seasonality, size and conservation metadata where reviewed.
+- Added field-guide search, family filters and sorting while retaining custom illustrations and RSPB species links.
+- Added personal monthly detection summaries from the existing BirdNET leaderboard cache; manual sightings remain separate and incomplete histories are labelled.
+- No change to the daily artwork generation workflow, Frame delivery or stored observations.
+
 ## 0.24.0 — Garden Visitor Leaderboard
 
 - Added an interactive Top 10 visitor-frequency chart under Daily Birds in Garden Visitors, with 7-, 30-, 90-day and all-time views.
