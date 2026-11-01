@@ -11,6 +11,15 @@ import bird_catalog
 
 
 class BirdCatalogueTests(unittest.TestCase):
+    def setUp(self):
+        # Catalogue tests use temporary bird_catalog.json files. The field guide
+        # also merges manually seen birds from a separate persistent file; on
+        # the real Pi that file contains genuine sightings and must not leak
+        # into fixture counts or prevent production deployment.
+        sightings_patch = patch.object(bird_catalog, "list_sightings", return_value=[])
+        sightings_patch.start()
+        self.addCleanup(sightings_patch.stop)
+
     def test_records_species_once_and_preserves_first_and_last_seen(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "bird_catalog.json"
