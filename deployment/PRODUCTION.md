@@ -12,6 +12,13 @@ BIRDCANVAS_FRAME_ENABLED=true
 BIRDCANVAS_FRAME_HOST=192.168.x.x
 ```
 
+The creative director now uses `gpt-6.1-sol` with low reasoning. Existing Pis with
+`BIRDCANVAS_CREATIVE_MODEL=gpt-5.6-sol` in their local `.env` are
+automatically mapped to GPT-6.1 Sol at runtime; the deployment deliberately
+preserves private `.env` files. A different explicitly configured creative
+model remains respected. Bird verification remains on GPT-5.6 Luna and image
+rendering remains on GPT-Image-2.
+
 The optional Frame token file uses the Samsung CLI default `~/.birdcanvas-frame-token` under the service user's home. Pair the TV once while logged in as that user. Give the TV a stable IP address. Leave `BIRDCANVAS_FRAME_ENABLED=false` while testing without the TV.
 
 The installer starts the GalleryOS service and a 15-minute systemd timer. The timer checks the frequency selected on `/control/` and retries delivery of previously generated images. Daily is 04:00, twice weekly is Monday/Thursday 04:00, weekly is Monday 04:00, all Europe/London. It never generates a replacement merely because Frame delivery failed. `sudo journalctl -u birdcanvas-production.service -n 100` shows generation failures; `/api/health` shows state. The phone's Generate now button closes the current collection at that moment, then the next scheduled boundary resumes collection.

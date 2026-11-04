@@ -16,6 +16,25 @@ class GenerationAITests(unittest.TestCase):
     def setUp(self):
         generation_ai.reset_usage()
 
+    def test_creative_model_upgrade_and_existing_overrides(self):
+        self.assertEqual(generation_ai._resolve_creative_model(None), "gpt-6.1-sol")
+        self.assertEqual(generation_ai._resolve_creative_model(""), "gpt-6.1-sol")
+        self.assertEqual(
+            generation_ai._resolve_creative_model("gpt-5.6-sol"),
+            "gpt-6.1-sol",
+        )
+        self.assertEqual(
+            generation_ai._resolve_creative_model("custom-creative-model"),
+            "custom-creative-model",
+        )
+
+    def test_model_roles_remain_separate(self):
+        profile = generation_ai.model_profile()
+        self.assertEqual(profile["creative_model"], generation_ai.CREATIVE_MODEL)
+        self.assertEqual(profile["utility_model"], generation_ai.UTILITY_MODEL)
+        self.assertEqual(profile["image_model"], generation_ai.IMAGE_MODEL)
+        self.assertEqual(profile["creative_reasoning"], "low")
+
     def test_feature_selection_uses_cheap_model_and_no_reasoning(self):
         reply = SimpleNamespace(
             output_text=json.dumps({
@@ -159,6 +178,7 @@ class GenerationAITests(unittest.TestCase):
         self.assertEqual(result["brief"]["art_style"], "Pop art")
         self.assertEqual(result["brief"]["style"], "Pop art")
         self.assertIn("Pop art", result["selected_movement"]["name"])
+        self.assertEqual(mocked.call_args.kwargs["model"], generation_ai.CREATIVE_MODEL)
         self.assertEqual(result["brief"]["subject_balance"], "subtle-wildlife")
         self.assertIn("Pop art", result["image_prompt"])
         self.assertIn("postcard montage", result["image_prompt"])

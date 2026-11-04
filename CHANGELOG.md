@@ -1,3 +1,11 @@
+## 0.25.3 — GPT-6.1 Sol Creative Director
+
+- Moved the artwork creative-director and prompt-writing role from GPT-5.6 Sol to GPT-6.1 Sol, retaining low reasoning.
+- Kept bird selection, verification and image generation on their existing models, preserving cost and artwork workflow.
+- Updated legacy creative calls to share the configured model instead of pinning GPT-5.6 Sol.
+- Migrated the previously pinned GPT-5.6 Sol default at runtime without touching the Pi's private `.env`, other custom overrides or stored art.
+- Added coverage for model selection and kept the generation output format unchanged.
+
 ## 0.25.2 — Expanded GalleryOS Field Guide
 
 - Added tap-to-open bird profiles with identification, habitat, diet, UK seasonality, size and conservation metadata where reviewed.

@@ -103,7 +103,7 @@ def load_creative_history(limit=10):
 
 def extract_creative_dna(brief):
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the BirdCanvas Curator.
 
@@ -214,7 +214,7 @@ def select_featured_birds(birds):
     ]
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the BirdCanvas Curator.
 
@@ -284,7 +284,7 @@ def create_movement_options(birds, season, edition="daily"):
     history = load_creative_history()
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the Exhibition Programme Director for BirdCanvas.
 
@@ -370,7 +370,7 @@ Return ONLY valid JSON:
 
 def select_movement(movements, birds):
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the Art Director for BirdCanvas.
 
@@ -454,7 +454,7 @@ def create_creative_brief(birds, movement=None, edition="daily", observation_win
     subject_balance = select_subject_balance()
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the Creative Director for BirdCanvas.
 
@@ -941,7 +941,7 @@ Someone seeing the artwork without context should never assume it was generated 
 
 def compose_structured_image_prompt(birds, brief):
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are BirdCanvas Prompt Composer.
 
@@ -1005,7 +1005,7 @@ def create_bird_plan(birds):
     )
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the BirdCanvas Ornithology Adviser.
 
@@ -1167,7 +1167,7 @@ materials, atmosphere and composition as much as possible.
 """
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=f"""
 You are the Image Prompt Writer for BirdCanvas.
 
@@ -1326,7 +1326,7 @@ def critique_artwork(expected_birds, brief, image_path):
     image_url = image_to_data_url(image_path)
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=[
             {
                 "role":"user",
@@ -1388,7 +1388,7 @@ def verify_image(expected_birds, bird_plan):
     plan_text = json.dumps({"birds": bird_plan}, indent=2)
 
     response = _client().responses.create(
-        model="gpt-5.6-sol",
+        model=generation_ai.CREATIVE_MODEL,
         input=[
             {
                 "role": "user",

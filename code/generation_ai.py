@@ -15,7 +15,15 @@ from typing import Any
 
 from paths import DATA_DIR
 
-CREATIVE_MODEL = os.getenv("BIRDCANVAS_CREATIVE_MODEL", "gpt-5.6-sol")
+def _resolve_creative_model(configured: str | None) -> str:
+    """Upgrade the former Pi .env default without modifying local settings."""
+    model = (configured or "").strip()
+    # Old installations may explicitly pin the previous default in their .env.
+    # Treat that value as the legacy default for this requested migration.
+    return "gpt-6.1-sol" if model in ("", "gpt-5.6-sol") else model
+
+
+CREATIVE_MODEL = _resolve_creative_model(os.getenv("BIRDCANVAS_CREATIVE_MODEL"))
 UTILITY_MODEL = os.getenv("BIRDCANVAS_UTILITY_MODEL", "gpt-5.6-luna")
 IMAGE_MODEL = os.getenv("BIRDCANVAS_IMAGE_MODEL", "gpt-image-2")
 CREATIVE_REASONING = os.getenv("BIRDCANVAS_CREATIVE_REASONING", "low")
