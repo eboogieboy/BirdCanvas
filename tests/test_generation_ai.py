@@ -178,7 +178,7 @@ class GenerationAITests(unittest.TestCase):
         self.assertEqual(result["brief"]["art_style"], "Pop art")
         self.assertEqual(result["brief"]["style"], "Pop art")
         self.assertIn("Pop art", result["selected_movement"]["name"])
-        self.assertEqual(mocked.call_args.kwargs["model"], generation_ai.CREATIVE_MODEL)
+        self.assertEqual(create.call_args.kwargs["model"], generation_ai.CREATIVE_MODEL)
         self.assertEqual(result["brief"]["subject_balance"], "subtle-wildlife")
         self.assertIn("Pop art", result["image_prompt"])
         self.assertIn("postcard montage", result["image_prompt"])
