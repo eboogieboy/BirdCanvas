@@ -1028,7 +1028,7 @@ $('#upload-form').onsubmit=async e=>{e.preventDefault();const file=$('#upload-im
 
 
 function healthLabel(status){return {ok:'Healthy',warning:'Attention',error:'Problem',unknown:'Not verified'}[status]||'Unknown';}
-const mainChecks=[['birdnet','BirdNET-Go'],['generation','Artwork generation'],['frame','Samsung Frame'],['mirror','Magic Mirror'],['backup','Nightly backup']];
+const mainChecks=[['birdnet','BirdNET-Go'],['generation','Artwork generation'],['frame','Samsung Frame'],['mirror','Magic Mirror'],['backup','Nightly backup'],['cpu_temperature','Pi CPU temperature']];
 function renderHealth(report){
   const checks=report.checks||{},overall=report.status||'unknown';
   $('#health-dot').className='health-indicator '+(overall==='ok'?'ok':overall==='error'?'error':'warning');

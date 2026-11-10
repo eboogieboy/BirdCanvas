@@ -29,6 +29,7 @@ class GeneratedPageTests(unittest.TestCase):
         self.assertIn("if(id==='system')refreshHealth()", page)
         self.assertIn("refresh();refreshGeneration();refreshHealth()", page)
         self.assertIn("id=\"health-overview\"", page)
+        self.assertIn("['cpu_temperature','Pi CPU temperature']", page)
         self.assertIn("thumbnail_url||a.image_url", page)
         self.assertIn("controller.abort()", page)
         self.assertIn("data-go=\"birds\"", page)

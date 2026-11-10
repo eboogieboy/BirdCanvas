@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 from paths import BACKUP_DIR
 from paths import DATA_DIR
 from paths import OUTPUT_DIR
-from system_health import delivery_checks
+from system_health import cpu_temperature_check, delivery_checks
 
 LOCAL_TIMEZONE = ZoneInfo("Europe/London")
 
@@ -123,6 +123,7 @@ def health_report(current_status: dict[str, Any] | None = None) -> dict[str, Any
         "state": _json_file_health(DATA_DIR / "galleryos_state.json"),
         "display_settings": _json_file_health(DATA_DIR / "display_settings.json"),
         "disk": _disk_health(),
+        "cpu_temperature": cpu_temperature_check(),
     }
     production = generation_status(include_birds=False)
     checks['birdnet'] = _birdnet_health()

@@ -1,3 +1,9 @@
+## 0.25.4 — Raspberry Pi CPU temperature in System Status
+
+- Added the Pi CPU temperature to the existing live System Status health panel and diagnostics JSON, refreshed with the health dashboard.
+- Show the measured Celsius value and mark temperatures of 70°C or above as warm and 80°C or above as hot.
+- Handle unavailable or malformed thermal sensor data without crashing health reporting, with regression coverage.
+
 ## 0.25.3 — GPT-6.1 Sol Creative Director
 
 - Moved the artwork creative-director and prompt-writing role from GPT-5.6 Sol to GPT-6.1 Sol, retaining low reasoning.

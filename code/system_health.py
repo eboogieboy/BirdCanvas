@@ -4,9 +4,31 @@ from __future__ import annotations
 import re
 import subprocess
 from datetime import datetime, timedelta
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 LOCAL = ZoneInfo("Europe/London")
+CPU_TEMP_PATH = Path("/sys/class/thermal/thermal_zone0/temp")
+
+
+def cpu_temperature_check():
+    """Read the current Raspberry Pi CPU temperature from Linux thermal sysfs."""
+    try:
+        milli_celsius = int(CPU_TEMP_PATH.read_text(encoding="ascii").strip())
+        if not -40000 <= milli_celsius <= 150000:
+            raise ValueError("Temperature outside plausible sensor range")
+    except (OSError, ValueError):
+        return {"status": "unknown", "message": "Pi CPU temperature sensor unavailable."}
+
+    celsius = round(milli_celsius / 1000, 1)
+    if celsius >= 80:
+        status, description = "error", "Hot; check cooling."
+    elif celsius >= 70:
+        status, description = "warning", "Warm; check airflow."
+    else:
+        status, description = "ok", "Within normal range."
+    return {"status": status, "celsius": celsius, "message": f"{celsius:.1f}°C — {description}"}
+
 
 
 def _run(*args):

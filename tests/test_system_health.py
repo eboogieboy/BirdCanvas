@@ -41,6 +41,33 @@ class SystemHealthTests(unittest.TestCase):
         with patch.object(system_health, "_run", return_value=""):
             self.assertEqual(system_health.delivery_checks()["mirror"]["status"], "unknown")
 
+    def test_cpu_temperature_reading_in_celsius(self):
+        with patch.object(system_health, "CPU_TEMP_PATH") as sensor:
+            sensor.read_text.return_value = "51500\n"
+            reading = system_health.cpu_temperature_check()
+        self.assertEqual(reading["status"], "ok")
+        self.assertEqual(reading["celsius"], 51.5)
+        self.assertIn("51.5°C", reading["message"])
+
+    def test_cpu_temperature_warning_and_hot_thresholds(self):
+        for milli_celsius, expected in [(69999, "ok"), (70000, "warning"), (79999, "warning"), (80000, "error")]:
+            with self.subTest(milli_celsius=milli_celsius), patch.object(system_health, "CPU_TEMP_PATH") as sensor:
+                sensor.read_text.return_value = str(milli_celsius)
+                self.assertEqual(system_health.cpu_temperature_check()["status"], expected)
+
+    def test_cpu_temperature_sensor_unavailable(self):
+        with patch.object(system_health, "CPU_TEMP_PATH") as sensor:
+            sensor.read_text.side_effect = OSError("unavailable")
+            reading = system_health.cpu_temperature_check()
+        self.assertEqual(reading["status"], "unknown")
+        self.assertIn("unavailable", reading["message"])
+
+    def test_cpu_temperature_invalid_sensor_value(self):
+        with patch.object(system_health, "CPU_TEMP_PATH") as sensor:
+            sensor.read_text.return_value = "not a temperature"
+            reading = system_health.cpu_temperature_check()
+        self.assertEqual(reading["status"], "unknown")
+
 
 if __name__ == "__main__":
     unittest.main()
