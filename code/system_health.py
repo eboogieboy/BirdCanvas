@@ -21,9 +21,9 @@ def cpu_temperature_check():
         return {"status": "unknown", "message": "Pi CPU temperature sensor unavailable."}
 
     celsius = round(milli_celsius / 1000, 1)
-    if celsius >= 80:
+    if milli_celsius >= 80000:
         status, description = "error", "Hot; check cooling."
-    elif celsius >= 70:
+    elif milli_celsius >= 70000:
         status, description = "warning", "Warm; check airflow."
     else:
         status, description = "ok", "Within normal range."
