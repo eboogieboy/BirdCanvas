@@ -23,9 +23,17 @@ def _resolve_creative_model(configured: str | None) -> str:
     return "gpt-6.1-sol" if model in ("", "gpt-5.6-sol") else model
 
 
+def _resolve_image_model(configured: str | None) -> str:
+    """Migrate deprecated GPT-Image-2 aliases, including values pinned in the Pi .env."""
+    model = (configured or "").strip()
+    if model in ("", "gpt-image-2", "gpt-image-2-2026-04-21"):
+        return "gpt-image-2.6-sunburst"
+    return model
+
+
 CREATIVE_MODEL = _resolve_creative_model(os.getenv("BIRDCANVAS_CREATIVE_MODEL"))
 UTILITY_MODEL = os.getenv("BIRDCANVAS_UTILITY_MODEL", "gpt-5.6-luna")
-IMAGE_MODEL = os.getenv("BIRDCANVAS_IMAGE_MODEL", "gpt-image-2")
+IMAGE_MODEL = _resolve_image_model(os.getenv("BIRDCANVAS_IMAGE_MODEL"))
 CREATIVE_REASONING = os.getenv("BIRDCANVAS_CREATIVE_REASONING", "low")
 UTILITY_REASONING = os.getenv("BIRDCANVAS_UTILITY_REASONING", "none")
 BIRD_GUIDE_CACHE = DATA_DIR / "bird_recognition_cache.json"

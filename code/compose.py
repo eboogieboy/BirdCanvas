@@ -1295,14 +1295,8 @@ Before rendering, ensure the selected species are present without sacrificing
 the integrity of the artwork.
 """
 
-    result = _client().images.generate(
-        model="gpt-image-1",
-        prompt=final_prompt,
-        size=IMAGE_SIZE,
-        quality="medium"
-    )
-
-    return base64.b64decode(result.data[0].b64_json)
+    # Keep the older entry point aligned with the shared production image model.
+    return generation_ai.generate_image(final_prompt, size=IMAGE_SIZE, quality="medium")
 
 
 def save_image(image_bytes, output_path=OUTPUT):
