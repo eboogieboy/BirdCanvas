@@ -16,8 +16,14 @@ The creative director now uses `gpt-6.1-sol` with low reasoning. Existing Pis wi
 `BIRDCANVAS_CREATIVE_MODEL=gpt-5.6-sol` in their local `.env` are
 automatically mapped to GPT-6.1 Sol at runtime; the deployment deliberately
 preserves private `.env` files. A different explicitly configured creative
-model remains respected. Bird verification remains on GPT-5.6 Luna and image
-rendering remains on GPT-Image-2.
+model remains respected. Bird verification remains on GPT-5.6 Luna. Artwork
+generation now defaults to `gpt-image-2.6-sunburst` (1024x1536, medium quality).
+Existing Pis with `BIRDCANVAS_IMAGE_MODEL=gpt-image-2` or
+`gpt-image-2-2026-04-21` in their private `.env` are transparently upgraded
+at runtime, without rewriting local settings. Explicitly selected other image
+models, including `gpt-image-2.6-flare`, remain respected. Both GPT-Image-2
+aliases shut down on February 10, 2027; the legacy compose entry point now
+uses the same production image-model configuration.
 
 The optional Frame token file uses the Samsung CLI default `~/.birdcanvas-frame-token` under the service user's home. Pair the TV once while logged in as that user. Give the TV a stable IP address. Leave `BIRDCANVAS_FRAME_ENABLED=false` while testing without the TV.
 
