@@ -28,6 +28,53 @@ class GenerationAITests(unittest.TestCase):
             "custom-creative-model",
         )
 
+    def test_image_model_upgrade_and_existing_overrides(self):
+        for legacy in (None, "", "gpt-image-2", "gpt-image-2-2026-04-21"):
+            with self.subTest(legacy=legacy):
+                self.assertEqual(
+                    generation_ai._resolve_image_model(legacy),
+                    "gpt-image-2.6-sunburst",
+                )
+        self.assertEqual(
+            generation_ai._resolve_image_model("gpt-image-2.6-flare"),
+            "gpt-image-2.6-flare",
+        )
+        self.assertEqual(
+            generation_ai._resolve_image_model("custom-image-model"),
+            "custom-image-model",
+        )
+
+    def test_image_generation_uses_resolved_model_and_existing_render_settings(self):
+        import base64
+
+        expected_image = b"test-png-bytes"
+        response = SimpleNamespace(
+            data=[SimpleNamespace(b64_json=base64.b64encode(expected_image).decode("ascii"))],
+            usage=None,
+        )
+        calls = []
+        client = SimpleNamespace(
+            images=SimpleNamespace(generate=lambda **kwargs: calls.append(kwargs) or response)
+        )
+        with patch.object(generation_ai, "_client", return_value=client):
+            image = generation_ai.generate_image(
+                "A blackbird in a gallery print",
+                size="1024x1536",
+                quality="medium",
+            )
+
+        self.assertEqual(image, expected_image)
+        self.assertEqual(calls, [{
+            "model": generation_ai.IMAGE_MODEL,
+            "prompt": "A blackbird in a gallery print",
+            "size": "1024x1536",
+            "quality": "medium",
+        }])
+        self.assertEqual(
+            generation_ai.usage_snapshot()[0]["model"],
+            generation_ai.IMAGE_MODEL,
+        )
+
     def test_model_roles_remain_separate(self):
         profile = generation_ai.model_profile()
         self.assertEqual(profile["creative_model"], generation_ai.CREATIVE_MODEL)
