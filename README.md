@@ -91,6 +91,16 @@ This removes Python caches and old sprint ZIP files from the project root. It do
 - `output/archive/` — archived artwork and manifests
 - `tests/` — automated regression tests
 
+## Image model migration (v0.25.5)
+
+Artwork generation uses `gpt-image-2.6-sunburst` by default, replacing
+`gpt-image-2` before its 10 February 2027 retirement. A local
+`BIRDCANVAS_IMAGE_MODEL=gpt-image-2` (or the 2026-04-21 snapshot) is
+automatically mapped to Sunburst on startup, so the Pi's private `.env`
+does not need editing. Other explicit image-model choices remain available.
+The portrait dimensions (1024x1536), medium quality, ten-family style
+rotation, archive, review and Samsung Frame delivery are unchanged.
+
 ## Current release
 
 Version `0.23.0` — a clear five-service health overview on the phone control page and faster Tailscale browsing through lazy, cached JPEG thumbnails. Live display polling no longer reloads the full artwork library every 15 seconds.
