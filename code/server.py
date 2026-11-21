@@ -11,7 +11,7 @@ from email.policy import default as email_policy
 from http import HTTPStatus
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 from custom_artwork import MAX_UPLOAD_BYTES, save_custom_artwork
 from display_controller import (
@@ -25,6 +25,7 @@ from display_controller import (
 )
 from gallery_library import build_library, delete_artwork, update_artwork_metadata
 from gallery_thumbnails import thumbnail_path
+from greeting_card import render_card_front
 from presentation_manager import apply_presentation
 from display_settings import load_display_settings, save_display_settings
 from reliability import create_backup, create_diagnostics, health_report
@@ -73,6 +74,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         if route == "/api/schedules":
             self.send_json({"schedules": list_schedules()})
+            return
+        if route == "/api/library/card-front.jpg":
+            artwork_id = (parse_qs(parsed.query).get("id") or [""])[0].strip()
+            if not artwork_id:
+                self.send_error(HTTPStatus.BAD_REQUEST, "Artwork ID is required")
+                return
+            try:
+                body = render_card_front(artwork_id)
+            except ValueError as error:
+                self.send_error(HTTPStatus.NOT_FOUND, str(error))
+                return
+            except OSError:
+                self.send_error(HTTPStatus.UNPROCESSABLE_ENTITY, "Unable to read the archived image")
+                return
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Disposition", "attachment; filename*=UTF-8''" + quote(artwork_id, safe="") + "-card.jpg")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
             return
         if route == "/api/library/thumbnail":
             artwork_id = (parse_qs(parsed.query).get("id") or [""])[0].strip()

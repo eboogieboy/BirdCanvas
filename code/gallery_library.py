@@ -47,8 +47,8 @@ def _directory_size(path: Path) -> int:
     return total
 
 
-def artwork_image_path(artwork_id: str) -> Path:
-    """Return the archived presentation image for a library artwork."""
+def artwork_image_path(artwork_id: str, *, prefer_original: bool = False) -> Path:
+    """Resolve an archived image, optionally preferring the unmounted original."""
     cleaned_id = str(artwork_id).strip()
     if not cleaned_id:
         raise ValueError("Artwork ID is required.")
@@ -60,6 +60,13 @@ def artwork_image_path(artwork_id: str) -> Path:
     manifest = _read_json(manifest_path)
     if manifest is None:
         raise ValueError("The artwork manifest is damaged.")
+
+    if prefer_original:
+        original = manifest.get("original_image") or "original.png"
+        if isinstance(original, str) and Path(original).name == original:
+            original_path = manifest_path.parent / original
+            if original_path.is_file():
+                return original_path
 
     image_name = str(manifest.get("image", "")).strip()
     if not image_name or Path(image_name).name != image_name:

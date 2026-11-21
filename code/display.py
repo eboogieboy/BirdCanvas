@@ -518,7 +518,12 @@ CONTROL_HTML = r'''<!DOCTYPE html>
 </main>
 <nav class="bottom-nav"><button class="nav active" data-go="home"><strong>⌂</strong>Home</button><button class="nav" data-go="birds"><strong>♩</strong>Birds</button><button class="nav" data-go="add"><strong>＋</strong>Add</button><button class="nav" data-go="schedule"><strong>◷</strong>Schedule</button><button class="nav" data-go="library"><strong>▦</strong>Library</button></nav>
 <div id="bird-profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Bird field guide profile"><div class="sheet"><div class="sheet-head"><strong>Bird field guide</strong><button id="bird-profile-close" class="close" type="button" aria-label="Close profile">×</button></div><div id="bird-profile-content" aria-live="polite">Loading profile…</div></div></div>
-<div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Exhibition</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><div id="detail-plaque" class="gallery-plaque"><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-plaque-collection" class="plaque-collection"></p><div class="plaque-facts"><span id="detail-plaque-medium"></span><span id="detail-plaque-origin"></span></div></div><div id="detail-species" class="species"></div><div id="detail-exhibition" class="exhibition-panel hidden"><div class="exhibition-section"><p class="exhibition-kicker">Curator's Notes</p><p id="detail-narrative"></p></div><div id="detail-bird-groups" class="exhibition-section bird-groups"></div><div class="exhibition-section"><p class="exhibition-kicker">Collection</p><h3 id="detail-collection"></h3><p id="detail-mood"></p></div><div class="exhibition-section"><p class="exhibition-kicker">Composition</p><p id="detail-composition"></p></div></div><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="send-tv-button" class="btn">Send to TV</button><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn secondary">Display in GalleryOS</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div><div id="send-tv-status" class="status"></div></div></div>
+<div id="detail-modal" class="modal hidden"><div class="sheet"><div class="sheet-head"><strong>Exhibition</strong><button id="detail-close" class="close">×</button></div><img id="detail-img" class="detail-img" alt=""><div id="detail-plaque" class="gallery-plaque"><h2 id="detail-title" class="detail-title"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-plaque-collection" class="plaque-collection"></p><div class="plaque-facts"><span id="detail-plaque-medium"></span><span id="detail-plaque-origin"></span></div></div><div id="detail-species" class="species"></div><div id="detail-exhibition" class="exhibition-panel hidden"><div class="exhibition-section"><p class="exhibition-kicker">Curator's Notes</p><p id="detail-narrative"></p></div><div id="detail-bird-groups" class="exhibition-section bird-groups"></div><div class="exhibition-section"><p class="exhibition-kicker">Collection</p><h3 id="detail-collection"></h3><p id="detail-mood"></p></div><div class="exhibition-section"><p class="exhibition-kicker">Composition</p><p id="detail-composition"></p></div></div><details id="card-tools" class="exhibition-panel"><summary><strong>Make a greeting card</strong></summary>
+<p>10 × 14 cm portrait front with a warm-white border. Upload the JPEG to your card printer, then paste the note on the back.</p>
+<p><a id="card-download" download>Download card front</a></p>
+<div class="field"><label for="card-note">Back-of-card note</label><textarea id="card-note" rows="4"></textarea></div>
+<button id="card-copy" type="button" class="btn secondary">Copy note</button> <span id="card-status" role="status"></span>
+</details><div class="rename-row"><input id="detail-rename" maxlength="120"><button id="rename-button" class="btn secondary">Rename</button></div><div class="field"><label for="detail-mount">Mount presentation</label><select id="detail-mount"><option value="auto">Automatic</option><option value="white_mount">White mount</option><option value="black_mount">Black mount</option><option value="no_mount">No mount</option></select><div id="mount-reason" class="subtle"></div></div><div class="action-grid"><button id="send-tv-button" class="btn">Send to TV</button><button id="apply-mount-button" class="btn secondary">Apply mount</button><button id="display-button" class="btn secondary">Display in GalleryOS</button><button id="schedule-detail-button" class="btn secondary">Schedule</button><button id="favourite-button" class="btn secondary">Favourite</button><button id="hide-button" class="btn secondary">Hide</button><button id="delete-button" class="btn danger hidden">Delete upload</button></div><div id="send-tv-status" class="status"></div></div></div>
 <script>
 const $=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let libraryData={artworks:[]},displayData=null,currentFilter='all',selectedArtwork=null,birdView='current',birdDate=null,birdLoading=false,birdCatalogData={birds:[]},birdCatalogFilter='all',birdCatalogQuery='',birdCatalogGroup='all',birdCatalogSort='az',birdProfileRequest=0,birdOverrideTarget=null;
 async function api(url){const r=await fetch(url,{cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}async function post(url,p={}){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}),d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');return d}
@@ -749,7 +754,35 @@ async function refreshBirdCatalogue(){
 }
 
 function renderLibrary(){const items=filteredArtworks(),grid=$('#art-grid');grid.replaceChildren();$('#result-count').textContent=`${items.length} artwork${items.length===1?'':'s'}`;const bc=libraryData.artworks.filter(a=>a.collection==='birdcanvas').length,cu=libraryData.artworks.filter(a=>a.collection==='custom').length;$('#collection-summary').textContent=`${bc} BirdCanvas · ${cu} custom`;if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No artwork matches this view.</div>';return}for(const a of items){const tile=document.createElement('button');tile.className='art-tile';tile.innerHTML=`<img loading="lazy" decoding="async" src="${escapeHtml(a.thumbnail_url||a.image_url)}" alt=""><div class="tile-body"><div class="tile-title">${a.favourite?'<span class="fav">★</span> ':''}${escapeHtml(a.title)}</div><div class="tile-meta">${a.collection==='birdcanvas'?(a.observation_date||'BirdCanvas'):'Custom'}</div></div>`;tile.onclick=()=>openDetail(a);grid.append(tile)}}
+function cardNote(a){
+  const lines=[a.title];
+  if(a.collection==='birdcanvas'){
+    const names=[...new Set(a.species_used||a.species||[])].slice(0,3);
+    lines.push('Inspired by the birds of our North Shields garden.');
+    if(names.length) lines.push('From this collection · '+names.join(' · '));
+  }
+  const date=new Date(a.created_at);
+  const credit=a.collection==='birdcanvas'?'BirdCanvas':'GalleryOS';
+  lines.push(a.created_at && Number.isFinite(date.getTime()) ? credit+' · '+date.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/London'}) : credit);
+  return lines.filter(Boolean).join(String.fromCharCode(10));
+}
+$('#card-copy').onclick=async()=>{
+  const field=$('#card-note');
+  try{
+    await navigator.clipboard.writeText(field.value);
+    $('#card-status').textContent='Copied.';
+  }catch{
+    field.focus();
+    field.select();
+    $('#card-status').textContent=document.execCommand('copy')?'Copied.':'Text selected. Choose Copy on your device.';
+  }
+};
 function openDetail(a){
+  $('#card-tools').open=false;
+  $('#card-download').href='/api/library/card-front.jpg?id='+encodeURIComponent(a.id);
+  $('#card-note').value=cardNote(a);
+  $('#card-status').textContent='';
+
   selectedArtwork=a;
   $('#detail-img').src=controlImageUrl(a);
   $('#detail-title').textContent=a.title;
